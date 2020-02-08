@@ -166,6 +166,7 @@ return [
          * Package Service Providers...
          */
         BwtTeam\LaravelAPI\Providers\ApiServiceProvider::class,
+        Spatie\Permission\PermissionServiceProvider::class,
 
         /*
          * Application Service Providers...

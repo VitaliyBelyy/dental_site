@@ -6,11 +6,11 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Upwork Bids</title>
+    <title>Dental clinic</title>
 
     <!-- Vuetify CSS -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
