@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Notifications\VerifyEmail;
+use App\Notifications\PasswordResetNotification;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -50,5 +51,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendEmailVerificationNotification()
     {
         $this->notify(new VerifyEmail);
+    }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new PasswordResetNotification($token));
     }
 }

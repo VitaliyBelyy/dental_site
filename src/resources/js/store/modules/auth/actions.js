@@ -32,6 +32,11 @@ let actions = {
                     resolve();
                 })
                 .catch(err => {
+                    if (err.response.status === 422) {
+                        const errors = err.response.data.meta.errors;
+                        errors && commit("setValidationErrors", errors);
+                    }
+
                     console.log(err.response);
                     reject();
                 });
@@ -61,8 +66,29 @@ let actions = {
                     resolve();
                 })
                 .catch(err => {
+                    if (err.response.status === 422) {
+                        const errors = err.response.data.meta.errors;
+                        errors && commit("setValidationErrors", errors);
+                    }
+
                     console.log(err.response);
                     reject();
+                });
+        });
+    },
+    userRequest: ({ commit, dispatch }) => {
+        commit('setLoadingStatus', true);
+
+        return new Promise((resolve, reject) => {
+            dispatch('loadUser')
+                .then(() => {
+                    resolve();
+                })
+                .catch(err => {
+                    reject(err);
+                })
+                .finally(() => {
+                    commit('setLoadingStatus', false);
                 });
         });
     },
@@ -127,6 +153,37 @@ let actions = {
                 });
         });
     },
+    sendResetLink: ({ commit }, data) => {
+        let url = END_POINT + '/password/email';
+
+        return new Promise((resolve, reject) => {
+            window.httpClient.post(url, data)
+                .then(() => {
+                    resolve();
+                })
+                .catch(err => {
+                    console.log(err.response);
+                    reject();
+                });
+        });
+    },
+    resetPassword: ({ commit }, data) => {
+        let url = END_POINT + '/password/reset';
+
+        return new Promise((resolve, reject) => {
+            window.httpClient.post(url, data)
+                .then(() => {
+                    resolve();
+                })
+                .catch(err => {
+                    console.log(err.response);
+                    reject();
+                });
+        });
+    },
+    clearValidationErrors: ({ commit }) => {
+        commit('clearValidationErrors');
+    }
 };
 
 export default actions;

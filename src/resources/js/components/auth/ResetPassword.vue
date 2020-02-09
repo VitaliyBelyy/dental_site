@@ -1,13 +1,36 @@
 <template>
     <div>
-        <h1 class="form-title">Login</h1>
-        <v-card class="form-card elevation-2">
-            <v-card-text class="card-content">
+        <v-snackbar
+            v-model="snackbar"
+            color="success"
+            top
+        >
+            <v-icon dark class="mr-2">mdi-checkbox-marked-circle</v-icon>
+            Password was changed successfully.
+            <v-btn
+                text
+                icon
+                dark
+                @click="snackbar = false">
+                <v-icon size="20">mdi-close</v-icon>
+            </v-btn>
+        </v-snackbar>
+
+        <v-card class="auth-card">
+            <v-card-title class="auth-card__title">
+                <h3>Change password</h3>
+            </v-card-title>
+
+            <v-divider></v-divider>
+
+            <v-card-text class="px-4 pb-0 pt-6">
                 <v-form>
                     <v-text-field
-                        label="Email"
+                        label="Email address"
                         name="email"
-                        prepend-icon="email"
+                        dense
+                        outlined
+                        append-icon="email"
                         type="email"
                         v-model="email"
                         maxlength="255"
@@ -16,9 +39,10 @@
                     ></v-text-field>
 
                     <v-text-field
-                        label="Password"
+                        label="New password"
                         name="password"
-                        prepend-icon="lock"
+                        dense
+                        outlined
                         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                         @click:append="showPassword = !showPassword"
                         :type="showPassword ? 'text' : 'password'"
@@ -27,25 +51,14 @@
                         :error-messages="passwordErrors"
                         @blur="$v.password.$touch()"
                     ></v-text-field>
-
-                    <div class="remember">
-                        <v-checkbox
-                            label="Remember me"
-                            color="primary"
-                            hide-details
-                            v-model="remember"
-                            class="mt-2"
-                        ></v-checkbox>
-                        <router-link :to="{ name: 'auth.forgot-password' }">Forgot Password?</router-link>
-                    </div>
                 </v-form>
             </v-card-text>
-            <v-card-actions class="card-actions">
+            <v-card-actions class="px-4 pb-6 pt-0">
+                <v-spacer></v-spacer>
                 <v-btn color="primary"
-                       class="form-submit"
                        :loading="isLoading"
-                       @click.prevent="submit">Login</v-btn>
-                <p>Are you new? <router-link :to="{ name: 'auth.register' }">Sign up</router-link></p>
+                       @click.prevent="resetPassword"
+                >Confirm</v-btn>
             </v-card-actions>
         </v-card>
     </div>
@@ -55,15 +68,15 @@
     import { required, email, minLength } from 'vuelidate/lib/validators';
 
     export default {
-        name: "Login",
+        name: "ResetPassword",
 
         data() {
             return {
                 email: '',
                 password: '',
-                remember: false,
                 showPassword: false,
                 isLoading: false,
+                snackbar: false
             }
         },
 
@@ -80,14 +93,14 @@
 
         computed: {
             emailErrors() {
-                const errors = this.$store.state.auth.validationErrors.email || [];
+                const errors = [];
                 if (!this.$v.email.$dirty) return errors;
                 !this.$v.email.required && errors.push('The e-mail is required.');
                 !this.$v.email.email && errors.push('The email must be a valid email address.');
                 return errors;
             },
             passwordErrors() {
-                const errors = this.$store.state.auth.validationErrors.password || [];
+                const errors = [];
                 if (!this.$v.password.$dirty) return errors;
                 !this.$v.password.required && errors.push('The password is required.');
                 !this.$v.password.minLength && errors.push('Password must be at least 8 characters long');
@@ -96,22 +109,18 @@
         },
 
         methods: {
-            submit() {
+            resetPassword() {
                 this.$v.$touch();
 
                 if (!this.$v.$invalid) {
-                    const {email, password, remember} = this;
+                    const { token } = this.$route.query;
+                    const { email, password } = this;
 
                     this.isLoading = true;
-                    this.$store.dispatch('auth/login', {data: {email, password}, remember})
+                    this.snackbar = false;
+                    this.$store.dispatch('auth/resetPassword', { token, email, password, password_confirmation: password })
                         .then(() => {
-                            this.$store.dispatch('auth/clearValidationErrors');
-
-                            if (this.$route.params.nextUrl != null) {
-                                this.$router.push(this.$route.params.nextUrl);
-                            } else {
-                                this.$router.push({ name: 'dashboard'});
-                            }
+                            this.snackbar = true;
                         })
                         .finally(() => {
                             this.isLoading = false;
@@ -123,30 +132,5 @@
 </script>
 
 <style scoped>
-    .form-title {
-        color: #fff;
-        text-transform: uppercase;
-        margin-bottom: 5px;
-    }
-    .form-card {
-        padding: 30px 40px;
-    }
-    .card-content {
-        padding: 0;
-    }
-    .card-actions {
-        padding: 0;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .form-submit {
-        width: 100%;
-        margin: 20px 0 25px;
-    }
-    .remember {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        font-size: 1rem;
-    }
+
 </style>

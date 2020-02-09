@@ -1,10 +1,11 @@
 import Auth from '../layouts/Auth';
 import Login from '../components/auth/Login';
+import Register from '../components/auth/Register';
 import EmailVerification from '../components/auth/EmailVerification';
 import EmailConfirmation from '../components/auth/EmailConfirmation';
-import Register from '../components/auth/Register';
+import ForgotPassword from "../components/auth/ForgotPassword";
+import ResetPassword from "../components/auth/ResetPassword";
 import Dashboard from '../layouts/Dashboard';
-import unverified from "./middleware/unverified";
 
 export default [
     {
@@ -45,6 +46,22 @@ export default [
                 component: EmailConfirmation,
                 meta: {
                     unverified: true,
+                },
+            },
+            {
+                path: 'forgot-password',
+                name: 'auth.forgot-password',
+                component: ForgotPassword,
+                meta: {
+                    guest: true,
+                },
+            },
+            {
+                path: 'reset-password',
+                name: 'auth.reset-password',
+                component: ResetPassword,
+                meta: {
+                    guest: true,
                 },
             },
         ]

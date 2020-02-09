@@ -81,29 +81,29 @@
             },
             password: {
                 required,
-                minLength: minLength(5)
+                minLength: minLength(8)
             },
         },
 
         computed: {
             fullnameErrors() {
-                const errors = [];
+                const errors = this.$store.state.auth.validationErrors.fullname || [];
                 if (!this.$v.fullname.$dirty) return errors;
                 !this.$v.fullname.required && errors.push('The full name is required.');
                 return errors;
             },
             emailErrors() {
-                const errors = [];
+                const errors = this.$store.state.auth.validationErrors.email || [];
                 if (!this.$v.email.$dirty) return errors;
                 !this.$v.email.required && errors.push('The e-mail is required.');
                 !this.$v.email.email && errors.push('The email must be a valid email address.');
                 return errors;
             },
             passwordErrors() {
-                const errors = [];
+                const errors = this.$store.state.auth.validationErrors.password || [];
                 if (!this.$v.password.$dirty) return errors;
                 !this.$v.password.required && errors.push('The password is required.');
-                !this.$v.password.minLength && errors.push('Password must be at least 5 characters long');
+                !this.$v.password.minLength && errors.push('Password must be at least 8 characters long');
                 return errors;
             },
         },
@@ -117,6 +117,7 @@
                     this.isLoading = true;
                     this.$store.dispatch('auth/register', {data: {fullname, email, password}})
                         .then(() => {
+                            this.$store.dispatch('auth/clearValidationErrors');
                             this.$router.push({ name: 'auth.email-verification' })
                         })
                         .finally(() => {

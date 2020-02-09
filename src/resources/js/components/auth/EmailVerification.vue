@@ -1,18 +1,36 @@
 <template>
-    <v-card class="verification-card">
-        <v-card-title class="verification-card__title">
-            <h3>Verify your email address</h3>
-        </v-card-title>
+    <div>
+        <v-snackbar
+            v-model="snackbar"
+            color="success"
+            top
+        >
+            <v-icon dark class="mr-2">mdi-checkbox-marked-circle</v-icon>
+            Verification email was successfully resent.
+            <v-btn
+                text
+                icon
+                dark
+                @click="snackbar = false">
+                <v-icon size="20">mdi-close</v-icon>
+            </v-btn>
+        </v-snackbar>
 
-        <v-divider></v-divider>
+        <v-card class="auth-card">
+            <v-card-title class="auth-card__title">
+                <h3>Verify your email address</h3>
+            </v-card-title>
 
-        <v-card-text>
-            <p class="ma-0">
-                Before proceeding, please check your email for a verification link. If you did not receive the email, <a
-                href="#" @click="resendEmailVerification">click here to request another.</a>
-            </p>
-        </v-card-text>
-    </v-card>
+            <v-divider></v-divider>
+
+            <v-card-text>
+                <p class="ma-0">
+                    Before proceeding, please check your email for a verification link. If you did not receive the email, <a
+                    href="#" @click="resendEmailVerification">click here to request another.</a>
+                </p>
+            </v-card-text>
+        </v-card>
+    </div>
 </template>
 
 <script>
@@ -22,15 +40,17 @@
         data() {
             return {
                 isLoading: false,
+                snackbar: false,
             }
         },
 
         methods: {
             resendEmailVerification() {
                 this.isLoading = true;
+                this.snackbar = false;
                 this.$store.dispatch('auth/resend')
                     .then(() => {
-
+                        this.snackbar = true;
                     })
                     .finally(() => {
                         this.isLoading = false;
@@ -41,10 +61,5 @@
 </script>
 
 <style scoped>
-    .verification-card__title {
-        font-size: 1rem;
-        text-transform: capitalize;
-        line-height: 1;
-        background: #f5f5f5;
-    }
+
 </style>

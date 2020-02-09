@@ -7,7 +7,7 @@ export default function RedirectIfAuthenticated (router) {
 
         try {
             // if site have token but dont have user – need to get user
-            token && !user && await store.dispatch('auth/loadUser');
+            token && !user && await store.dispatch('auth/userRequest');
         } catch (err) {
             if (err.response && err.response.status === 401) {
                 await store.dispatch('auth/logout');
