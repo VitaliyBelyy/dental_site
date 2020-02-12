@@ -118,7 +118,7 @@
                     this.$store.dispatch('auth/register', {data: {fullname, email, password}})
                         .then(() => {
                             this.$store.dispatch('auth/clearValidationErrors');
-                            this.$router.push({ name: 'auth.email-verification' })
+                            this.$router.push({ name: 'auth.email-verification' });
                         })
                         .finally(() => {
                             this.isLoading = false;

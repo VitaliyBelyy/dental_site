@@ -33,7 +33,7 @@
                     color="red"
                     class="mb-5"
                 >mdi-alert-circle</v-icon>
-                <p class="confirmation-card__message ma-0">An error occurred. Try to <a href="#" @click="resendEmailVerification">resend verification email.</a></p>
+                <p class="confirmation-card__message ma-0">An error occurred. Try to <a href="#" @click.prevent="resendEmailVerification">resend verification email.</a></p>
             </v-card-text>
 
             <v-card-text class="text-center py-6" v-else>
@@ -46,6 +46,12 @@
             </v-card-text>
 
             <v-divider></v-divider>
+
+            <v-progress-linear
+                indeterminate
+                color="primary"
+                v-if="inProgress"
+            ></v-progress-linear>
 
             <v-card-actions class="confirmation-card__actions">
                 <v-spacer></v-spacer>
@@ -67,6 +73,7 @@
             return {
                 isLoading: false,
                 confirmationError: false,
+                inProgress: false,
                 snackbar: false,
             }
         },
@@ -89,14 +96,14 @@
                     });
             },
             resendEmailVerification() {
-                // this.isLoading = true;
+                this.inProgress = true;
                 this.snackbar = false;
                 this.$store.dispatch('auth/resend')
                     .then(() => {
                         this.snackbar = true;
                     })
                     .finally(() => {
-                        // this.isLoading = false;
+                        this.inProgress = false;
                     });
             }
         }

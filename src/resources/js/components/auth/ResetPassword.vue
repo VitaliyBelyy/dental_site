@@ -1,21 +1,5 @@
 <template>
     <div>
-        <v-snackbar
-            v-model="snackbar"
-            color="success"
-            top
-        >
-            <v-icon dark class="mr-2">mdi-checkbox-marked-circle</v-icon>
-            Password was changed successfully.
-            <v-btn
-                text
-                icon
-                dark
-                @click="snackbar = false">
-                <v-icon size="20">mdi-close</v-icon>
-            </v-btn>
-        </v-snackbar>
-
         <v-card class="auth-card">
             <v-card-title class="auth-card__title">
                 <h3>Change password</h3>
@@ -76,7 +60,6 @@
                 password: '',
                 showPassword: false,
                 isLoading: false,
-                snackbar: false
             }
         },
 
@@ -117,10 +100,9 @@
                     const { email, password } = this;
 
                     this.isLoading = true;
-                    this.snackbar = false;
                     this.$store.dispatch('auth/resetPassword', { token, email, password, password_confirmation: password })
                         .then(() => {
-                            this.snackbar = true;
+                            this.$router.push({ name: 'auth.login' });
                         })
                         .finally(() => {
                             this.isLoading = false;

@@ -26,9 +26,26 @@
             <v-card-text>
                 <p class="ma-0">
                     Before proceeding, please check your email for a verification link. If you did not receive the email, <a
-                    href="#" @click="resendEmailVerification">click here to request another.</a>
+                    href="#" @click.prevent="resendEmailVerification">click here to request another.</a>
                 </p>
             </v-card-text>
+
+            <v-divider></v-divider>
+
+            <v-progress-linear
+                indeterminate
+                color="primary"
+                v-if="inProgress"
+            ></v-progress-linear>
+
+            <v-card-actions class="verification-card__actions">
+                <v-spacer></v-spacer>
+                <v-btn color="grey lighten-2"
+                       link
+                       light
+                       @click="handleLogout"
+                >Back to login</v-btn>
+            </v-card-actions>
         </v-card>
     </div>
 </template>
@@ -39,27 +56,35 @@
 
         data() {
             return {
-                isLoading: false,
+                inProgress: false,
                 snackbar: false,
             }
         },
 
         methods: {
             resendEmailVerification() {
-                this.isLoading = true;
+                this.inProgress = true;
                 this.snackbar = false;
                 this.$store.dispatch('auth/resend')
                     .then(() => {
                         this.snackbar = true;
                     })
                     .finally(() => {
-                        this.isLoading = false;
+                        this.inProgress = false;
                     });
-            }
+            },
+            handleLogout() {
+                this.$store.dispatch('auth/logout')
+                    .then(() => {
+                        this.$router.push({ name: 'auth.login' });
+                    })
+            },
         }
     }
 </script>
 
 <style scoped>
-
+    .verification-card__actions {
+        padding: 16px;
+    }
 </style>
