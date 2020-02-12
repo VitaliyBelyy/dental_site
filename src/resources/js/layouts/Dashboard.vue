@@ -1,7 +1,7 @@
 <template>
     <v-app id="inspire" class="app dashboard-layout">
-        <app-drawer class="app__drawer" :show-drawer="showDrawer"></app-drawer>
-        <app-toolbar class="app__toolbar" @side-icon-click="handleDrawerVisiable"></app-toolbar>
+        <app-drawer class="app__drawer"></app-drawer>
+        <app-toolbar class="app__toolbar"></app-toolbar>
         <v-content>
             <!-- Page Header -->
             <page-header></page-header>
@@ -28,13 +28,7 @@
 
         data() {
             return {
-                showDrawer: true
-            }
-        },
 
-        methods: {
-            handleDrawerVisiable() {
-                this.showDrawer = !this.showDrawer;
             }
         },
     }

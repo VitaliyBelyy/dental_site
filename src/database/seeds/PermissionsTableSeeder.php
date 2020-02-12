@@ -13,7 +13,9 @@ class PermissionsTableSeeder extends Seeder
     public function run()
     {
         $permissions = [
-
+            ['name' => 'users.viewList'],
+            ['name' => 'users.destroy'],
+            ['name' => 'users.restore'],
         ];
 
         foreach ($permissions as $key => $value) {

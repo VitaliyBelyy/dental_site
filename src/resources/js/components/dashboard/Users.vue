@@ -18,10 +18,44 @@
                     <v-card-text class="pa-0">
                         <v-data-table
                             :headers="headers"
-                            :items="desserts"
+                            :items="users"
+                            :server-items-length="totalUsers"
+                            :options.sync="options"
+                            :loading="isLoading"
                             :items-per-page="5"
+                            :footer-props="footerProps"
+                            :multi-sort="true"
                             class="elevation-1"
-                        ></v-data-table>
+                        >
+                            <template v-slot:item.fullname="{ item }">
+                                <v-chip color="red" dark v-if="!!item.deleted_at">{{ item.fullname }}</v-chip>
+                                <span v-else>{{ item.fullname }}</span>
+                            </template>
+                            <template v-slot:item.action="{ item }">
+                                <v-tooltip
+                                    bottom
+                                    v-if="!!item.deleted_at"
+                                >
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn text icon @click="restoreUser(item.id)">
+                                            <v-icon small v-on="on">mdi-delete-restore</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <span>Restore deleted user</span>
+                                </v-tooltip>
+                                <v-tooltip
+                                    bottom
+                                    v-else
+                                >
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn text icon @click="deleteUser(item.id)">
+                                            <v-icon small v-on="on">mdi-delete</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <span>Delete user</span>
+                                </v-tooltip>
+                            </template>
+                        </v-data-table>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -35,103 +69,91 @@
 
         data() {
             return {
-                search: "",
+                search: null,
+                isLoading: false,
+                options: {},
+                footerProps: {
+                    'items-per-page-options': [5, 15, 30]
+                },
                 headers: [
                     {
-                        text: 'Dessert (100g serving)',
+                        text: 'ID',
                         align: 'left',
                         sortable: false,
-                        value: 'name',
-                    },
-                    { text: 'Calories', value: 'calories' },
-                    { text: 'Fat (g)', value: 'fat' },
-                    { text: 'Carbs (g)', value: 'carbs' },
-                    { text: 'Protein (g)', value: 'protein' },
-                    { text: 'Iron (%)', value: 'iron' },
-                ],
-                desserts: [
-                    {
-                        name: 'Frozen Yogurt',
-                        calories: 159,
-                        fat: 6.0,
-                        carbs: 24,
-                        protein: 4.0,
-                        iron: '1%',
+                        value: 'id',
                     },
                     {
-                        name: 'Ice cream sandwich',
-                        calories: 237,
-                        fat: 9.0,
-                        carbs: 37,
-                        protein: 4.3,
-                        iron: '1%',
+                        text: 'Full Name',
+                        align: 'left',
+                        sortable: true,
+                        value: 'fullname',
                     },
                     {
-                        name: 'Eclair',
-                        calories: 262,
-                        fat: 16.0,
-                        carbs: 23,
-                        protein: 6.0,
-                        iron: '7%',
+                        text: 'Email',
+                        align: 'left',
+                        sortable: true,
+                        value: 'email',
                     },
                     {
-                        name: 'Cupcake',
-                        calories: 305,
-                        fat: 3.7,
-                        carbs: 67,
-                        protein: 4.3,
-                        iron: '8%',
-                    },
-                    {
-                        name: 'Gingerbread',
-                        calories: 356,
-                        fat: 16.0,
-                        carbs: 49,
-                        protein: 3.9,
-                        iron: '16%',
-                    },
-                    {
-                        name: 'Jelly bean',
-                        calories: 375,
-                        fat: 0.0,
-                        carbs: 94,
-                        protein: 0.0,
-                        iron: '0%',
-                    },
-                    {
-                        name: 'Lollipop',
-                        calories: 392,
-                        fat: 0.2,
-                        carbs: 98,
-                        protein: 0,
-                        iron: '2%',
-                    },
-                    {
-                        name: 'Honeycomb',
-                        calories: 408,
-                        fat: 3.2,
-                        carbs: 87,
-                        protein: 6.5,
-                        iron: '45%',
-                    },
-                    {
-                        name: 'Donut',
-                        calories: 452,
-                        fat: 25.0,
-                        carbs: 51,
-                        protein: 4.9,
-                        iron: '22%',
-                    },
-                    {
-                        name: 'KitKat',
-                        calories: 518,
-                        fat: 26.0,
-                        carbs: 65,
-                        protein: 7,
-                        iron: '6%',
+                        text: 'Actions',
+                        align: 'left',
+                        sortable: false,
+                        value: 'action',
                     },
                 ],
             }
+        },
+
+        computed: {
+            users() {
+                return this.$store.state.users.users || [];
+            },
+            totalUsers() {
+                return this.$store.state.users.pagination.total || 0;
+            }
+        },
+
+        // created() {
+        //     this.loadUsers();
+        // },
+
+        watch: {
+            options: {
+                handler() {
+                    this.loadUsers();
+                },
+                deep: true,
+            },
+            search() {
+                this.options.page = 1;
+                this.loadUsers();
+            }
+        },
+
+        methods: {
+            loadUsers() {
+                let params = {
+                    q: this.search,
+                    page: this.options.page || 1,
+                    limit: this.options.itemsPerPage || 5,
+                    sort_by: this.options.sortBy || [],
+                    sort_desc: this.options.sortDesc || [],
+                };
+
+                this.isLoading = true;
+                this.$store.dispatch('users/loadUsers', { params })
+                    .finally(() => {
+                        this.isLoading = false;
+                    });
+            },
+            deleteUser(id) {
+                if (confirm('Are you sure you want to delete this user?')) {
+                    this.$store.dispatch('users/deleteUser', id);
+                }
+            },
+            restoreUser(id) {
+                this.$store.dispatch('users/restoreUser', id);
+            },
         }
     }
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer class="app__drawer" :mini-variant.sync="mini" app v-model="showDrawer" :width="drawWidth">
+    <v-navigation-drawer class="app__drawer" :mini-variant.sync="mini" app v-model="drawer" :width="drawWidth">
         <v-toolbar color="primary darken-1" dark>
             <img :src="logo" width="36" height="36" alt="App logo"/>
             <v-toolbar-title class="ml-0 pl-3">
@@ -43,15 +43,10 @@
         },
 
         props: {
-            expanded: {
-                type: Boolean,
-                default: true
-            },
             drawWidth: {
                 type: [Number, String],
                 default: "260"
             },
-            showDrawer: Boolean
         },
 
         data() {
@@ -68,6 +63,14 @@
             logo() {
                 return "/storage/images/logo.svg";
             },
+            drawer: {
+                get: function () {
+                    return this.$store.state.app.drawer;
+                },
+                set: function (newValue) {
+                    this.$store.dispatch('app/setDrawerState', newValue);
+                }
+            }
         },
     }
 </script>

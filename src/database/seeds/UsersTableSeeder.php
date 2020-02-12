@@ -15,15 +15,20 @@ class UsersTableSeeder extends Seeder
     {
         $admin = User::firstOrCreate(
             ['fullname' => 'admin', 'email' => 'admin@example.com'],
-            ['password' => Hash::make('123456'), 'api_token' => uniqid(Str::random(60))]
+            [
+                'email_verified_at' => now(),
+                'password' => Hash::make('12345678'),
+                'api_token' => uniqid(Str::random(60)),
+                'remember_token' => Str::random(10)
+            ]
         );
 
         $admin->assignRole('admin');
 
-        // Create test users and assign roles to them
-        // factory(User::class, 3)->create()
-        //      ->each(function ($user) {
-        //          $user->assignRole('user');
-        //      });
+        // Create test users
+         factory(User::class, 10)->create()
+              ->each(function ($user) {
+                  $user->assignRole('user');
+              });
     }
 }

@@ -11,7 +11,7 @@
                         <v-avatar size="30px" class="mr-2">
                             <img :src="avatar" alt="Doctor"/>
                         </v-avatar>
-                        {{ (user && user.fullname) ? user.fullname : 'user' }}
+                        {{ (user && user.fullname) ? user.fullname : 'unknown user' }}
                         <v-icon class="ml-2">mdi-chevron-down</v-icon>
                     </v-btn>
                 </template>
@@ -58,12 +58,12 @@
 
         methods: {
             handleDrawerToggle() {
-                this.$emit("side-icon-click");
+                this.$store.dispatch('app/setDrawerState', !this.$store.state.app.drawer);
             },
             handleLogout() {
                 this.$store.dispatch('auth/logout')
                     .then(() => {
-                        this.$router.push({ name: 'auth.login'});
+                        this.$router.push({ name: 'auth.login' });
                     })
             },
         },
