@@ -6,6 +6,8 @@ import EmailConfirmation from '../components/auth/EmailConfirmation';
 import ForgotPassword from "../components/auth/ForgotPassword";
 import ResetPassword from "../components/auth/ResetPassword";
 import Dashboard from '../layouts/Dashboard';
+import Statistics from "../components/dashboard/Statistics";
+import Users from "../components/dashboard/Users";
 
 export default [
     {
@@ -68,11 +70,28 @@ export default [
     },
     {
         path: '/',
-        name: 'dashboard', // TODO remove
         component: Dashboard,
         meta: {
             auth: true,
         },
+        children: [
+            {
+                path: '/',
+                redirect: { name: 'dashboard.statistics' },
+            },
+            {
+                path: 'statistics',
+                name: 'dashboard.statistics',
+                component: Statistics,
+                meta: { title: "Statistics" },
+            },
+            {
+                path: 'users',
+                name: 'dashboard.users',
+                component: Users,
+                meta: { title: "Users" },
+            },
+        ]
     },
 ];
 

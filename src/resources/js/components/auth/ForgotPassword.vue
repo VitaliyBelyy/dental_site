@@ -40,6 +40,11 @@
                 </v-form>
             </v-card-text>
             <v-card-actions class="px-4 pb-6 pt-0">
+                <v-btn color="primary"
+                       text
+                       :disabled="isLoading"
+                       :to="{ name: 'auth.login' }"
+                >Cancel</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn color="primary"
                        :loading="isLoading"

@@ -40,7 +40,7 @@
                     ></v-text-field>
                 </v-form>
             </v-card-text>
-            <v-card-actions class="card-actions pt-2">
+            <v-card-actions class="card-actions pt-6">
                 <v-btn color="primary"
                        text
                        :disabled="isLoading"

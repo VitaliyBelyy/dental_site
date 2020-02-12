@@ -52,7 +52,7 @@
                 <v-btn color="primary"
                        :disabled="isLoading || confirmationError"
                        link
-                       :to="{ name: 'dashboard' }"
+                       :to="{ name: 'dashboard.statistics' }"
                 >Go to dashboard</v-btn>
             </v-card-actions>
         </v-card>

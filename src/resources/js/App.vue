@@ -1,15 +1,13 @@
 <template>
-    <v-app id="inspire">
-        <div class="progress-overlay" v-if="isLoading">
+    <div class="app-root">
+        <div class="progress" v-if="isLoading">
             <v-progress-linear
                 indeterminate
-                color="primary"
+                color="#1976d2"
             ></v-progress-linear>
         </div>
-        <v-content>
-            <router-view></router-view>
-        </v-content>
-    </v-app>
+        <router-view></router-view>
+    </div>
 </template>
 
 <script>
