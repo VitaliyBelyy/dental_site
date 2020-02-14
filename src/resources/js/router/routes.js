@@ -8,6 +8,7 @@ import ResetPassword from "../components/auth/ResetPassword";
 import Dashboard from '../layouts/Dashboard';
 import Statistics from "../components/dashboard/Statistics";
 import Users from "../components/dashboard/Users";
+import Patients from "../components/dashboard/Patients";
 
 export default [
     {
@@ -90,6 +91,12 @@ export default [
                 name: 'dashboard.users',
                 component: Users,
                 meta: { title: "Users" },
+            },
+            {
+                path: 'patients',
+                name: 'dashboard.patients',
+                component: Patients,
+                meta: { title: "Patients" },
             },
         ]
     },

@@ -20,6 +20,10 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function () {
     Route::delete('users/{id}', 'UsersController@destroy');
     # POST              /users/{id}/restore         users.restore
     Route::post('users/{id}/restore', 'UsersController@restore');
+
+    // Patients
+    # GET               /patients                        patients.index
+    Route::get('patients', 'PatientsController@index');
 });
 
 // Auth

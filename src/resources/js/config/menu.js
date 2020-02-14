@@ -9,6 +9,11 @@ const Menu = [
         icon: "mdi-account-cog",
         name: "dashboard.users"
     },
+    {
+        title: "Patients",
+        icon: "mdi-account-group",
+        name: "dashboard.patients"
+    },
 ];
 
 export default Menu;
