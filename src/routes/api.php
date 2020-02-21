@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 */
 Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function () {
     // Users
-    # GET               /users                        users.index
+    # GET               /users                      users.index
     Route::get('users', 'UsersController@index');
     # DELETE            /users/{id}                 users.destroy
     Route::delete('users/{id}', 'UsersController@destroy');
@@ -22,8 +22,32 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function () {
     Route::post('users/{id}/restore', 'UsersController@restore');
 
     // Patients
-    # GET               /patients                        patients.index
+    # GET               /patients                                   patients.index
     Route::get('patients', 'PatientsController@index');
+    # POST              /patients                                   patients.store
+    Route::post('patients', 'PatientsController@store');
+    # GET               /patients/{patient}                         patients.show
+    Route::get('patients/{patient}', 'PatientsController@show');
+    # PUT/PATCH         /patients/{patient}                         patients.update
+    Route::put('patients/{patient}', 'PatientsController@update');
+
+    # GET               /patients/{id}/service-history              patients.showServiceHistory
+    Route::get('patients/{id}/service-history', 'PatientsController@showServiceHistory');
+    # POST              /patients/{patient}/service-history         patients.createServiceHistoryRecord
+    Route::post('patients/{patient}/service-history', 'PatientsController@createServiceHistoryRecord');
+
+    # GET               /patients/{patient}/payment-history         patients.showPaymentHistory
+    Route::get('patients/{patient}/payment-history', 'PatientsController@showPaymentHistory');
+    # POST              /patients/{patient}/payment-history         patients.createPaymentHistoryRecord
+    Route::post('patients/{patient}/payment-history', 'PatientsController@createPaymentHistoryRecord');
+
+    // Anamnesis
+    # GET               /anamnesis                   anamnesis.index
+    Route::get('anamnesis', 'AnamnesisController@index');
+
+    // Services
+    # GET               /services                    services.index
+    Route::get('services', 'ServicesController@index');
 });
 
 // Auth

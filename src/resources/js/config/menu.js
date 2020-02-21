@@ -5,14 +5,15 @@ const Menu = [
         name: "dashboard.statistics"
     },
     {
-        title: "Users",
-        icon: "mdi-account-cog",
-        name: "dashboard.users"
-    },
-    {
         title: "Patients",
         icon: "mdi-account-group",
         name: "dashboard.patients"
+    },
+    {
+        title: "Users",
+        icon: "mdi-account-cog",
+        name: "dashboard.users",
+        admin: true
     },
 ];
 

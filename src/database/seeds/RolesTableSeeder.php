@@ -18,7 +18,14 @@ class RolesTableSeeder extends Seeder
         $user = Role::firstOrCreate(['name' => 'user']);
 
         $permissionsList = [
-
+            'patients.viewList',
+            'patients.store',
+            'patients.view',
+            'patients.update',
+            'patients.viewServiceHistory',
+            'patients.createServiceHistoryRecord',
+            'patients.viewPaymentHistory',
+            'patients.createPaymentHistoryRecord',
         ];
 
         $user->syncPermissions(Permission::whereIn('name', $permissionsList)->get());

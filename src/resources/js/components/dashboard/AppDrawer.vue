@@ -3,7 +3,7 @@
         <v-toolbar color="primary darken-1" dark>
             <img :src="logo" width="36" height="36" alt="App logo"/>
             <v-toolbar-title class="ml-0 pl-3">
-                <span class="hidden-sm-and-down">Vue Material</span>
+                <span class="hidden-sm-and-down">Dental clinic</span>
             </v-toolbar-title>
         </v-toolbar>
 
@@ -12,10 +12,9 @@
                 <v-list-item-group color="primary">
                     <v-list-item
                         v-for="item in menu"
-                        :to="!item.href ? { name: item.name } : null"
-                        :href="item.href"
+                        v-if="item.admin ? isAdmin : true"
                         ripple="ripple"
-                        :disabled="item.disabled"
+                        :to="item.name ? { name: item.name } : null"
                         :key="item.name"
                     >
                         <v-list-item-icon v-if="item.icon">
@@ -70,6 +69,9 @@
                 set: function (newValue) {
                     this.$store.dispatch('app/setDrawerState', newValue);
                 }
+            },
+            isAdmin() {
+                return this.$store.getters['auth/isAdmin'];
             }
         },
     }

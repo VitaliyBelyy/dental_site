@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Patient extends Model
 {
+    const MALE = 0;
+    const FEMALE = 1;
+
+    const GENDERS = [
+        self::MALE,
+        self::FEMALE,
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -41,5 +49,20 @@ class Patient extends Model
     public function anamnesis()
     {
         return $this->belongsTo('App\Models\Anamnesis');
+    }
+
+    public function services()
+    {
+        return $this->belongsToMany('App\Models\Service')
+            ->withTimestamps()
+            ->withPivot([
+                'count',
+                'date',
+            ]);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany('App\Models\Payment');
     }
 }

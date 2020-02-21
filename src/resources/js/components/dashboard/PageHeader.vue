@@ -1,8 +1,8 @@
 <template>
-    <v-container fluid class="pt-6">
+    <v-container fluid class="pt-6" v-if="pageTitle">
         <v-row class="ma-0" justify="center">
             <v-col cols="12" class="py-0">
-                <h3 class="page-header">{{ $route.meta.title || '' }}</h3>
+                <h3 class="page-header">{{ pageTitle }}</h3>
             </v-col>
         </v-row>
     </v-container>
@@ -17,6 +17,12 @@ export default {
 
         }
     },
+
+    computed: {
+        pageTitle() {
+            return this.$route.meta.title || '';
+        }
+    }
 }
 </script>
 

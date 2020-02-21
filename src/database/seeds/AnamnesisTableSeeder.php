@@ -15,13 +15,11 @@ class AnamnesisTableSeeder extends Seeder
         $names = ["Гипертония", "Гепатит", "Аллергия", "Гипотония", "Гайморит"];
 
         $toArr = function($name) {
-            return [
-                'name' => $name,
-                'created_at' => now(),
-                'updated_At' => now()
-            ];
+            return compact('name');
         };
 
-        Anamnesis::insert(array_map($toArr, $names));
+        foreach (array_map($toArr, $names) as $key => $value) {
+            Anamnesis::updateOrCreate($value);
+        }
     }
 }

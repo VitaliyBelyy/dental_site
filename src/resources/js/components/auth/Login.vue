@@ -13,6 +13,7 @@
                         maxlength="255"
                         :error-messages="emailErrors"
                         @blur="$v.email.$touch()"
+                        @keyup.native.enter="submit"
                     ></v-text-field>
 
                     <v-text-field
@@ -26,6 +27,7 @@
                         maxlength="20"
                         :error-messages="passwordErrors"
                         @blur="$v.password.$touch()"
+                        @keyup.native.enter="submit"
                     ></v-text-field>
 
                     <div class="remember">

@@ -24,12 +24,11 @@
                             :loading="isLoading"
                             :items-per-page="5"
                             :footer-props="footerProps"
-                            :multi-sort="true"
                             class="elevation-1"
                         >
-                            <template v-slot:item.fullname="{ item }">
-                                <v-chip color="red" dark v-if="!!item.deleted_at">{{ item.fullname }}</v-chip>
-                                <span v-else>{{ item.fullname }}</span>
+                            <template v-slot:item.name="{ item }">
+                                <v-chip color="red" dark v-if="!!item.deleted_at">{{ item.name }}</v-chip>
+                                <span v-else>{{ item.name }}</span>
                             </template>
                             <template v-slot:item.action="{ item }">
                                 <v-tooltip
@@ -83,10 +82,10 @@
                         value: 'id',
                     },
                     {
-                        text: 'Full Name',
+                        text: 'Name',
                         align: 'left',
                         sortable: true,
-                        value: 'fullname',
+                        value: 'name',
                     },
                     {
                         text: 'Email',
@@ -113,10 +112,6 @@
             }
         },
 
-        // created() {
-        //     this.loadUsers();
-        // },
-
         watch: {
             options: {
                 handler() {
@@ -136,8 +131,8 @@
                     q: this.search,
                     page: this.options.page || 1,
                     limit: this.options.itemsPerPage || 5,
-                    sort_by: this.options.sortBy || [],
-                    sort_desc: this.options.sortDesc || [],
+                    sort_by: this.options.sortBy || null,
+                    sort_desc: this.options.sortDesc || null,
                 };
 
                 this.isLoading = true;

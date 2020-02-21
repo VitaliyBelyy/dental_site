@@ -36,6 +36,8 @@ class HttpClient {
     delete(url, config = {}) {
         return this._client.delete(url, config);
     }
+
+
 }
 
 export default HttpClient;

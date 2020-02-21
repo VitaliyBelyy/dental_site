@@ -11,8 +11,12 @@
                             placeholder="Type something"
                             v-model="search"
                             hide-details
-                            class="hidden-sm-and-down"
+                            class="hidden-sm-and-down mr-4"
                         ></v-text-field>
+                        <v-btn color="primary" link :to="{ name: 'dashboard.create-patient' }">
+                            <v-icon left>mdi-plus</v-icon>
+                            Add new
+                        </v-btn>
                     </v-toolbar>
                     <v-divider></v-divider>
                     <v-card-text class="pa-0">
@@ -24,9 +28,14 @@
                             :loading="isLoading"
                             :items-per-page="5"
                             :footer-props="footerProps"
-                            :multi-sort="true"
                             class="elevation-1"
                         >
+                            <template v-slot:item.avatar="{ item }">
+                                <v-avatar size="32">
+                                    <img :src="item.image_path" :alt="item.name"/>
+                                </v-avatar>
+                            </template>
+
                             <template v-slot:item.action="{ item }">
                                 <v-menu left offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">
                                     <template v-slot:activator="{ on }">
@@ -37,20 +46,17 @@
 
                                     <v-list class="pa-0">
                                         <v-list-item
-                                            v-for="(item, index) in patientActions"
-                                            :to="!item.href ? { name: item.name } : null"
-                                            :href="item.href"
-                                            @click="() => item.click(item.id)"
-                                            ripple="ripple"
-                                            :disabled="item.disabled"
+                                            v-for="(menuItem, index) in patientActions"
+                                            @click="menuItem.click ? menuItem.click(item.id) : null"
                                             :key="index"
+                                            ripple="ripple"
                                         >
-                                            <v-list-item-content>
-                                                <v-list-item-title>{{ item.title }}</v-list-item-title>
-                                            </v-list-item-content>
-                                            <v-list-item-icon v-if="item.icon">
-                                                <v-icon>{{ item.icon }}</v-icon>
+                                            <v-list-item-icon v-if="menuItem.icon" class="mr-4">
+                                                <v-icon>{{ menuItem.icon }}</v-icon>
                                             </v-list-item-icon>
+                                            <v-list-item-content>
+                                                <v-list-item-title>{{ menuItem.title }}</v-list-item-title>
+                                            </v-list-item-content>
                                         </v-list-item>
                                     </v-list>
                                 </v-menu>
@@ -88,6 +94,12 @@
                         value: 'id',
                     },
                     {
+                        text: 'Avatar',
+                        align: 'left',
+                        sortable: false,
+                        value: 'avatar',
+                    },
+                    {
                         text: 'Name',
                         align: 'left',
                         sortable: true,
@@ -96,7 +108,7 @@
                     {
                         text: 'Phone',
                         align: 'left',
-                        sortable: true,
+                        sortable: false,
                         value: 'phone',
                     },
                     {
@@ -108,20 +120,14 @@
                     {
                         text: 'Gender',
                         align: 'left',
-                        sortable: false,
+                        sortable: true,
                         value: 'gender',
                     },
                     {
                         text: 'Birth date',
                         align: 'left',
-                        sortable: false,
+                        sortable: true,
                         value: 'birth_date',
-                    },
-                    {
-                        text: 'Anamnesis',
-                        align: 'left',
-                        sortable: false,
-                        value: 'anamnesis',
                     },
                     {
                         text: 'Actions',
@@ -132,9 +138,25 @@
                 ],
                 patientActions: [
                     {
-                        icon: "mdi-exit-to-app",
-                        href: "#",
-                        title: 'Test',
+                        icon: "mdi-eye",
+                        click: (id) => {
+                            this.$router.push({name: 'dashboard.patient-profile', params: { id }});
+                        },
+                        title: "Show patient profile",
+                    },
+                    {
+                        icon: "mdi-account-details",
+                        click: (id) => {
+                            this.$router.push({name: 'dashboard.service-history', params: { id }});
+                        },
+                        title: "Show service history",
+                    },
+                    {
+                        icon: "mdi-account-cash",
+                        click: (id) => {
+                            this.$router.push({name: 'dashboard.payment-history', params: { id }});
+                        },
+                        title: "Show payment history",
                     },
                 ]
             }
@@ -144,15 +166,21 @@
             patients() {
                 if (this.$store.state.patients.patients && this.$store.state.patients.patients.length) {
                     return this.$store.state.patients.patients.map(patient => {
-                       return {
-                           'id': patient.id,
-                           'name': patient.first_name + ' ' + patient.last_name,
-                           'phone': patient.phone || null,
-                           'email': patient.email || null,
-                           'gender': (+patient.gender === MALE) ? 'male' : (+patient.gender === FEMALE) ? 'female' : null,
-                           'birth_date': patient.birth_date ? moment(patient.birth_date).format('DD-MM-YYYY') : null,
-                           'anamnesis': (patient.anamnesis && patient.anamnesis.name) ? patient.anamnesis.name : null,
-                       };
+                        let gender = null;
+
+                        if (patient.gender || patient.gender === 0) {
+                            gender = (+patient.gender === MALE) ? 'male' : (+patient.gender === FEMALE) ? 'female' : null;
+                        }
+
+                        return {
+                            'id': patient.id,
+                            'name': patient.name,
+                            'phone': patient.phone || null,
+                            'email': patient.email || null,
+                            'gender': gender,
+                            'birth_date': patient.birth_date ? moment(patient.birth_date).format('DD-MM-YYYY') : null,
+                            'image_path': patient.image_path || '/storage/images/no-profile-image.png',
+                        };
                     });
                 }
 

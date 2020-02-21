@@ -14,22 +14,21 @@ class UsersController extends Controller
     public function index(UsersIndex $request)
     {
         $limit = $request->get('limit') ?? 10;
-        $sortBy = $request->get('sort_by') ?? [];
-        $sortDesc = $request->get('sort_desc') ?? [];
         $users = User::withTrashed()
             ->when($request->get('q'), function(Builder $query) use (&$request) {
                 $query->where('id', 'LIKE', '%'. $request->get('q') .'%')
-                    ->orWhere('fullname', 'LIKE', '%'. $request->get('q') .'%')
+                    ->orWhere('name', 'LIKE', '%'. $request->get('q') .'%')
                     ->orWhere('email', 'LIKE', '%'. $request->get('q') .'%');
             })
-            ->where('id', '!=', auth()->user()->id);
+            ->when($request->get('sort_by'), function(Builder $query) use (&$request) {
+                $direction = $request->get('sort_desc');
+                $query->orderBy($request->get('sort_by'), (isset($direction) && json_decode($direction)) ? 'DESC' : 'ASC');
+            })
+            ->where('id', '!=', auth()->user()->id)
+            ->orderBy('created_at', 'DESC')
+            ->paginate($limit);
 
-        foreach ($sortBy as $index => $column) {
-            $direction = isset($sortDesc[$index]) ? json_decode($sortDesc[$index]) : false;
-            $users->orderBy($column, $direction ? 'DESC' : 'ASC');
-        }
-
-        return response()->api($users->paginate($limit));
+        return response()->api($users);
     }
 
     public function destroy(UsersDestroy $request, $id)

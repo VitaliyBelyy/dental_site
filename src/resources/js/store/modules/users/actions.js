@@ -4,7 +4,7 @@ const END_POINT = '/api/users';
 
 let actions = {
     loadUsers: ({ commit }, payload) => {
-        const url = `${END_POINT}?${queryString.stringify(payload.params, {encode: false, arrayFormat: 'bracket'})}`;
+        const url = `${END_POINT}?${queryString.stringify(payload.params, {encode: false})}`;
 
         return new Promise((resolve, reject) => {
             window.httpClient.get(url)

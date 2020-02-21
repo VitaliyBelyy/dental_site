@@ -5,14 +5,15 @@
             <v-card-text class="card-content">
                 <v-form>
                     <v-text-field
-                        label="Full name"
-                        name="fullname"
+                        label="Name"
+                        name="name"
                         prepend-icon="mdi-account-circle"
                         type="text"
-                        v-model="fullname"
+                        v-model="name"
                         maxlength="255"
-                        :error-messages="fullnameErrors"
-                        @blur="$v.fullname.$touch()"
+                        :error-messages="nameErrors"
+                        @blur="$v.name.$touch()"
+                        @keyup.native.enter="submit"
                     ></v-text-field>
 
                     <v-text-field
@@ -24,6 +25,7 @@
                         maxlength="255"
                         :error-messages="emailErrors"
                         @blur="$v.email.$touch()"
+                        @keyup.native.enter="submit"
                     ></v-text-field>
 
                     <v-text-field
@@ -37,12 +39,15 @@
                         maxlength="20"
                         :error-messages="passwordErrors"
                         @blur="$v.password.$touch()"
+                        @keyup.native.enter="submit"
                     ></v-text-field>
                 </v-form>
             </v-card-text>
             <v-card-actions class="card-actions pt-6">
                 <v-btn color="primary"
                        text
+                       link
+                       exact
                        :disabled="isLoading"
                        :to="{ name: 'auth.login' }"
                 >Cancel</v-btn>
@@ -63,7 +68,7 @@
 
         data() {
             return {
-                fullname: '',
+                name: '',
                 email: '',
                 password: '',
                 showPassword: false,
@@ -72,7 +77,7 @@
         },
 
         validations: {
-            fullname: {
+            name: {
                 required,
             },
             email: {
@@ -86,10 +91,10 @@
         },
 
         computed: {
-            fullnameErrors() {
-                const errors = this.$store.state.auth.validationErrors.fullname || [];
-                if (!this.$v.fullname.$dirty) return errors;
-                !this.$v.fullname.required && errors.push('The full name is required.');
+            nameErrors() {
+                const errors = this.$store.state.auth.validationErrors.name || [];
+                if (!this.$v.name.$dirty) return errors;
+                !this.$v.name.required && errors.push('The name is required.');
                 return errors;
             },
             emailErrors() {
@@ -112,10 +117,10 @@
                 this.$v.$touch();
 
                 if (!this.$v.$invalid) {
-                    const {fullname, email, password} = this;
+                    const {name, email, password} = this;
 
                     this.isLoading = true;
-                    this.$store.dispatch('auth/register', {data: {fullname, email, password}})
+                    this.$store.dispatch('auth/register', {data: {name, email, password}})
                         .then(() => {
                             this.$store.dispatch('auth/clearValidationErrors');
                             this.$router.push({ name: 'auth.email-verification' });

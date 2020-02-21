@@ -14,7 +14,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $admin = User::firstOrCreate(
-            ['fullname' => 'admin', 'email' => 'admin@example.com'],
+            ['name' => 'admin', 'email' => 'admin@example.com'],
             [
                 'email_verified_at' => now(),
                 'password' => Hash::make('12345678'),

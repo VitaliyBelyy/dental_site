@@ -9,6 +9,13 @@ import Dashboard from '../layouts/Dashboard';
 import Statistics from "../components/dashboard/Statistics";
 import Users from "../components/dashboard/Users";
 import Patients from "../components/dashboard/Patients";
+import CreatePatient from "../components/dashboard/CreatePatient";
+import PatientProfile from "../components/dashboard/PatientProfile";
+import EditPatient from "../components/dashboard/EditPatient";
+import ServiceHistory from "../components/dashboard/ServiceHistory";
+import CreateServiceHistoryRecord from "../components/dashboard/CreateServiceHistoryRecord";
+import PaymentHistory from "../components/dashboard/PaymentHistory";
+import CreatePaymentHistoryRecord from "../components/dashboard/CreatePaymentHistoryRecord";
 
 export default [
     {
@@ -97,6 +104,47 @@ export default [
                 name: 'dashboard.patients',
                 component: Patients,
                 meta: { title: "Patients" },
+            },
+            {
+                path: 'patients/create',
+                name: 'dashboard.create-patient',
+                component: CreatePatient,
+            },
+            {
+                path: 'patients/:id',
+                name: 'dashboard.patient-profile',
+                component: PatientProfile,
+                props: true
+            },
+            {
+                path: 'patients/:id/edit',
+                name: 'dashboard.edit-patient',
+                component: EditPatient,
+                props: true
+            },
+            {
+                path: 'patients/:id/service-history',
+                name: 'dashboard.service-history',
+                component: ServiceHistory,
+                props: true
+            },
+            {
+                path: 'patients/:id/create-service-history-record',
+                name: 'dashboard.create-service-history-record',
+                component: CreateServiceHistoryRecord,
+                props: true
+            },
+            {
+                path: 'patients/:id/payment-history',
+                name: 'dashboard.payment-history',
+                component: PaymentHistory,
+                props: true
+            },
+            {
+                path: 'patients/:id/create-payment-history-record',
+                name: 'dashboard.create-payment-history-record',
+                component: CreatePaymentHistoryRecord,
+                props: true
             },
         ]
     },

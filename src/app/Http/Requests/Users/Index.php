@@ -28,8 +28,8 @@ class Index extends ApiRequest
             'limit' => 'nullable|integer|min:1|max:50',
             'page' => 'nullable|integer|min:1',
             'q' => 'nullable|string|max:255',
-            'sort_by' => 'nullable|array',
-            'sort_desc' => 'nullable|array',
+            'sort_by' => 'nullable|string|max:64',
+            'sort_desc' => 'nullable|string|max:5',
         ];
     }
 

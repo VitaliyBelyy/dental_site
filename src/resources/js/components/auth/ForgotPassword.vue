@@ -42,6 +42,8 @@
             <v-card-actions class="px-4 pb-6 pt-0">
                 <v-btn color="primary"
                        text
+                       link
+                       exact
                        :disabled="isLoading"
                        :to="{ name: 'auth.login' }"
                 >Cancel</v-btn>
