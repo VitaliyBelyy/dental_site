@@ -4,6 +4,15 @@ import Vuetify from 'vuetify';
 import Vuelidate from 'vuelidate';
 import Cookies from "js-cookie";
 
+const ignoreMessage = "The .native modifier for v-on is only valid on components but it was used on <div>.";
+Vue.config.warnHandler = function (msg, vm, trace) {
+    if (msg === ignoreMessage) {
+        msg = null;
+        vm = null;
+        trace = null;
+    }
+};
+
 // Vuex store
 import store from '@/js/store/index';
 

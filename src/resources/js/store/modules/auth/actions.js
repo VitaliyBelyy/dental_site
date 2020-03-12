@@ -14,7 +14,7 @@ let actions = {
                     let data = response.data.response;
                     let token = data.access_token;
                     let user = {
-                        name: data.name || null,
+                        full_name: data.full_name,
                         email: data.email || null,
                         emailVerificationStatus: !!data.email_verified_at,
                         roles: data.roles || [],
@@ -51,7 +51,7 @@ let actions = {
                     let data = response.data.response;
                     let token = data.access_token;
                     let user = {
-                        name: data.name || null,
+                        full_name: data.full_name,
                         email: data.email || null,
                         emailVerificationStatus: !!data.email_verified_at,
                         roles: data.roles || [],
@@ -100,7 +100,7 @@ let actions = {
                 .then(response => {
                     let data = response.data.response;
                     let user = {
-                        name: data.name || null,
+                        full_name: data.full_name,
                         email: data.email || null,
                         emailVerificationStatus: !!data.email_verified_at,
                         roles: data.roles || [],

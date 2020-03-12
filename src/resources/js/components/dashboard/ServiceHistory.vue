@@ -13,7 +13,7 @@
                             hide-details
                             class="hidden-sm-and-down mr-4"
                         ></v-text-field>
-                        <v-btn color="primary" link :to="{ name: 'dashboard.create-service-history-record', params: { id }}">
+                        <v-btn color="primary" @click="dialog = true">
                             <v-icon left>mdi-plus</v-icon>
                             Add new
                         </v-btn>
@@ -26,12 +26,21 @@
                             :server-items-length="totalHistoryItems"
                             :options.sync="options"
                             :loading="isLoading"
-                            :items-per-page="5"
+                            :items-per-page="15"
                             :footer-props="footerProps"
                             class="elevation-1"
                         >
                         </v-data-table>
                     </v-card-text>
+
+                    <service-history-form :patient-id="id"
+                                          :dialog="dialog"
+                                          :record="editedRecord"
+                                          :selected-id="selectedId"
+                                          @on-create="recordCreated"
+                                          @on-update="recordUpdated"
+                                          @on-close="closeForm"
+                    ></service-history-form>
                 </v-card>
             </v-col>
         </v-row>
@@ -39,8 +48,14 @@
 </template>
 
 <script>
+    import ServiceHistoryForm from "./ServiceHistoryForm";
+
     export default {
         name: "ServiceHistory",
+
+        components: {
+            ServiceHistoryForm,
+        },
 
         props: ['id'],
 
@@ -50,7 +65,7 @@
                 isLoading: false,
                 options: {},
                 footerProps: {
-                    'items-per-page-options': [5, 15, 30]
+                    'items-per-page-options': [15, 30, 45]
                 },
                 headers: [
                     {
@@ -78,6 +93,9 @@
                         value: 'date',
                     },
                 ],
+                dialog: false,
+                selectedId: null,
+                editedRecord: {},
             }
         },
 
@@ -108,7 +126,7 @@
                 let params = {
                     q: this.search,
                     page: this.options.page || 1,
-                    limit: this.options.itemsPerPage || 5,
+                    limit: this.options.itemsPerPage || 15,
                     sort_by: this.options.sortBy || [],
                     sort_desc: this.options.sortDesc || [],
                 };
@@ -118,6 +136,21 @@
                     .finally(() => {
                         this.isLoading = false;
                     });
+            },
+            recordCreated() {
+                this.loadServiceHistory();
+                this.closeForm();
+            },
+            recordUpdated() {
+                this.loadServiceHistory();
+                this.closeForm();
+            },
+            closeForm () {
+                this.dialog = false;
+                setTimeout(() => {
+                    this.selectedId = null;
+                    this.editedRecord = {};
+                }, 300);
             },
         }
     }

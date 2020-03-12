@@ -23,7 +23,7 @@ class AuthController extends Controller
     public function register(AuthRegister $request)
     {
         $user = User::create([
-            'name' => $request->name,
+            'full_name' => $request->full_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'api_token' => uniqid(Str::random(60)),
@@ -78,7 +78,7 @@ class AuthController extends Controller
     private function respondWithToken(Authenticatable $user)
     {
         return response()->api([
-            'name' => $user->name,
+            'full_name' => $user->full_name,
             'email' => $user->email,
             'email_verified_at' => $user->email_verified_at,
             'access_token' => $user->api_token,

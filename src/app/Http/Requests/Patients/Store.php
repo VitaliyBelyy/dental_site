@@ -27,9 +27,8 @@ class Store extends ApiRequest
     {
         return [
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:255',
+            'full_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
             'email' => 'nullable|string|email|max:255',
             'gender' => [
                 'nullable',

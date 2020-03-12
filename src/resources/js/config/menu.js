@@ -5,6 +5,11 @@ const Menu = [
         name: "dashboard.statistics"
     },
     {
+        title: "Calendar",
+        icon: "mdi-calendar-month",
+        name: "dashboard.calendar"
+    },
+    {
         title: "Patients",
         icon: "mdi-account-group",
         name: "dashboard.patients"

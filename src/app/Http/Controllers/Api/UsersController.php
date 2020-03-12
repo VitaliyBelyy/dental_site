@@ -16,9 +16,7 @@ class UsersController extends Controller
         $limit = $request->get('limit') ?? 10;
         $users = User::withTrashed()
             ->when($request->get('q'), function(Builder $query) use (&$request) {
-                $query->where('id', 'LIKE', '%'. $request->get('q') .'%')
-                    ->orWhere('name', 'LIKE', '%'. $request->get('q') .'%')
-                    ->orWhere('email', 'LIKE', '%'. $request->get('q') .'%');
+                $query->where('full_name', 'LIKE', '%'. $request->get('q') .'%');
             })
             ->when($request->get('sort_by'), function(Builder $query) use (&$request) {
                 $direction = $request->get('sort_desc');

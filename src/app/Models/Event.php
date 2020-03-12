@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Payment extends Model
+class Event extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,7 +12,7 @@ class Payment extends Model
      * @var array
      */
     protected $fillable = [
-        'patient_id', 'amount', 'date', 'notes'
+        'patient_id', 'user_id', 'start', 'end', 'status', 'details',
     ];
 
     /**
@@ -21,7 +21,7 @@ class Payment extends Model
      * @var array
      */
     protected $hidden = [
-        
+
     ];
 
     /**
@@ -30,11 +30,17 @@ class Payment extends Model
      * @var array
      */
     protected $casts = [
-        'date' => 'date',
+        'start' => 'datetime',
+        'end' => 'datetime',
     ];
 
     public function patient()
     {
         return $this->belongsTo('App\Models\Patient');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
     }
 }

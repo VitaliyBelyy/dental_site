@@ -12,7 +12,6 @@
                 <v-list-item-group color="primary">
                     <v-list-item
                         v-for="item in menu"
-                        v-if="item.admin ? isAdmin : true"
                         ripple="ripple"
                         :to="item.name ? { name: item.name } : null"
                         :key="item.name"
@@ -31,8 +30,8 @@
 </template>
 
 <script>
-    import menu from "@/js/config/menu";
     import VuePerfectScrollbar from "vue-perfect-scrollbar";
+    import menu from "@/js/config/menu";
 
     export default {
         name: "AppDrawer",
@@ -51,7 +50,6 @@
         data() {
             return {
                 mini: false,
-                menu: menu,
                 scrollSettings: {
                     maxScrollbarLength: 160
                 }
@@ -62,6 +60,12 @@
             logo() {
                 return "/storage/images/logo.svg";
             },
+            isAdmin() {
+                return this.$store.getters['auth/isAdmin'];
+            },
+            menu() {
+                return menu.filter(item => item.admin ? this.isAdmin : true);
+            },
             drawer: {
                 get: function () {
                     return this.$store.state.app.drawer;
@@ -70,9 +74,6 @@
                     this.$store.dispatch('app/setDrawerState', newValue);
                 }
             },
-            isAdmin() {
-                return this.$store.getters['auth/isAdmin'];
-            }
         },
     }
 </script>

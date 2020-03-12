@@ -22,15 +22,14 @@ class PatientsController extends Controller
     public function index(PatientsIndex $request)
     {
         $limit = $request->get('limit') ?? 10;
-        $users = Patient::query()
-            ->select(DB::raw('id, CONCAT(first_name, " ", last_name) as name, phone, email, gender, birth_date, hash_file_name'))
+        $patients = Patient::query()
             ->when(!auth()->user()->hasRole('admin'), function(Builder $query) {
                 $query->where('user_id', '=', auth()->user()->id);
             })
             ->when($request->get('q'), function(Builder $query) use (&$request) {
                 $query->where('id', 'LIKE', '%'. $request->get('q') .'%')
-                    ->orWhere('first_name', 'LIKE', '%'. $request->get('q') .'%')
-                    ->orWhere('last_name', 'LIKE', '%'. $request->get('q') .'%');
+                    ->orWhere('full_name', 'LIKE', '%'. $request->get('q') .'%')
+                    ->orWhere('phone', 'LIKE', '%'. $request->get('q') .'%');
             })
             ->when($request->get('sort_by'), function(Builder $query) use (&$request) {
                 $direction = $request->get('sort_desc');
@@ -39,7 +38,7 @@ class PatientsController extends Controller
             ->orderBy('created_at', 'DESC')
             ->paginate($limit);
 
-        $users->getCollection()->transform(function ($item, $key) {
+        $patients->getCollection()->transform(function ($item, $key) {
             if (isset($item->hash_file_name)) {
                 $item->image_path = Storage::disk('patient_avatars')->url($item->hash_file_name);
             }
@@ -47,7 +46,7 @@ class PatientsController extends Controller
             return $item;
         });
 
-        return response()->api($users);
+        return response()->api($patients);
     }
 
     public function store(PatientsStore $request) {
@@ -65,8 +64,7 @@ class PatientsController extends Controller
         }
 
         $patient = Patient::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
+            'full_name' => $request->full_name,
             'phone' => $request->phone ?? null,
             'email' => $request->email ?? null,
             'gender' => $request->gender ?? null,
@@ -111,8 +109,7 @@ class PatientsController extends Controller
         }
 
         $patient->update([
-            'first_name' => $request->first_name ?? $patient->first_name,
-            'last_name' => $request->last_name ?? $patient->last_name,
+            'full_name' => $request->full_name ?? $patient->full_name,
             'phone' => $request->phone ?? $patient->phone,
             'email' => $request->email ?? $patient->email,
             'gender' => $request->gender ?? $patient->gender,
@@ -137,8 +134,7 @@ class PatientsController extends Controller
             ->select(DB::raw('patient_service.id, patient_service.count * services.price as cost, services.name, patient_service.date'));
 
         if (isset($search)) {
-            $query = $query->where('services.name', 'LIKE', '%' . $request->get('q') . '%')
-                ->orWhere('patient_service.date', 'LIKE', '%' . $request->get('q') . '%');
+            $query = $query->where('services.name', 'LIKE', '%' . $request->get('q') . '%');
         }
 
         if (isset($sortBy)) {
@@ -152,7 +148,9 @@ class PatientsController extends Controller
     }
 
     public function createServiceHistoryRecord(PatientsCreateServiceHistoryRecord $request, Patient $patient) {
-        $patient->services()->attach($request->service_id, ['count' => $request->count, 'date' => $request->date]);
+        $patient->services()->attach($request->service_id, [
+            'count' => $request->count, 'date' => $request->date
+        ]);
 
         return response()->api(null, 200);
     }

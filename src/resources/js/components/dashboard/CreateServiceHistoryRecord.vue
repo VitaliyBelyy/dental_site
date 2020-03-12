@@ -22,10 +22,12 @@
                                             :items="services"
                                             item-text="name"
                                             return-object
-                                            label="Services"
                                             :error-messages="servicesErrors"
                                             @blur="$v.form.service.$touch()"
                                         >
+                                            <template v-slot:label>
+                                                Service <span class="red--text">*</span>
+                                            </template>
                                             <template v-slot:item='{item}'>
                                                 {{ item.name }}
                                                 <v-spacer></v-spacer>
@@ -72,37 +74,38 @@
                                             <v-icon large>mdi-plus</v-icon>
                                         </v-btn>
                                     </v-col>
-                                    <v-col cols="12">
-                                        <v-dialog
-                                            ref="dialog"
-                                            v-model="modal"
-                                            :return-value.sync="form.date"
-                                            persistent
-                                            width="290px"
+                                    <v-col cols="12" class="pt-0">
+                                        <v-menu
+                                            v-model="menu"
+                                            :close-on-content-click="false"
+                                            transition="scale-transition"
+                                            offset-y
+                                            min-width="280px"
                                         >
                                             <template v-slot:activator="{ on }">
                                                 <v-text-field
+                                                    v-on="on"
+                                                    v-model="form.date"
+                                                    append-icon="event"
                                                     dense
                                                     outlined
-                                                    v-model="form.date"
-                                                    label="Date"
-                                                    append-icon="mdi-calendar"
                                                     readonly
-                                                    v-on="on"
-                                                ></v-text-field>
+                                                    :error-messages="dateErrors"
+                                                    @blur="$v.form.date.$touch()"
+                                                >
+                                                    <template v-slot:label>
+                                                        Date <span class="red--text">*</span>
+                                                    </template>
+                                                </v-text-field>
                                             </template>
-                                            <v-date-picker v-model="form.date" scrollable>
-                                                <v-spacer></v-spacer>
-                                                <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
-                                                <v-btn text color="primary" @click="$refs.dialog.save(form.date)">OK</v-btn>
-                                            </v-date-picker>
-                                        </v-dialog>
+                                            <v-date-picker
+                                                v-model="form.date"
+                                                @input="menu = false"
+                                            ></v-date-picker>
+                                        </v-menu>
                                     </v-col>
                                     <v-col cols="12" class="pt-0">
-                                        <div class="total_price">
-                                            <b class="total_price__heading">Total: </b>
-                                            <span class="total_price__value">{{ total }}</span>
-                                        </div>
+                                        <small><span class="red--text">*</span> indicates required field</small>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -110,6 +113,10 @@
                     </v-card-text>
 
                     <v-card-actions class="pt-0 pb-4 px-6">
+                        <div class="total_price">
+                            <b class="total_price__heading">Total: </b>
+                            <span class="total_price__value">{{ total }}</span>
+                        </div>
                         <v-spacer></v-spacer>
                         <v-btn color="primary"
                                :loading="isLoading"
@@ -123,6 +130,7 @@
 </template>
 
 <script>
+    import moment from 'moment';
     import { required } from 'vuelidate/lib/validators';
 
     export default {
@@ -135,6 +143,9 @@
                 service: {
                     required,
                 },
+                date: {
+                    required
+                },
             }
         },
 
@@ -142,13 +153,13 @@
             return {
                 isLoading: false,
                 isLoadingServices: false,
-                modal: false,
+                menu: false,
                 minCount: 1,
                 maxCount: 10,
                 form: {
                     service: null,
                     count: 1,
-                    date: new Date().toISOString().substr(0, 10),
+                    date: moment().format('YYYY-MM-DD'),
                 }
             }
         },
@@ -161,6 +172,12 @@
                 const errors = [];
                 if (!this.$v.form.service.$dirty) return errors;
                 !this.$v.form.service.required && errors.push('The service field is required.');
+                return errors;
+            },
+            dateErrors() {
+                const errors = [];
+                if (!this.$v.form.date.$dirty) return errors;
+                !this.$v.form.date.required && errors.push('The date field is required.');
                 return errors;
             },
             total() {
@@ -224,11 +241,5 @@
     }
     .total_price {
         font-size: 18px;
-    }
-    .select-progress {
-        position: absolute;
-        right: 15px;
-        top: 10px;
-        background: #fff;
     }
 </style>

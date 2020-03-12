@@ -26,9 +26,8 @@
                             :footer-props="footerProps"
                             class="elevation-1"
                         >
-                            <template v-slot:item.name="{ item }">
-                                <v-chip color="red" dark v-if="!!item.deleted_at">{{ item.name }}</v-chip>
-                                <span v-else>{{ item.name }}</span>
+                            <template v-slot:item.full_name="{ item }">
+                                <span :class="{ 'text--crossed': !!item.deleted_at}">{{ item.full_name }}</span>
                             </template>
                             <template v-slot:item.action="{ item }">
                                 <v-tooltip
@@ -82,15 +81,15 @@
                         value: 'id',
                     },
                     {
-                        text: 'Name',
+                        text: 'Full name',
                         align: 'left',
                         sortable: true,
-                        value: 'name',
+                        value: 'full_name',
                     },
                     {
                         text: 'Email',
                         align: 'left',
-                        sortable: true,
+                        sortable: false,
                         value: 'email',
                     },
                     {
@@ -154,5 +153,7 @@
 </script>
 
 <style scoped>
-
+    .text--crossed {
+        text-decoration: line-through;
+    }
 </style>

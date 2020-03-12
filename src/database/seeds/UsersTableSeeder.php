@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UsersTableSeeder extends Seeder
@@ -14,7 +15,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $admin = User::firstOrCreate(
-            ['name' => 'admin', 'email' => 'admin@example.com'],
+            ['full_name' => 'admin', 'email' => 'admin@example.com'],
             [
                 'email_verified_at' => now(),
                 'password' => Hash::make('12345678'),

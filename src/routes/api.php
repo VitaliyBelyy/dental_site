@@ -48,6 +48,16 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function () {
     // Services
     # GET               /services                    services.index
     Route::get('services', 'ServicesController@index');
+
+    // Events
+    # GET               /events                      events.index
+    Route::get('events', 'EventsController@index');
+    # POST              /patients                    patients.store
+    Route::post('events', 'EventsController@store');
+    # PUT/PATCH         /events/{event}              patients.update
+    Route::put('events/{event}', 'EventsController@update');
+    # DELETE            /events/{event}              users.destroy
+    Route::delete('events/{event}', 'EventsController@destroy');
 });
 
 // Auth

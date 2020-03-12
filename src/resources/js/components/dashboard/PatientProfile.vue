@@ -28,36 +28,36 @@
                             <v-col cols="12" sm="8">
                                 <div class="patient-info__group">
                                     <h4 class="patient-info__group-title">Personal info</h4>
-                                    <v-row v-if="patient.id" class="patient-info__group-row">
+                                    <v-row class="patient-info__group-row">
                                         <v-col cols="12" sm="3" class="patient-info__group-column">
                                             <h5 class="patient-info__details-heading">ID:</h5>
                                         </v-col>
                                         <v-col cols="12" sm="9" class="patient-info__group-column">
-                                            <p class="patient-info__details">{{ patient.id }}</p>
+                                            <p class="patient-info__details">{{ patient.id ? patient.id : '-' }}</p>
                                         </v-col>
                                     </v-row>
-                                    <v-row v-if="patient.first_name && patient.last_name" class="patient-info__group-row">
+                                    <v-row class="patient-info__group-row">
                                         <v-col cols="12" sm="3" class="patient-info__group-column">
-                                            <h5 class="patient-info__details-heading">Name:</h5>
+                                            <h5 class="patient-info__details-heading">Full Name:</h5>
                                         </v-col>
                                         <v-col cols="12" sm="9" class="patient-info__group-column">
-                                            <p class="patient-info__details">{{ patient.first_name + ' ' + patient.last_name }}</p>
+                                            <p class="patient-info__details">{{ patient.full_name ? patient.full_name : '-' }}</p>
                                         </v-col>
                                     </v-row>
-                                    <v-row v-if="gender" class="patient-info__group-row">
+                                    <v-row class="patient-info__group-row">
                                         <v-col cols="12" sm="3" class="patient-info__group-column">
                                             <h5 class="patient-info__details-heading">Gender:</h5>
                                         </v-col>
                                         <v-col cols="12" sm="9" class="patient-info__group-column">
-                                            <p class="patient-info__details">{{ gender }}</p>
+                                            <p class="patient-info__details">{{ patientGender ? patientGender : '-' }}</p>
                                         </v-col>
                                     </v-row>
-                                    <v-row v-if="birthDate" class="patient-info__group-row">
+                                    <v-row class="patient-info__group-row">
                                         <v-col cols="12" sm="3" class="patient-info__group-column">
                                             <h5 class="patient-info__details-heading">Birth date:</h5>
                                         </v-col>
                                         <v-col cols="12" sm="9" class="patient-info__group-column">
-                                            <p class="patient-info__details">{{ birthDate }}</p>
+                                            <p class="patient-info__details">{{ patientBirthDate ? patientBirthDate : '-' }}</p>
                                         </v-col>
                                     </v-row>
                                 </div>
@@ -66,20 +66,20 @@
 
                                 <div class="patient-info__group">
                                     <h4 class="patient-info__group-title">Contact details</h4>
-                                    <v-row v-if="patient.phone" class="patient-info__group-row">
+                                    <v-row class="patient-info__group-row">
                                         <v-col cols="12" sm="3" class="patient-info__group-column">
                                             <h5 class="patient-info__details-heading">Phone:</h5>
                                         </v-col>
                                         <v-col cols="12" sm="9" class="patient-info__group-column">
-                                            <p class="patient-info__details">{{ patient.phone }}</p>
+                                            <p class="patient-info__details">{{ patient.phone ? patient.phone : '-' }}</p>
                                         </v-col>
                                     </v-row>
-                                    <v-row v-if="patient.email" class="patient-info__group-row">
+                                    <v-row class="patient-info__group-row">
                                         <v-col cols="12" sm="3" class="patient-info__group-column">
                                             <h5 class="patient-info__details-heading">Email address:</h5>
                                         </v-col>
                                         <v-col cols="12" sm="9" class="patient-info__group-column">
-                                            <p class="patient-info__details">{{ patient.email }}</p>
+                                            <p class="patient-info__details">{{ patient.email ? patient.email : '-' }}</p>
                                         </v-col>
                                     </v-row>
                                 </div>
@@ -88,20 +88,20 @@
 
                                 <div class="patient-info__group">
                                     <h4 class="patient-info__group-title">Medical info</h4>
-                                    <v-row v-if="patient.anamnesis && patient.anamnesis.name" class="patient-info__group-row">
+                                    <v-row class="patient-info__group-row">
                                         <v-col cols="12" sm="3" class="patient-info__group-column">
                                             <h5 class="patient-info__details-heading">Anamnesis:</h5>
                                         </v-col>
                                         <v-col cols="12" sm="9" class="patient-info__group-column">
-                                            <p class="patient-info__details">{{ patient.anamnesis.name }}</p>
+                                            <p class="patient-info__details">{{ patient.anamnesis && patient.anamnesis.name ? patient.anamnesis.name : '-' }}</p>
                                         </v-col>
                                     </v-row>
-                                    <v-row v-if="patient.medical_info" class="patient-info__group-row">
+                                    <v-row class="patient-info__group-row">
                                         <v-col cols="12" sm="3" class="patient-info__group-column">
                                             <h5 class="patient-info__details-heading">Notes:</h5>
                                         </v-col>
                                         <v-col cols="12" sm="9" class="patient-info__group-column">
-                                            <p class="patient-info__details">{{ patient.medical_info }}</p>
+                                            <p class="patient-info__details">{{ patient.medical_info ? patient.medical_info : '-' }}</p>
                                         </v-col>
                                     </v-row>
                                 </div>
@@ -138,14 +138,14 @@
             avatar() {
                 return this.patient.image_path || '/storage/images/no-profile-image.png';
             },
-            gender() {
+            patientGender() {
                 if (this.patient.gender || this.patient.gender === 0) {
                     return (+this.patient.gender === MALE) ? 'male' : (+this.patient.gender === FEMALE) ? 'female' : null;
                 }
 
                 return null;
             },
-            birthDate() {
+            patientBirthDate() {
                 return this.patient.birth_date ? moment(this.patient.birth_date).format('DD-MM-YYYY') : null;
             }
         },
@@ -170,9 +170,9 @@
     .patient-info__group-title {
         font-weight: 400;
         letter-spacing: normal;
-        font-size: 22px;
+        font-size: 26px;
         text-transform: capitalize;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
     }
     .patient-info__details-heading {
         font-size: 14px;
@@ -186,6 +186,6 @@
         margin-right: -8px;
     }
     .patient-info__group-column {
-        padding: 8px;
+        padding: 6px;
     }
 </style>

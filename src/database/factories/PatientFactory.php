@@ -9,8 +9,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Patient::class, function (Faker $faker) {
     return [
-        'first_name' => $faker->firstName,
-        'last_name' => $faker->lastName,
+        'full_name' => $faker->name,
         'phone' => $faker->numerify('+38 (0##) ###-##-##'),
         'email' => $faker->unique()->safeEmail,
         'gender' => rand(0, 1),

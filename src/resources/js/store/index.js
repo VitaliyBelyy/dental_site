@@ -5,6 +5,7 @@ import appModule from './modules/app';
 import authModule from './modules/auth';
 import usersModule from './modules/users';
 import patientsModule from './modules/patients';
+import eventsModule from './modules/events';
 
 Vue.use(Vuex);
 
@@ -14,5 +15,6 @@ export default new Vuex.Store({
         auth: authModule,
         users: usersModule,
         patients: patientsModule,
+        events: eventsModule
     },
 });

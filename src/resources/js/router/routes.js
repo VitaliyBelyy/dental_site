@@ -16,6 +16,7 @@ import ServiceHistory from "../components/dashboard/ServiceHistory";
 import CreateServiceHistoryRecord from "../components/dashboard/CreateServiceHistoryRecord";
 import PaymentHistory from "../components/dashboard/PaymentHistory";
 import CreatePaymentHistoryRecord from "../components/dashboard/CreatePaymentHistoryRecord";
+import Calendar from "../components/dashboard/Calendar";
 
 export default [
     {
@@ -145,6 +146,11 @@ export default [
                 name: 'dashboard.create-payment-history-record',
                 component: CreatePaymentHistoryRecord,
                 props: true
+            },
+            {
+                path: 'calendar',
+                name: 'dashboard.calendar',
+                component: Calendar,
             },
         ]
     },

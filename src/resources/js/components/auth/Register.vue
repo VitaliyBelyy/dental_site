@@ -5,20 +5,18 @@
             <v-card-text class="card-content">
                 <v-form>
                     <v-text-field
-                        label="Name"
-                        name="name"
+                        label="Full name"
                         prepend-icon="mdi-account-circle"
                         type="text"
-                        v-model="name"
+                        v-model="fullName"
                         maxlength="255"
-                        :error-messages="nameErrors"
-                        @blur="$v.name.$touch()"
+                        :error-messages="fullNameErrors"
+                        @blur="$v.fullName.$touch()"
                         @keyup.native.enter="submit"
                     ></v-text-field>
 
                     <v-text-field
                         label="Email"
-                        name="email"
                         prepend-icon="email"
                         type="email"
                         v-model="email"
@@ -30,7 +28,6 @@
 
                     <v-text-field
                         label="Password"
-                        name="password"
                         prepend-icon="lock"
                         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                         @click:append="showPassword = !showPassword"
@@ -68,7 +65,7 @@
 
         data() {
             return {
-                name: '',
+                fullName: '',
                 email: '',
                 password: '',
                 showPassword: false,
@@ -77,7 +74,7 @@
         },
 
         validations: {
-            name: {
+            fullName: {
                 required,
             },
             email: {
@@ -91,10 +88,10 @@
         },
 
         computed: {
-            nameErrors() {
-                const errors = this.$store.state.auth.validationErrors.name || [];
-                if (!this.$v.name.$dirty) return errors;
-                !this.$v.name.required && errors.push('The name is required.');
+            fullNameErrors() {
+                const errors = this.$store.state.auth.validationErrors.full_name || [];
+                if (!this.$v.fullName.$dirty) return errors;
+                !this.$v.fullName.required && errors.push('The full name is required.');
                 return errors;
             },
             emailErrors() {
@@ -117,10 +114,10 @@
                 this.$v.$touch();
 
                 if (!this.$v.$invalid) {
-                    const {name, email, password} = this;
+                    const {fullName, email, password} = this;
 
                     this.isLoading = true;
-                    this.$store.dispatch('auth/register', {data: {name, email, password}})
+                    this.$store.dispatch('auth/register', {data: {full_name: fullName, email, password}})
                         .then(() => {
                             this.$store.dispatch('auth/clearValidationErrors');
                             this.$router.push({ name: 'auth.email-verification' });

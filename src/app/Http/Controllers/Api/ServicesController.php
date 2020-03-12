@@ -8,7 +8,8 @@ use App\Models\Service;
 
 class ServicesController extends Controller
 {
-    public function index(ServicesIndex $request) {
+    public function index(ServicesIndex $request)
+    {
         $services = Service::all();
 
         return response()->api($services);

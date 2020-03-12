@@ -18,49 +18,57 @@
                                             dense
                                             outlined
                                             v-model="form.amount"
-                                            label="Amount"
                                             type="text"
                                             maxlength="11"
                                             :error-messages="amountErrors"
                                             @blur="$v.form.amount.$touch()"
-                                        ></v-text-field>
+                                        >
+                                            <template v-slot:label>
+                                                Amount <span class="red--text">*</span>
+                                            </template>
+                                        </v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6">
-                                        <v-dialog
-                                            ref="dialog"
-                                            v-model="modal"
-                                            :return-value.sync="form.date"
-                                            persistent
-                                            width="290px"
+                                        <v-menu
+                                            v-model="menu"
+                                            :close-on-content-click="false"
+                                            transition="scale-transition"
+                                            offset-y
+                                            min-width="280px"
                                         >
                                             <template v-slot:activator="{ on }">
                                                 <v-text-field
+                                                    v-on="on"
+                                                    v-model="form.date"
+                                                    append-icon="event"
                                                     dense
                                                     outlined
-                                                    v-model="form.date"
-                                                    label="Date"
-                                                    type="text"
-                                                    append-icon="mdi-calendar"
                                                     readonly
-                                                    v-on="on"
-                                                ></v-text-field>
+                                                    :error-messages="dateErrors"
+                                                    @blur="$v.form.date.$touch()"
+                                                >
+                                                    <template v-slot:label>
+                                                        Date <span class="red--text">*</span>
+                                                    </template>
+                                                </v-text-field>
                                             </template>
-                                            <v-date-picker v-model="form.date" scrollable>
-                                                <v-spacer></v-spacer>
-                                                <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
-                                                <v-btn text color="primary" @click="$refs.dialog.save(form.date)">OK</v-btn>
-                                            </v-date-picker>
-                                        </v-dialog>
+                                            <v-date-picker
+                                                v-model="form.date"
+                                                @input="menu = false"
+                                            ></v-date-picker>
+                                        </v-menu>
                                     </v-col>
                                     <v-col cols="12" class="pt-0">
                                         <v-textarea
                                             label="Notes"
                                             v-model="form.notes"
                                             outlined
-                                            hide-details
                                             autocomplete="none"
                                             maxlength="1000"
                                         ></v-textarea>
+                                    </v-col>
+                                    <v-col cols="12" class="pt-0">
+                                        <small><span class="red--text">*</span> indicates required field</small>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -81,6 +89,7 @@
 </template>
 
 <script>
+    import moment from 'moment';
     import { required } from 'vuelidate/lib/validators';
 
     const isNumeric = (n) => {
@@ -98,16 +107,19 @@
                     required,
                     isNumeric
                 },
+                date: {
+                    required
+                },
             }
         },
 
         data() {
             return {
                 isLoading: false,
-                modal: false,
+                menu: false,
                 form: {
                     amount: null,
-                    date: new Date().toISOString().substr(0, 10),
+                    date: moment().format('YYYY-MM-DD'),
                     notes: null,
                 }
             }
@@ -119,6 +131,12 @@
                 if (!this.$v.form.amount.$dirty) return errors;
                 !this.$v.form.amount.required && errors.push('The amount field is required.');
                 !this.$v.form.amount.isNumeric && errors.push('Wrong format of the amount field.');
+                return errors;
+            },
+            dateErrors() {
+                const errors = [];
+                if (!this.$v.form.date.$dirty) return errors;
+                !this.$v.form.date.required && errors.push('The date field is required.');
                 return errors;
             },
         },

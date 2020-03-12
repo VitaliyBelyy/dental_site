@@ -5,7 +5,7 @@
                 <v-card>
                     <v-toolbar flat color="white">
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" link :to="{ name: 'dashboard.create-payment-history-record', params: { id }}">
+                        <v-btn color="primary" @click="dialog = true">
                             <v-icon left>mdi-plus</v-icon>
                             Add new
                         </v-btn>
@@ -24,6 +24,15 @@
                         >
                         </v-data-table>
                     </v-card-text>
+
+                    <payment-history-form :patient-id="id"
+                                          :dialog="dialog"
+                                          :record="editedRecord"
+                                          :selected-id="selectedId"
+                                          @on-create="recordCreated"
+                                          @on-update="recordUpdated"
+                                          @on-close="closeForm"
+                    ></payment-history-form>
                 </v-card>
             </v-col>
         </v-row>
@@ -31,8 +40,14 @@
 </template>
 
 <script>
+    import PaymentHistoryForm from "./PaymentHistoryForm";
+
     export default {
         name: "PaymentHistory",
+
+        components: {
+            PaymentHistoryForm,
+        },
 
         props: ['id'],
 
@@ -69,6 +84,9 @@
                         value: 'notes',
                     },
                 ],
+                dialog: false,
+                selectedId: null,
+                editedRecord: {},
             }
         },
 
@@ -88,10 +106,6 @@
                 },
                 deep: true,
             },
-            search() {
-                this.options.page = 1;
-                this.loadPaymentHistory();
-            }
         },
 
         methods: {
@@ -108,6 +122,21 @@
                     .finally(() => {
                         this.isLoading = false;
                     });
+            },
+            recordCreated() {
+                this.loadPaymentHistory();
+                this.closeForm();
+            },
+            recordUpdated() {
+                this.loadPaymentHistory();
+                this.closeForm();
+            },
+            closeForm () {
+                this.dialog = false;
+                setTimeout(() => {
+                    this.selectedId = null;
+                    this.editedRecord = {};
+                }, 300);
             },
         }
     }

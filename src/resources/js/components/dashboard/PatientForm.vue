@@ -27,37 +27,22 @@
                                 @change="onFilePicked"
                             >
                         </v-col>
-                        <v-col cols="12" sm="6">
-                            <v-text-field
-                                name="first_name"
-                                type="text"
-                                v-model="form.firstName"
-                                maxlength="255"
-                                :error-messages="firstNameErrors"
-                                @blur="$v.form.firstName.$touch()"
-                            >
-                                <template v-slot:label>
-                                    First Name <span class="red--text">*</span>
-                                </template>
-                            </v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6">
-                            <v-text-field
-                                name="last_name"
-                                type="text"
-                                v-model="form.lastName"
-                                maxlength="255"
-                                :error-messages="lastNameErrors"
-                                @blur="$v.form.lastName.$touch()"
-                            >
-                                <template v-slot:label>
-                                    Last Name <span class="red--text">*</span>
-                                </template>
-                            </v-text-field>
-                        </v-col>
                         <v-col cols="12">
                             <v-text-field
-                                label="Phone"
+                                name="full_name"
+                                type="text"
+                                v-model="form.fullName"
+                                maxlength="255"
+                                :error-messages="fullNameErrors"
+                                @blur="$v.form.fullName.$touch()"
+                            >
+                                <template v-slot:label>
+                                    Full Name <span class="red--text">*</span>
+                                </template>
+                            </v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6">
+                            <v-text-field
                                 name="phone"
                                 type="text"
                                 append-icon="mdi-phone"
@@ -66,9 +51,13 @@
                                 maxlength="255"
                                 :error-messages="phoneErrors"
                                 @blur="$v.form.phone.$touch()"
-                            ></v-text-field>
+                            >
+                                <template v-slot:label>
+                                    Phone <span class="red--text">*</span>
+                                </template>
+                            </v-text-field>
                         </v-col>
-                        <v-col cols="12">
+                        <v-col cols="12" sm="6">
                             <v-text-field
                                 label="Email"
                                 name="email"
@@ -89,9 +78,8 @@
                         <v-col cols="12">
                             <v-dialog
                                 ref="dialog"
-                                v-model="modal"
+                                v-model="dialog"
                                 :return-value.sync="form.birthDate"
-                                persistent
                                 width="290px"
                             >
                                 <template v-slot:activator="{ on }">
@@ -103,10 +91,14 @@
                                         v-on="on"
                                     ></v-text-field>
                                 </template>
-                                <v-date-picker v-model="form.birthDate" scrollable :max="new Date().toISOString()">
-                                    <v-spacer></v-spacer>
-                                    <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
-                                    <v-btn text color="primary" @click="$refs.dialog.save(form.birthDate)">OK</v-btn>
+                                <v-date-picker 
+                                    ref="picker"
+                                    v-model="form.birthDate" 
+                                    :max="new Date().toISOString().substr(0, 10)"
+                                    min="1950-01-01"
+                                    scrollable
+                                    @change="$refs.dialog.save(form.birthDate)"
+                                >
                                 </v-date-picker>
                             </v-dialog>
                         </v-col>
@@ -175,13 +167,11 @@
 
         validations: {
             form: {
-                firstName: {
-                    required,
-                },
-                lastName: {
+                fullName: {
                     required,
                 },
                 phone: {
+                    required,
                     minLength: minLength(19),
                 },
                 email: {
@@ -193,13 +183,12 @@
         data() {
             return {
                 isLoadingAnamnesis: false,
-                modal: false,
+                dialog: false,
                 phoneMask: '+38 (0##) ###-##-##',
                 imagePath: null,
                 form: {
                     photo: null,
-                    firstName: null,
-                    lastName: null,
+                    fullName: null,
                     phone: null,
                     email: null,
                     gender: null,
@@ -213,7 +202,10 @@
         watch: {
             patient() {
                 this.initForm();
-            }
+            },
+            dialog(val) {
+                val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'));
+            },
         },
 
         computed: {
@@ -223,21 +215,16 @@
             anamnesis() {
                 return this.$store.state.patients.anamnesis || [];
             },
-            firstNameErrors() {
+            fullNameErrors() {
                 const errors = [];
-                if (!this.$v.form.firstName.$dirty) return errors;
-                !this.$v.form.firstName.required && errors.push('The first name is required.');
-                return errors;
-            },
-            lastNameErrors() {
-                const errors = [];
-                if (!this.$v.form.lastName.$dirty) return errors;
-                !this.$v.form.lastName.required && errors.push('The last name is required.');
+                if (!this.$v.form.fullName.$dirty) return errors;
+                !this.$v.form.fullName.required && errors.push('The full name is required.');
                 return errors;
             },
             phoneErrors() {
                 const errors = [];
                 if (!this.$v.form.phone.$dirty) return errors;
+                !this.$v.form.phone.required && errors.push('The phone is required.');
                 !this.$v.form.phone.minLength && errors.push('The phone must be a valid phone number.');
                 return errors;
             },
@@ -297,8 +284,7 @@
             prepareData() {
                 return {
                     photo: this.form.photo || null,
-                    first_name: this.form.firstName,
-                    last_name: this.form.lastName,
+                    full_name: this.form.fullName,
                     phone: this.form.phone || null,
                     email: this.form.email || null,
                     gender: this.form.gender || null,
@@ -311,8 +297,7 @@
                 this.imagePath = this.patient.image_path || null;
                 this.form = {
                     photo: null,
-                    firstName: this.patient.first_name || null,
-                    lastName: this.patient.last_name || null,
+                    fullName: this.patient.full_name || null,
                     phone: this.patient.phone || null,
                     email: this.patient.email || null,
                     gender: (this.patient.gender || this.patient.gender === 0) ? this.patient.gender.toString() : null,

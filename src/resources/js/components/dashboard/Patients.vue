@@ -32,7 +32,7 @@
                         >
                             <template v-slot:item.avatar="{ item }">
                                 <v-avatar size="32">
-                                    <img :src="item.image_path" :alt="item.name"/>
+                                    <img :src="item.image_path" :alt="item.full_name"/>
                                 </v-avatar>
                             </template>
 
@@ -45,19 +45,25 @@
                                     </template>
 
                                     <v-list class="pa-0">
-                                        <v-list-item
-                                            v-for="(menuItem, index) in patientActions"
-                                            @click="menuItem.click ? menuItem.click(item.id) : null"
-                                            :key="index"
-                                            ripple="ripple"
-                                        >
-                                            <v-list-item-icon v-if="menuItem.icon" class="mr-4">
-                                                <v-icon>{{ menuItem.icon }}</v-icon>
-                                            </v-list-item-icon>
-                                            <v-list-item-content>
-                                                <v-list-item-title>{{ menuItem.title }}</v-list-item-title>
-                                            </v-list-item-content>
-                                        </v-list-item>
+                                        <template v-for="(menuItem, index) in patientActions">
+                                            <v-divider
+                                                v-if="menuItem.divider"
+                                                :key="index"
+                                            ></v-divider>
+                                            <v-list-item
+                                                v-else
+                                                @click="menuItem.click ? menuItem.click(item.id) : null"
+                                                :key="index"
+                                                ripple="ripple"
+                                            >
+                                                <v-list-item-icon v-if="menuItem.icon" class="mr-4">
+                                                    <v-icon>{{ menuItem.icon }}</v-icon>
+                                                </v-list-item-icon>
+                                                <v-list-item-content>
+                                                    <v-list-item-title>{{ menuItem.title }}</v-list-item-title>
+                                                </v-list-item-content>
+                                            </v-list-item>
+                                        </template>
                                     </v-list>
                                 </v-menu>
                             </template>
@@ -100,10 +106,10 @@
                         value: 'avatar',
                     },
                     {
-                        text: 'Name',
+                        text: 'Full name',
                         align: 'left',
                         sortable: true,
-                        value: 'name',
+                        value: 'full_name',
                     },
                     {
                         text: 'Phone',
@@ -114,13 +120,13 @@
                     {
                         text: 'Email',
                         align: 'left',
-                        sortable: true,
+                        sortable: false,
                         value: 'email',
                     },
                     {
                         text: 'Gender',
                         align: 'left',
-                        sortable: true,
+                        sortable: false,
                         value: 'gender',
                     },
                     {
@@ -144,6 +150,9 @@
                         },
                         title: "Show patient profile",
                     },
+
+                    { divider: true },
+
                     {
                         icon: "mdi-account-details",
                         click: (id) => {
@@ -151,6 +160,9 @@
                         },
                         title: "Show service history",
                     },
+
+                    { divider: true },
+
                     {
                         icon: "mdi-account-cash",
                         click: (id) => {
@@ -174,8 +186,8 @@
 
                         return {
                             'id': patient.id,
-                            'name': patient.name,
-                            'phone': patient.phone || null,
+                            'full_name': patient.full_name,
+                            'phone': patient.phone,
                             'email': patient.email || null,
                             'gender': gender,
                             'birth_date': patient.birth_date ? moment(patient.birth_date).format('DD-MM-YYYY') : null,

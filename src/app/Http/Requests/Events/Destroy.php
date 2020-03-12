@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests\Events;
 
 use BwtTeam\LaravelAPI\Requests\ApiRequest;
 
-class Register extends ApiRequest
+class Destroy extends ApiRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,7 @@ class Register extends ApiRequest
     public function rules()
     {
         return [
-            'full_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|max:255',
+            //
         ];
     }
 }

@@ -11,7 +11,7 @@
                         <v-avatar size="30px" class="mr-2">
                             <img :src="avatar" alt="Doctor"/>
                         </v-avatar>
-                        {{ (user && user.name) ? user.name : 'unknown user' }}
+                        {{ (user && user.full_name) ? user.full_name : 'unknown user' }}
                         <v-icon class="ml-2">mdi-chevron-down</v-icon>
                     </v-btn>
                 </template>
