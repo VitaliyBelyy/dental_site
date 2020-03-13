@@ -25,6 +25,8 @@ class CreatePatientsTable extends Migration
             $table->bigInteger('anamnesis_id')->unsigned()->index()->nullable();
             $table->string('original_file_name')->nullable();
             $table->string('hash_file_name')->nullable();
+            $table->decimal('total_accrued', 9, 2)->default(0);
+            $table->decimal('total_paid', 9, 2)->default(0);
             $table->timestamps();
         });
     }

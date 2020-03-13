@@ -29,6 +29,7 @@ class CreateServiceHistoryRecord extends ApiRequest
             'service_id' => 'required|integer|exists:services,id',
             'date' => 'required|date',
             'count' => 'required|integer|min:1',
+            'service_cost' => 'required|numeric'
         ];
     }
 }

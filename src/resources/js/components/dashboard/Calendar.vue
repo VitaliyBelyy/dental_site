@@ -236,11 +236,13 @@
                 this.dialog = true;
             },
             deleteEvent (event) {
-                this.$store.dispatch('events/deleteEvent', event.id)
-                    .then(() => {
-                        this.selectedOpen = false;
-                        this.loadEvents();
-                    });
+                if (confirm('Are you sure you want to delete this event?')) {
+                    this.$store.dispatch('events/deleteEvent', event.id)
+                        .then(() => {
+                            this.selectedOpen = false;
+                            this.loadEvents();
+                        });
+                }
             },
             showEvent ({ nativeEvent, event }) {
                 const open = () => {

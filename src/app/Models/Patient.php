@@ -20,7 +20,7 @@ class Patient extends Model
      * @var array
      */
     protected $fillable = [
-        'full_name', 'phone', 'email', 'gender', 'birth_date', 'medical_info', 'user_id', 'anamnesis_id', 'original_file_name', 'hash_file_name'
+        'full_name', 'phone', 'email', 'gender', 'birth_date', 'medical_info', 'user_id', 'anamnesis_id', 'original_file_name', 'hash_file_name', 'total_accrued', 'total_paid'
     ];
 
     /**
@@ -57,6 +57,7 @@ class Patient extends Model
             ->withTimestamps()
             ->withPivot([
                 'count',
+                'service_cost',
                 'date',
             ]);
     }

@@ -17,7 +17,7 @@
                                     outlined
                                     v-model="form.amount"
                                     type="text"
-                                    maxlength="11"
+                                    maxlength="10"
                                     :error-messages="amountErrors"
                                     @blur="$v.form.amount.$touch()"
                                 >
@@ -77,8 +77,16 @@
 
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" text @click="closeForm">Close</v-btn>
-                <v-btn color="primary" text @click="saveForm">Save</v-btn>
+                <v-btn color="primary"
+                       text
+                       :disabled="isLoading"
+                       @click="closeForm"
+                >Close</v-btn>
+                <v-btn color="primary"
+                       text
+                       :loading="isLoading"
+                       @click="saveForm"
+                >Save</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

@@ -120,8 +120,8 @@ let actions = {
                 });
         });
     },
-    loadServices: ({ commit }) => {
-        let url = '/api/services';
+    loadServices: ({ commit }, payload) => {
+        let url = `/api/services?${queryString.stringify(payload.params, {encode: false})}`;
 
         return new Promise((resolve, reject) => {
             window.httpClient.get(url)

@@ -130,8 +130,7 @@ class PatientsController extends Controller
         $query = DB::table('patient_service')
             ->join('services', 'patient_service.service_id', '=', 'services.id')
             ->where('patient_service.patient_id', '=', $id)
-            ->orderBy('patient_service.created_at', 'DESC')
-            ->select(DB::raw('patient_service.id, patient_service.count * services.price as cost, services.name, patient_service.date'));
+            ->select(DB::raw('patient_service.id, patient_service.service_cost, patient_service.date, services.name'));
 
         if (isset($search)) {
             $query = $query->where('services.name', 'LIKE', '%' . $request->get('q') . '%');
@@ -142,14 +141,21 @@ class PatientsController extends Controller
             $query = $query->orderBy($request->get('sort_by'), (isset($direction) && json_decode($direction)) ? 'DESC' : 'ASC');
         }
 
-        $history = $query->paginate($limit);
+        $history = $query->orderBy('patient_service.created_at', 'DESC')
+            ->paginate($limit);
 
         return response()->api($history);
     }
 
     public function createServiceHistoryRecord(PatientsCreateServiceHistoryRecord $request, Patient $patient) {
         $patient->services()->attach($request->service_id, [
-            'count' => $request->count, 'date' => $request->date
+            'count' => $request->count,
+            'service_cost' => $request->service_cost,
+            'date' => $request->date
+        ]);
+
+        $patient->update([
+           'total_accrued' => $patient->total_accrued + $request->service_cost
         ]);
 
         return response()->api(null, 200);
@@ -173,6 +179,10 @@ class PatientsController extends Controller
             'amount' => $request->amount,
             'date' => $request->date,
             'notes' => $request->notes ?? null,
+        ]);
+
+        $patient->update([
+            'total_paid' => $patient->total_paid + $request->amount
         ]);
 
         return response()->api($result);

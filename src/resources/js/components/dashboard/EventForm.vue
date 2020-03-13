@@ -38,8 +38,7 @@
                                     @blur="$v.form.patient.$touch()"
                                 >
                                     <template v-slot:label>
-                                        Patient
-                                        <span class="red--text">*</span>
+                                        Patient <span class="red--text">*</span>
                                     </template>
                                     <template v-slot:progress>
                                         <v-progress-circular
@@ -180,8 +179,16 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" text @click="closeForm">Close</v-btn>
-                <v-btn color="primary" text @click="saveForm">Save</v-btn>
+                <v-btn color="primary"
+                       text
+                       :disabled="isLoading"
+                       @click="closeForm"
+                >Close</v-btn>
+                <v-btn color="primary"
+                       text
+                       :loading="isLoading"
+                       @click="saveForm"
+                >Save</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -190,6 +197,8 @@
 <script>
     import moment from 'moment';
     import {required} from "vuelidate/lib/validators";
+    import { Subject } from 'rxjs';
+    import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
     export default {
         name: "EventForm",
@@ -226,7 +235,9 @@
 
         data() {
             return {
+                isLoading: false,
                 searchQuery: null,
+                searchStream: new Subject(),
                 isLoadingPatients: false,
                 statusList: [
                     "Запланировано",
@@ -289,6 +300,14 @@
 
         created() {
             this.loadPatients();
+            this.searchStream.pipe(
+                // wait 1s after each keystroke before considering the term
+                debounceTime(500),
+
+                // ignore new term if same as previous term
+                distinctUntilChanged(),
+
+            ).subscribe(query => this.loadPatients(query));
         },
 
         watch: {
@@ -300,22 +319,23 @@
                     return;
                 }
 
-                this.loadPatients();
+                this.searchStream.next(query);
             }
         },
 
         methods: {
-            loadPatients() {
+            loadPatients(query = null) {
                 let params = {
-                    q: this.searchQuery,
+                    q: query,
                     page: 1,
                     limit: 15
                 };
 
                 this.isLoadingPatients = true;
-                this.$store.dispatch("events/loadPatients", {params}).finally(() => {
-                    this.isLoadingPatients = false;
-                });
+                this.$store.dispatch("events/loadPatients", { params })
+                    .finally(() => {
+                        this.isLoadingPatients = false;
+                    });
             },
             getStatusColor(status) {
                 switch (status) {
@@ -356,9 +376,9 @@
                     let data = this.prepareData();
 
                     if (this.selectedId) {
-                        this.updateEvent(this.selectedId, data);
+                        this.updateEvent({ id: this.selectedId, data });
                     } else {
-                        this.createEvent(data);
+                        this.createEvent({ data });
                     }
                 }
             },
@@ -375,14 +395,19 @@
                     details: this.form.details
                 };
             },
-            createEvent(data) {
-                this.$store.dispatch('events/createEvent', {data})
+            createEvent(payload) {
+                this.isLoading = true;
+                this.$store.dispatch('events/createEvent', payload)
                     .then(() => {
                         this.eventCreated();
+                    })
+                    .finally(() => {
+                        this.isLoading = false;
                     });
             },
-            updateEvent(id, data) {
-                this.$store.dispatch('events/updateEvent', {id, data})
+            updateEvent(payload) {
+                this.isLoading = true;
+                this.$store.dispatch('events/updateEvent', payload)
                     .then(() => {
                         let event = {
                             name: this.form.patient.full_name,
@@ -393,6 +418,9 @@
                             patient: this.form.patient,
                         };
                         this.eventUpdated(event);
+                    })
+                    .finally(() => {
+                        this.isLoading = false;
                     });
             },
             eventCreated() {

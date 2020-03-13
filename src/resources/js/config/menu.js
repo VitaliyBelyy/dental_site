@@ -15,6 +15,11 @@ const Menu = [
         name: "dashboard.patients"
     },
     {
+        title: "Services",
+        icon: "mdi-view-list",
+        name: "dashboard.services",
+    },
+    {
         title: "Users",
         icon: "mdi-account-cog",
         name: "dashboard.users",

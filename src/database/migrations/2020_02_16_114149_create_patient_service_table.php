@@ -18,6 +18,7 @@ class CreatePatientServiceTable extends Migration
             $table->bigInteger('patient_id')->unsigned()->index();
             $table->bigInteger('service_id')->unsigned()->index();
             $table->tinyInteger('count');
+            $table->decimal('service_cost', 9, 2);
             $table->date('date');
             $table->timestamps();
         });

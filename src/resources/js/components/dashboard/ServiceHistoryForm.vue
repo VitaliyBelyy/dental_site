@@ -20,6 +20,8 @@
                                 <v-autocomplete
                                     dense
                                     outlined
+                                    :no-filter="true"
+                                    :search-input.sync="searchQuery"
                                     v-model="form.service"
                                     :loading="isLoadingServices"
                                     :items="services"
@@ -117,8 +119,16 @@
 
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" text @click="closeForm">Close</v-btn>
-                <v-btn color="primary" text @click="saveForm">Save</v-btn>
+                <v-btn color="primary"
+                       text
+                       :disabled="isLoading"
+                       @click="closeForm"
+                >Close</v-btn>
+                <v-btn color="primary"
+                       text
+                       :loading="isLoading"
+                       @click="saveForm"
+                >Save</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -127,6 +137,9 @@
 <script>
     import moment from 'moment';
     import { required } from 'vuelidate/lib/validators';
+    import { Subject } from 'rxjs';
+    import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+
 
     export default {
         name: "ServiceHistoryForm",
@@ -163,6 +176,8 @@
             return {
                 isLoading: false,
                 isLoadingServices: false,
+                searchQuery: null,
+                searchStream: new Subject(),
                 menu: false,
                 minCount: 1,
                 maxCount: 10,
@@ -200,18 +215,39 @@
 
         created() {
             this.loadServices();
+            this.searchStream.pipe(
+                // wait 1s after each keystroke before considering the term
+                debounceTime(500),
+
+                // ignore new term if same as previous term
+                distinctUntilChanged(),
+
+            ).subscribe(query => this.loadServices(query));
         },
 
         watch: {
             record() {
                 this.initForm();
             },
+            searchQuery(query) {
+                if (this.form.service && query === this.form.service.name) {
+                    return;
+                }
+
+                this.searchStream.next(query);
+            }
         },
 
         methods: {
-            loadServices() {
+            loadServices(query = null) {
+                let params = {
+                    q: query,
+                    page: 1,
+                    limit: 15
+                };
+
                 this.isLoadingServices = true;
-                this.$store.dispatch('patients/loadServices')
+                this.$store.dispatch('patients/loadServices', { params })
                     .finally(() => {
                         this.isLoadingServices = false;
                     });
@@ -251,6 +287,7 @@
                     'service_id': this.form.service.id,
                     'date': this.form.date,
                     'count': this.form.count,
+                    'service_cost': this.total
                 }
             },
             createRecord(payload) {

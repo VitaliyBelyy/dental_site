@@ -16,13 +16,27 @@ class PatientsTableSeeder extends Seeder
         factory(Patient::class, 20)->create()
             ->each(function ($patient) {
                 for ($i = 0; $i < 10; $i++) {
-                    $count = rand(1, 10);
                     $date = now()->sub(rand(1, 10), 'day');
-                    $serviceId = Service::inRandomOrder()->first()->id;
-                    $patient->services()->attach($serviceId, ['count' => $count, 'date' => $date]); // Fill service history
-                    $patient->payments()->create([ // Fill payment history
-                        'amount' => rand(100, 500),
+                    $service = Service::inRandomOrder()->first();
+
+                    $count = rand(1, 10);
+                    $serviceCost = $service->price * $count;
+                    $patient->services()->attach($service->id, [ // Fill service history
+                        'count' => $count,
+                        'service_cost' => $serviceCost,
                         'date' => $date
+                    ]);
+                    $patient->update([
+                        'total_accrued' => $patient->total_accrued + $serviceCost
+                    ]);
+
+                    $amount = rand(100, 2000);
+                    $patient->payments()->create([ // Fill payment history
+                        'amount' => $amount,
+                        'date' => $date
+                    ]);
+                    $patient->update([
+                        'total_paid' => $patient->total_paid + $amount
                     ]);
                 }
             });

@@ -84,7 +84,7 @@
                         text: 'Service cost',
                         align: 'left',
                         sortable: true,
-                        value: 'cost',
+                        value: 'service_cost',
                     },
                     {
                         text: 'Date',
@@ -145,7 +145,7 @@
                 this.loadServiceHistory();
                 this.closeForm();
             },
-            closeForm () {
+            closeForm() {
                 this.dialog = false;
                 setTimeout(() => {
                     this.selectedId = null;

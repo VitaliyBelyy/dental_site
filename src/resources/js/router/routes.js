@@ -13,11 +13,9 @@ import CreatePatient from "../components/dashboard/CreatePatient";
 import PatientProfile from "../components/dashboard/PatientProfile";
 import EditPatient from "../components/dashboard/EditPatient";
 import ServiceHistory from "../components/dashboard/ServiceHistory";
-import CreateServiceHistoryRecord from "../components/dashboard/CreateServiceHistoryRecord";
 import PaymentHistory from "../components/dashboard/PaymentHistory";
-import CreatePaymentHistoryRecord from "../components/dashboard/CreatePaymentHistoryRecord";
 import Calendar from "../components/dashboard/Calendar";
-
+import Services from "../components/dashboard/Services";
 export default [
     {
         path: '/auth',
@@ -130,27 +128,20 @@ export default [
                 props: true
             },
             {
-                path: 'patients/:id/create-service-history-record',
-                name: 'dashboard.create-service-history-record',
-                component: CreateServiceHistoryRecord,
-                props: true
-            },
-            {
                 path: 'patients/:id/payment-history',
                 name: 'dashboard.payment-history',
                 component: PaymentHistory,
                 props: true
             },
             {
-                path: 'patients/:id/create-payment-history-record',
-                name: 'dashboard.create-payment-history-record',
-                component: CreatePaymentHistoryRecord,
-                props: true
-            },
-            {
                 path: 'calendar',
                 name: 'dashboard.calendar',
                 component: Calendar,
+            },
+            {
+                path: 'services',
+                name: 'dashboard.services',
+                component: Services,
             },
         ]
     },
