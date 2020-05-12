@@ -16,10 +16,14 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function () {
     // Users
     # GET               /users                      users.index
     Route::get('users', 'UsersController@index');
-    # DELETE            /users/{id}                 users.destroy
-    Route::delete('users/{id}', 'UsersController@destroy');
-    # POST              /users/{id}/restore         users.restore
-    Route::post('users/{id}/restore', 'UsersController@restore');
+    # POST              /users                      users.store
+    Route::post('users', 'UsersController@store');
+    # GET               /users/{user}               users.show
+    Route::get('users/{user}', 'UsersController@show');
+    # PUT/PATCH         /users/{user}               users.update
+    Route::put('users/{user}', 'UsersController@update');
+    # DELETE            /users/{user}               users.destroy
+    Route::delete('users/{user}', 'UsersController@destroy');
 
     // Patients
     # GET               /patients                                   patients.index
@@ -30,11 +34,13 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function () {
     Route::get('patients/{patient}', 'PatientsController@show');
     # PUT/PATCH         /patients/{patient}                         patients.update
     Route::put('patients/{patient}', 'PatientsController@update');
+    # DELETE            /patients/{patient}                         patients.destroy
+    Route::delete('patients/{patient}', 'PatientsController@destroy');
 
-    # GET               /patients/{id}/service-history              patients.showServiceHistory
-    Route::get('patients/{id}/service-history', 'PatientsController@showServiceHistory');
-    # POST              /patients/{patient}/service-history         patients.createServiceHistoryRecord
-    Route::post('patients/{patient}/service-history', 'PatientsController@createServiceHistoryRecord');
+    # GET               /patients/{patient}/visit-history              patients.showVisitHistory
+    Route::get('patients/{patient}/visit-history', 'PatientsController@showVisitHistory');
+    # POST              /patients/{patient}/visit-history         patients.createVisitHistoryRecord
+    Route::post('patients/{patient}/visit-history', 'PatientsController@createVisitHistoryRecord');
 
     # GET               /patients/{patient}/payment-history         patients.showPaymentHistory
     Route::get('patients/{patient}/payment-history', 'PatientsController@showPaymentHistory');
@@ -64,6 +70,20 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function () {
     Route::put('events/{event}', 'EventsController@update');
     # DELETE            /events/{event}              events.destroy
     Route::delete('events/{event}', 'EventsController@destroy');
+
+    // Visits
+    # GET               /visits/{visit}/services     visits.showServices
+    Route::get('visits/{visit}/services', 'VisitsController@showServices');
+
+    // Charts
+    # GET               /charts/visits                      charts.showVisits
+    Route::get('charts/visits', 'ChartsController@showVisits');
+    # GET               /charts/payments                    charts.showPayments
+    Route::get('charts/payments', 'ChartsController@showPayments');
+    # GET               /charts/services-cost               charts.showServicesCost
+    Route::get('charts/services-cost', 'ChartsController@showServicesCost');
+    # GET               /charts/ratio                       charts.showRatio
+    Route::get('charts/ratio', 'ChartsController@showRatio');
 });
 
 // Auth

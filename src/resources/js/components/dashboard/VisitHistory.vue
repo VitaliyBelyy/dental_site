@@ -4,16 +4,8 @@
             <v-col cols="12" class="py-0">
                 <v-card>
                     <v-toolbar flat color="white">
-                        <v-text-field
-                            flat
-                            solo
-                            prepend-icon="search"
-                            placeholder="Type something"
-                            v-model="search"
-                            hide-details
-                            class="hidden-sm-and-down mr-4"
-                        ></v-text-field>
-                        <v-btn color="primary" @click="dialog = true">
+                        <v-spacer></v-spacer>
+                        <v-btn color="primary" @click="formDialog = true">
                             <v-icon left>mdi-plus</v-icon>
                             Add new
                         </v-btn>
@@ -30,17 +22,32 @@
                             :footer-props="footerProps"
                             class="elevation-1"
                         >
+                            <template v-slot:item.action="{ item }">
+                                <v-tooltip bottom>
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn text icon @click="showServicesTable(item.id)">
+                                            <v-icon small v-on="on">mdi-eye</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <span>Show provided services</span>
+                                </v-tooltip>
+                            </template>
                         </v-data-table>
                     </v-card-text>
 
-                    <service-history-form :patient-id="id"
-                                          :dialog="dialog"
-                                          :record="editedRecord"
-                                          :selected-id="selectedId"
-                                          @on-create="recordCreated"
-                                          @on-update="recordUpdated"
-                                          @on-close="closeForm"
-                    ></service-history-form>
+                    <visit-history-form :patient-id="id"
+                                        :dialog="formDialog"
+                                        :record="editedRecord"
+                                        :selected-id="selectedId"
+                                        @on-create="recordCreated"
+                                        @on-update="recordUpdated"
+                                        @on-close="closeForm"
+                    ></visit-history-form>
+
+                    <visit-history-services-table :dialog="servicesDialog"
+                                                  :selected-id="visitId"
+                                                  @on-close="closeServicesTable"
+                    ></visit-history-services-table>
                 </v-card>
             </v-col>
         </v-row>
@@ -48,20 +55,21 @@
 </template>
 
 <script>
-    import ServiceHistoryForm from "./ServiceHistoryForm";
+    import VisitHistoryForm from "./VisitHistoryForm";
+    import VisitHistoryServicesTable from "./VisitHistoryServicesTable";
 
     export default {
-        name: "ServiceHistory",
+        name: "VisitHistory",
 
         components: {
-            ServiceHistoryForm,
+            VisitHistoryForm,
+            VisitHistoryServicesTable
         },
 
         props: ['id'],
 
         data() {
             return {
-                search: null,
                 isLoading: false,
                 options: {},
                 footerProps: {
@@ -75,10 +83,10 @@
                         value: 'id',
                     },
                     {
-                        text: 'Name',
+                        text: 'Date',
                         align: 'left',
                         sortable: true,
-                        value: 'name',
+                        value: 'date',
                     },
                     {
                         text: 'Service cost',
@@ -87,44 +95,41 @@
                         value: 'service_cost',
                     },
                     {
-                        text: 'Date',
+                        text: 'Actions',
                         align: 'left',
-                        sortable: true,
-                        value: 'date',
+                        sortable: false,
+                        value: 'action',
                     },
                 ],
-                dialog: false,
+                formDialog: false,
                 selectedId: null,
                 editedRecord: {},
+                servicesDialog: false,
+                visitId: null
             }
         },
 
         computed: {
             historyItems() {
-                return this.$store.state.patients.serviceHistory || [];
+                return this.$store.state.patients.visitHistory || [];
             },
             totalHistoryItems() {
-                return this.$store.state.patients.serviceHistoryPagination.total || 0;
+                return this.$store.state.patients.visitHistoryPagination.total || 0;
             }
         },
 
         watch: {
             options: {
                 handler() {
-                    this.loadServiceHistory();
+                    this.loadVisitHistory();
                 },
                 deep: true,
             },
-            search() {
-                this.options.page = 1;
-                this.loadServiceHistory();
-            }
         },
 
         methods: {
-            loadServiceHistory() {
+            loadVisitHistory() {
                 let params = {
-                    q: this.search,
                     page: this.options.page || 1,
                     limit: this.options.itemsPerPage || 15,
                     sort_by: this.options.sortBy || [],
@@ -132,26 +137,33 @@
                 };
 
                 this.isLoading = true;
-                this.$store.dispatch('patients/loadServiceHistory', { id: this.id, params })
+                this.$store.dispatch('patients/loadVisitHistory', { id: this.id, params })
                     .finally(() => {
                         this.isLoading = false;
                     });
             },
             recordCreated() {
-                this.loadServiceHistory();
+                this.loadVisitHistory();
                 this.closeForm();
             },
             recordUpdated() {
-                this.loadServiceHistory();
+                this.loadVisitHistory();
                 this.closeForm();
             },
             closeForm() {
-                this.dialog = false;
+                this.formDialog = false;
                 setTimeout(() => {
                     this.selectedId = null;
                     this.editedRecord = {};
                 }, 300);
             },
+            showServicesTable(id) {
+                this.visitId = id;
+                this.servicesDialog = true;
+            },
+            closeServicesTable() {
+                this.servicesDialog = false;
+            }
         }
     }
 </script>

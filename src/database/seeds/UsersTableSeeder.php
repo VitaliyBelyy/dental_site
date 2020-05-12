@@ -17,6 +17,7 @@ class UsersTableSeeder extends Seeder
         $admin = User::firstOrCreate(
             ['full_name' => 'admin', 'email' => 'admin@example.com'],
             [
+                'phone' => '+38 (000) 000-00-00',
                 'email_verified_at' => now(),
                 'password' => Hash::make('12345678'),
                 'api_token' => uniqid(Str::random(60)),

@@ -7,9 +7,9 @@ use App\Http\Requests\Auth\Register as AuthRegister;
 use App\Http\Requests\Auth\Login as AuthLogin;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Illuminate\Auth\Events\Registered;
 
 class AuthController extends Controller
 {
@@ -20,21 +20,21 @@ class AuthController extends Controller
      *
      * @return ApiResponse
      */
-    public function register(AuthRegister $request)
-    {
-        $user = User::create([
-            'full_name' => $request->full_name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'api_token' => uniqid(Str::random(60)),
-        ]);
+    // public function register(AuthRegister $request)
+    // {
+    //     $user = User::create([
+    //         'full_name' => $request->full_name,
+    //         'email' => $request->email,
+    //         'password' => Hash::make($request->password),
+    //         'api_token' => uniqid(Str::random(60)),
+    //     ]);
 
-        $user->assignRole('user');
+    //     $user->assignRole('user');
 
-        event(new Registered($user));
+    //     event(new Registered($user));
 
-        return $this->respondWithToken($user);
-    }
+    //     return $this->respondWithToken($user);
+    // }
 
     /**
      * Get access token via given credentials.
@@ -78,11 +78,14 @@ class AuthController extends Controller
     private function respondWithToken(Authenticatable $user)
     {
         return response()->api([
-            'full_name' => $user->full_name,
-            'email' => $user->email,
-            'email_verified_at' => $user->email_verified_at,
-            'access_token' => $user->api_token,
-            'roles' => $user->roles->pluck('name')
+            'user' => [
+                'id' => $user->id,
+                'full_name' => $user->full_name,
+                'email' => $user->email,
+                'email_verified_at' => $user->email_verified_at,
+                'access_token' => $user->api_token,
+                'roles' => $user->roles->pluck('name')
+            ]
         ]);
     }
 }

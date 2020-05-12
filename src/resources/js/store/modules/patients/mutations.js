@@ -11,11 +11,14 @@ let mutations = {
     setSelectedPatient: (state, payload) => {
         state.selectedPatient = payload;
     },
-    setServiceHistory: (state, payload) => {
-        state.serviceHistory = payload;
+    setVisitHistory: (state, payload) => {
+        state.visitHistory = payload;
     },
-    setServiceHistoryPagination: (state, payload) => {
-        state.serviceHistoryPagination = payload;
+    setVisitHistoryPagination: (state, payload) => {
+        state.visitHistoryPagination = payload;
+    },
+    setVisitHistoryServices: (state, payload) => {
+        state.visitHistoryServices = payload;
     },
     setServices: (state, payload) => {
         state.services = payload;

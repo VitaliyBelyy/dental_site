@@ -69,7 +69,7 @@
                                 @blur="$v.form.email.$touch()"
                             ></v-text-field>
                         </v-col>
-                        <v-col>
+                        <v-col cols="12">
                             <v-radio-group v-model="form.gender" :mandatory="false" row>
                                 <v-radio label="Male" value="0"></v-radio>
                                 <v-radio label="Female" value="1"></v-radio>
@@ -91,9 +91,9 @@
                                         v-on="on"
                                     ></v-text-field>
                                 </template>
-                                <v-date-picker 
+                                <v-date-picker
                                     ref="picker"
-                                    v-model="form.birthDate" 
+                                    v-model="form.birthDate"
                                     :max="new Date().toISOString().substr(0, 10)"
                                     min="1950-01-01"
                                     scrollable
@@ -285,7 +285,7 @@
                 return {
                     photo: this.form.photo || null,
                     full_name: this.form.fullName,
-                    phone: this.form.phone || null,
+                    phone: this.form.phone,
                     email: this.form.email || null,
                     gender: this.form.gender || null,
                     birth_date: this.form.birthDate || null,

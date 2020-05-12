@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePatientServiceTable extends Migration
+class CreateServiceVisitTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreatePatientServiceTable extends Migration
      */
     public function up()
     {
-        Schema::create('patient_service', function (Blueprint $table) {
+        Schema::create('service_visit', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('patient_id')->unsigned()->index();
+            $table->bigInteger('visit_id')->unsigned()->index();
             $table->bigInteger('service_id')->unsigned()->index();
-            $table->tinyInteger('count');
-            $table->decimal('service_cost', 9, 2);
-            $table->date('date');
+            $table->tinyInteger('service_count');
+            $table->decimal('total_cost', 9, 2);
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ class CreatePatientServiceTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('patient_service');
+        Schema::dropIfExists('service_visit');
     }
 }

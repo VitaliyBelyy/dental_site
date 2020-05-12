@@ -10,14 +10,18 @@ use App\Http\Requests\Events\Destroy as EventsDestroy;
 use App\Models\Event;
 use App\Models\Patient;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 
 class EventsController extends Controller
 {
     public function index(EventsIndex $request)
     {
-        $events = Event::all();
+        $events = Event::query()
+            ->when(!auth()->user()->hasRole('admin'), function(Builder $query) {
+                $query->where('user_id', '=', auth()->user()->id);
+            })
+            ->get();
 
         $events->transform(function ($item, $key) {
             if (isset($item->patient_id)) {

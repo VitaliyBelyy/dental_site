@@ -1,6 +1,11 @@
 <template>
-    <v-dialog v-model="dialog" persistent max-width="600px">
-        <v-card class="event-card">
+    <v-dialog
+        v-model="dialog"
+        scrollable
+        persistent
+        max-width="600px"
+    >
+        <v-card max-height="600px" class="dashboard-card">
             <v-card-title class="py-4 px-6">
                 <h3 class="dashboard-card__title">{{ formTitle }}</h3>
                 <v-spacer></v-spacer>
@@ -16,70 +21,7 @@
                 <v-form>
                     <v-container class="pa-0">
                         <v-row>
-                            <v-col cols="12" sm="8">
-                                <v-autocomplete
-                                    dense
-                                    outlined
-                                    :no-filter="true"
-                                    :search-input.sync="searchQuery"
-                                    v-model="form.service"
-                                    :loading="isLoadingServices"
-                                    :items="services"
-                                    item-text="name"
-                                    return-object
-                                    :error-messages="servicesErrors"
-                                    @blur="$v.form.service.$touch()"
-                                >
-                                    <template v-slot:label>
-                                        Service <span class="red--text">*</span>
-                                    </template>
-                                    <template v-slot:item='{item}'>
-                                        {{ item.name }}
-                                        <v-spacer></v-spacer>
-                                        <span class="price">{{ item.price }}</span>
-                                    </template>
-                                    <template v-slot:progress>
-                                        <v-progress-circular
-                                            indeterminate
-                                            color="primary"
-                                            size="20"
-                                            width="2"
-                                            class="select-progress"
-                                        ></v-progress-circular>
-                                    </template>
-                                </v-autocomplete>
-                            </v-col>
-                            <v-col cols="12" sm="4" class="counter">
-                                <v-btn
-                                    color="primary"
-                                    min-width="40px"
-                                    class="counter__minus pa-0"
-                                    @click="decrementCounter"
-                                    :disabled="form.count <= minCount"
-                                >
-                                    <v-icon large>mdi-minus</v-icon>
-                                </v-btn>
-                                <v-text-field
-                                    flat
-                                    solo
-                                    dense
-                                    outlined
-                                    readonly
-                                    hide-details
-                                    v-model="form.count"
-                                    class="counter__field mx-3"
-                                ></v-text-field>
-                                <v-btn
-                                    color="primary"
-                                    min-width="40px"
-                                    class="counter__minus pa-0"
-                                    @click="incrementCounter"
-                                    :disabled="form.count >= maxCount"
-                                >
-                                    <v-icon large>mdi-plus</v-icon>
-                                </v-btn>
-                            </v-col>
-                            <v-col cols="12" class="py-0">
+                            <v-col cols="12">
                                 <v-menu
                                     v-model="menu"
                                     :close-on-content-click="false"
@@ -109,7 +51,93 @@
                                     ></v-date-picker>
                                 </v-menu>
                             </v-col>
+                            <v-col cols="12" sm="6" class="pt-0">
+                                <v-autocomplete
+                                    dense
+                                    outlined
+                                    no-filter
+                                    item-text="name"
+                                    return-object
+                                    label="Service"
+                                    :search-input.sync="searchQuery"
+                                    v-model="form.service"
+                                    :loading="isLoadingServices"
+                                    :items="services"
+                                    :error-messages="serviceErrors"
+                                >
+                                    <template v-slot:item='{item}'>
+                                        {{ item.name }}
+                                        <v-spacer></v-spacer>
+                                        <span class="item-price">{{ item.price }}</span>
+                                    </template>
+                                    <template v-slot:progress>
+                                        <v-progress-circular
+                                            indeterminate
+                                            color="primary"
+                                            size="20"
+                                            width="2"
+                                            class="select-progress"
+                                        ></v-progress-circular>
+                                    </template>
+                                </v-autocomplete>
+                            </v-col>
+                            <v-col cols="12" sm="4" class="counter pt-0">
+                                <v-btn
+                                    text
+                                    color="primary"
+                                    min-width="40px"
+                                    class="counter__minus pa-0"
+                                    @click="decrementCounter"
+                                    :disabled="form.count <= minCount"
+                                >
+                                    <v-icon large>mdi-minus</v-icon>
+                                </v-btn>
+                                <v-text-field
+                                    flat
+                                    solo
+                                    dense
+                                    outlined
+                                    readonly
+                                    hide-details
+                                    v-model="form.count"
+                                    class="counter__field mx-3"
+                                ></v-text-field>
+                                <v-btn
+                                    text
+                                    color="primary"
+                                    min-width="40px"
+                                    class="counter__minus pa-0"
+                                    @click="incrementCounter"
+                                    :disabled="form.count >= maxCount"
+                                >
+                                    <v-icon large>mdi-plus</v-icon>
+                                </v-btn>
+                            </v-col>
+                            <v-col cols="12" sm="2" class="pt-0">
+                                <v-btn
+                                    color="primary"
+                                    elevation="1"
+                                    width="100%"
+                                    height="40px"
+                                    @click="addSelectedService"
+                                >Add</v-btn>
+                            </v-col>
                             <v-col cols="12" class="pt-0">
+                                <v-data-table
+                                    disable-sort
+                                    hide-default-footer
+                                    :headers="headers"
+                                    :items="form.selectedServices"
+                                    class="dashboard-card__table--modal"
+                                >
+                                    <template v-if="selectedServicesErrors.length" v-slot:no-data>
+                                        <div class="error--text" role="alert">
+                                            {{ selectedServicesErrors[0] }}
+                                        </div>
+                                    </template>
+                                </v-data-table>
+                            </v-col>
+                            <v-col cols="12">
                                 <small><span class="red--text">*</span> indicates required field</small>
                             </v-col>
                         </v-row>
@@ -142,7 +170,7 @@
 
 
     export default {
-        name: "ServiceHistoryForm",
+        name: "VisitHistoryForm",
 
         props: {
             patientId: {
@@ -163,7 +191,7 @@
 
         validations: {
             form: {
-                service: {
+                selectedServices: {
                     required,
                 },
                 date: {
@@ -181,11 +209,35 @@
                 menu: false,
                 minCount: 1,
                 maxCount: 10,
+                serviceValid: true,
                 form: {
+                    date: moment().format('YYYY-MM-DD'),
+                    selectedServices: [],
                     service: null,
                     count: 1,
-                    date: moment().format('YYYY-MM-DD'),
-                }
+                },
+                headers: [
+                    {
+                        text: 'ID',
+                        align: 'left',
+                        value: 'id',
+                    },
+                    {
+                        text: 'Name',
+                        align: 'left',
+                        value: 'name',
+                    },
+                    {
+                        text: 'Count',
+                        align: 'left',
+                        value: 'service_count',
+                    },
+                    {
+                        text: 'Price',
+                        align: 'left',
+                        value: 'total_cost',
+                    },
+                ],
             }
         },
 
@@ -196,10 +248,16 @@
             formTitle() {
                 return this.selectedId === null ? "New Payment Record" : "Edit Payment Record";
             },
-            servicesErrors() {
+            serviceErrors() {
                 const errors = [];
-                if (!this.$v.form.service.$dirty) return errors;
-                !this.$v.form.service.required && errors.push('The service field is required.');
+                if (this.serviceValid) return errors;
+                !this.serviceValid && errors.push('The service field is required.');
+                return errors;
+            },
+            selectedServicesErrors() {
+                const errors = [];
+                if (!this.$v.form.selectedServices.$dirty) return errors;
+                !this.$v.form.selectedServices.required && errors.push('At least one service must be selected.');
                 return errors;
             },
             dateErrors() {
@@ -209,7 +267,9 @@
                 return errors;
             },
             total() {
-                return (this.form.service && this.form.service.price) ? this.form.service.price * this.form.count : 0;
+                return this.form.selectedServices.reduce((sum, item) => {
+                    return sum + item.total_cost;
+                }, 0);
             }
         },
 
@@ -254,9 +314,10 @@
             },
             initForm() {
                 this.form = {
-                    service: this.record.service || null,
-                    count: this.record.count || 1,
                     date: this.record.date || moment().format('YYYY-MM-DD'),
+                    selectedServices: this.record.services || [],
+                    service: null,
+                    count: 1,
                 };
             },
             incrementCounter() {
@@ -284,15 +345,13 @@
             },
             prepareData() {
                 return {
-                    'service_id': this.form.service.id,
                     'date': this.form.date,
-                    'count': this.form.count,
-                    'service_cost': this.total
+                    'services': this.form.selectedServices,
                 }
             },
             createRecord(payload) {
                 this.isLoading = true;
-                this.$store.dispatch('patients/createServiceHistoryRecord', payload)
+                this.$store.dispatch('patients/createVisitHistoryRecord', payload)
                     .then(() => {
                         this.recordCreated();
                     })
@@ -315,14 +374,51 @@
                 this.$v.$reset();
                 this.$emit("on-close");
             },
+            addSelectedService() {
+                if (!this.form.service) {
+                    this.serviceValid = false;
+                    return;
+                }
+
+                let index = -1;
+
+                for(let i = 0; i < this.form.selectedServices.length; i++) {
+                    if (this.form.selectedServices[i].id === this.form.service.id) {
+                        index = i;
+                        break;
+                    }
+                }
+
+                if (index >= 0) {
+                    let selected = Object.assign({}, this.form.selectedServices[index], {
+                        'service_count': this.form.selectedServices[index]['service_count'] + this.form.count,
+                        'total_cost': this.form.selectedServices[index]['total_cost'] + this.form.service.price * this.form.count
+                    });
+                    this.form.selectedServices = this.form.selectedServices.slice(0, index).concat([selected, ...this.form.selectedServices.slice(index + 1)]);
+                } else {
+                    let selected = {
+                        'id': this.form.service.id,
+                        'name': this.form.service.name,
+                        'service_count': this.form.count,
+                        'total_cost': this.form.service.price * this.form.count
+                    };
+                    this.form.selectedServices = [...this.form.selectedServices, selected];
+                }
+
+                this.form.service = null;
+                this.form.count = 1;
+                this.serviceValid = true;
+                this.$v.form.selectedServices.$reset();
+            }
         }
     }
 </script>
 
 <style scoped>
-    .price {
+    .item-price {
         font-weight: 500;
         color: #949494;
+        padding-left: 15px;
     }
     .total-price {
         font-size: 18px;

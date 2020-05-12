@@ -4,7 +4,7 @@ namespace App\Http\Requests\Patients;
 
 use BwtTeam\LaravelAPI\Requests\ApiRequest;
 
-class CreateServiceHistoryRecord extends ApiRequest
+class CreateVisitHistoryRecord extends ApiRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +15,7 @@ class CreateServiceHistoryRecord extends ApiRequest
     {
         $patient = $this->route('patient');
 
-        return $patient && $this->user()->can('createServiceHistoryRecord', $patient);
+        return $patient && $this->user()->can('createVisitHistoryRecord', $patient);
     }
 
     /**
@@ -26,10 +26,11 @@ class CreateServiceHistoryRecord extends ApiRequest
     public function rules()
     {
         return [
-            'service_id' => 'required|integer|exists:services,id',
             'date' => 'required|date',
-            'count' => 'required|integer|min:1',
-            'service_cost' => 'required|numeric'
+            'services' => 'required|array',
+            'services.*.id' => 'required|integer|exists:services,id',
+            'services.*.service_count' => 'required|integer|min:1|max:10',
+            'services.*.total_cost' => 'required|numeric',
         ];
     }
 }

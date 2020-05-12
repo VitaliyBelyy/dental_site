@@ -7,6 +7,7 @@ import usersModule from './modules/users';
 import patientsModule from './modules/patients';
 import eventsModule from './modules/events';
 import servicesModule from './modules/services';
+import statisticsModule from './modules/statistics';
 
 Vue.use(Vuex);
 
@@ -18,5 +19,6 @@ export default new Vuex.Store({
         patients: patientsModule,
         events: eventsModule,
         services: servicesModule,
+        statistics: statisticsModule
     },
 });

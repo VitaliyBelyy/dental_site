@@ -5,7 +5,7 @@ namespace App\Http\Requests\Users;
 use BwtTeam\LaravelAPI\Requests\ApiRequest;
 use App\Models\User;
 
-class Restore extends ApiRequest
+class Store extends ApiRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +14,7 @@ class Restore extends ApiRequest
      */
     public function authorize()
     {
-        return $this->user()->can('restore', User::class);
+        return $this->user()->can('store', User::class);
     }
 
     /**
@@ -25,7 +25,11 @@ class Restore extends ApiRequest
     public function rules()
     {
         return [
-
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'full_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|max:255',
         ];
     }
 }

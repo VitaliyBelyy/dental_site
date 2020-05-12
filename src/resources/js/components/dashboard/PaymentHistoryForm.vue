@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="500px">
-        <v-card class="event-card">
+        <v-card class="dashboard-card">
             <v-card-title class="py-4 px-6">
                 <h3 class="dashboard-card__title">{{ formTitle }}</h3>
             </v-card-title>

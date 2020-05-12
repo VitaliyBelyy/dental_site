@@ -13,6 +13,10 @@
                             hide-details
                             class="hidden-sm-and-down"
                         ></v-text-field>
+                        <v-btn color="primary" link :to="{ name: 'dashboard.create-user' }">
+                            <v-icon left>mdi-plus</v-icon>
+                            Add new
+                        </v-btn>
                     </v-toolbar>
                     <v-divider></v-divider>
                     <v-card-text class="pa-0">
@@ -26,25 +30,23 @@
                             :footer-props="footerProps"
                             class="elevation-1"
                         >
-                            <template v-slot:item.full_name="{ item }">
-                                <span :class="{ 'text--crossed': !!item.deleted_at}">{{ item.full_name }}</span>
+                            <template v-slot:item.avatar="{ item }">
+                                <v-avatar size="32">
+                                    <img :src="item.image_path || '/storage/images/no-profile-image.png'" :alt="item.full_name"/>
+                                </v-avatar>
                             </template>
+
                             <template v-slot:item.action="{ item }">
-                                <v-tooltip
-                                    bottom
-                                    v-if="!!item.deleted_at"
-                                >
+                                <v-tooltip bottom>
                                     <template v-slot:activator="{ on }">
-                                        <v-btn text icon @click="restoreUser(item.id)">
-                                            <v-icon small v-on="on">mdi-delete-restore</v-icon>
+                                        <v-btn text icon link :to="{ name: 'dashboard.edit-user', params: { id: item.id }}">
+                                            <v-icon small v-on="on">mdi-pencil</v-icon>
                                         </v-btn>
                                     </template>
-                                    <span>Restore deleted user</span>
+                                    <span>Edit service</span>
                                 </v-tooltip>
-                                <v-tooltip
-                                    bottom
-                                    v-else
-                                >
+
+                                <v-tooltip bottom>
                                     <template v-slot:activator="{ on }">
                                         <v-btn text icon @click="deleteUser(item.id)">
                                             <v-icon small v-on="on">mdi-delete</v-icon>
@@ -81,10 +83,22 @@
                         value: 'id',
                     },
                     {
+                        text: 'Avatar',
+                        align: 'left',
+                        sortable: false,
+                        value: 'avatar',
+                    },
+                    {
                         text: 'Full name',
                         align: 'left',
                         sortable: true,
                         value: 'full_name',
+                    },
+                    {
+                        text: 'Phone',
+                        align: 'left',
+                        sortable: false,
+                        value: 'phone',
                     },
                     {
                         text: 'Email',
@@ -142,11 +156,11 @@
             },
             deleteUser(id) {
                 if (confirm('Are you sure you want to delete this user?')) {
-                    this.$store.dispatch('users/deleteUser', id);
+                    this.$store.dispatch('users/deleteUser', id)
+                        .then(() => {
+                                this.loadUsers();
+                            });
                 }
-            },
-            restoreUser(id) {
-                this.$store.dispatch('users/restoreUser', id);
             },
         }
     }

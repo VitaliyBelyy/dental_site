@@ -112,7 +112,7 @@
                             if (this.$route.params.nextUrl != null) {
                                 this.$router.push(this.$route.params.nextUrl);
                             } else {
-                                this.$router.push({ name: 'dashboard.statistics'});
+                                this.$router.push({ name: 'dashboard.patients' });
                             }
                         })
                         .finally(() => {

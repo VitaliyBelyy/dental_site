@@ -29,13 +29,13 @@
 
         methods: {
             createPatient(data) {
-                this.isLoading = true;
+                this.dataProcessing = true;
                 this.$store.dispatch('patients/createPatient', { data })
                     .then(() => {
                         this.$router.push({ name: 'dashboard.patients' });
                     })
                     .finally(() => {
-                        this.isLoading = false;
+                        this.dataProcessing = false;
                     });
             },
         }

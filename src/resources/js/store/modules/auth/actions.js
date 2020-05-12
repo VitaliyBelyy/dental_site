@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie';
+import moment from 'moment';
 
 const END_POINT = '/api/auth';
 const ONE_HOUR = 1/24;
@@ -11,14 +12,8 @@ let actions = {
         return new Promise((resolve, reject) => {
             window.httpClient.post(url, payload.data)
                 .then(response => {
-                    let data = response.data.response;
-                    let token = data.access_token;
-                    let user = {
-                        full_name: data.full_name,
-                        email: data.email || null,
-                        emailVerificationStatus: !!data.email_verified_at,
-                        roles: data.roles || [],
-                    };
+                    let user = response.data.response.user;
+                    let token = user.access_token;
 
                     window.httpClient.bindToken(token);
 
@@ -42,40 +37,34 @@ let actions = {
                 });
         });
     },
-    register: ({ commit }, payload) => {
-        let url = END_POINT + '/register';
+    // register: ({ commit }, payload) => {
+    //     let url = END_POINT + '/register';
 
-        return new Promise((resolve, reject) => {
-            window.httpClient.post(url, payload.data)
-                .then(response => {
-                    let data = response.data.response;
-                    let token = data.access_token;
-                    let user = {
-                        full_name: data.full_name,
-                        email: data.email || null,
-                        emailVerificationStatus: !!data.email_verified_at,
-                        roles: data.roles || [],
-                    };
+    //     return new Promise((resolve, reject) => {
+    //         window.httpClient.post(url, payload.data)
+    //             .then(response => {
+    //                 let user = response.data.response.user;
+    //                 let token = user.access_token;
 
-                    window.httpClient.bindToken(token);
+    //                 window.httpClient.bindToken(token);
 
-                    Cookies.set('access_token', token, { expires: ONE_HOUR });
+    //                 Cookies.set('access_token', token, { expires: ONE_HOUR });
 
-                    commit('setToken', token);
-                    commit('setUser', user);
-                    resolve();
-                })
-                .catch(err => {
-                    if (err.response.status === 422) {
-                        const errors = err.response.data.meta.errors;
-                        errors && commit("setValidationErrors", errors);
-                    }
+    //                 commit('setToken', token);
+    //                 commit('setUser', user);
+    //                 resolve();
+    //             })
+    //             .catch(err => {
+    //                 if (err.response.status === 422) {
+    //                     const errors = err.response.data.meta.errors;
+    //                     errors && commit("setValidationErrors", errors);
+    //                 }
 
-                    console.log(err.response);
-                    reject();
-                });
-        });
-    },
+    //                 console.log(err.response);
+    //                 reject();
+    //             });
+    //     });
+    // },
     userRequest: ({ commit, dispatch }) => {
         commit('setLoadingStatus', true);
 
@@ -98,13 +87,7 @@ let actions = {
         return new Promise((resolve, reject) => {
             window.httpClient.get(url)
                 .then(response => {
-                    let data = response.data.response;
-                    let user = {
-                        full_name: data.full_name,
-                        email: data.email || null,
-                        emailVerificationStatus: !!data.email_verified_at,
-                        roles: data.roles || [],
-                    };
+                    let user = response.data.response.user;
 
                     commit('setUser', user);
                     resolve();
@@ -144,7 +127,7 @@ let actions = {
         return new Promise((resolve, reject) => {
             window.httpClient.post(queryURL)
                 .then(() => {
-                    commit('setVerificationStatus', true);
+                    commit('setVerificationDate', moment().format('YYYY-MM-DD'));
                     resolve();
                 })
                 .catch(err => {
@@ -183,7 +166,10 @@ let actions = {
     },
     clearValidationErrors: ({ commit }) => {
         commit('clearValidationErrors');
-    }
+    },
+    updateUser: ({ commit }, data) => {
+        commit('updateUser', data);
+    },
 };
 
 export default actions;

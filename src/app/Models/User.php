@@ -6,7 +6,6 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Notifications\VerifyEmail;
 use App\Notifications\PasswordResetNotification;
 
@@ -14,7 +13,6 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
     use HasRoles;
-    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -22,7 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'full_name', 'email', 'password', 'api_token'
+        'full_name', 'phone', 'email', 'password', 'original_file_name', 'hash_file_name', 'api_token'
     ];
 
     /**
@@ -64,8 +62,8 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new PasswordResetNotification($token));
     }
 
-//    public function patients()
-//    {
-//        return $this->hasMany('App\Models\Patient');
-//    }
+    public function patients()
+    {
+        return $this->hasMany('App\Models\Patient');
+    }
 }

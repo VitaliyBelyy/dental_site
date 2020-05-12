@@ -15,23 +15,37 @@ class PatientsTableSeeder extends Seeder
     {
         factory(Patient::class, 20)->create()
             ->each(function ($patient) {
+                // Fill visit history
                 for ($i = 0; $i < 10; $i++) {
-                    $date = now()->sub(rand(1, 10), 'day');
-                    $service = Service::inRandomOrder()->first();
-
-                    $count = rand(1, 10);
-                    $serviceCost = $service->price * $count;
-                    $patient->services()->attach($service->id, [ // Fill service history
-                        'count' => $count,
-                        'service_cost' => $serviceCost,
+                    $date = now()->sub(10 - $i, 'day');
+                    $visit = $patient->visits()->create([
                         'date' => $date
                     ]);
+                    $iterationsNum = rand(1, 3);
+                    $serviceCost = 0;
+
+                    for ($j = 0; $j < $iterationsNum; $j++) {
+                        $service = Service::inRandomOrder()->first();
+                        $serviceCount = rand(1, 5);
+                        $totalCost = $service->price * $serviceCount;
+
+                        $visit->services()->attach($service->id, [
+                            'service_count' => $serviceCount,
+                            'total_cost' => $totalCost
+                        ]);
+                        $serviceCost += $totalCost;
+                    }
                     $patient->update([
                         'total_accrued' => $patient->total_accrued + $serviceCost
                     ]);
+                }
 
-                    $amount = rand(100, 2000);
-                    $patient->payments()->create([ // Fill payment history
+                // Fill payment history
+                for ($i = 0; $i < 10; $i++) {
+                    $date = now()->sub(10 - $i, 'day');
+                    $amount = rand(1000, 5000);
+
+                    $patient->payments()->create([
                         'amount' => $amount,
                         'date' => $date
                     ]);

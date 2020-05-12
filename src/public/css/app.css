@@ -15,7 +15,7 @@
 .dashboard-card__title {
   font-weight: 300;
   letter-spacing: normal;
-  font-size: 24px;
+  font-size: 22px;
   text-transform: capitalize;
 }
 
@@ -37,5 +37,19 @@
   right: 15px;
   top: 10px;
   background: #fff;
+}
+
+.dashboard-card__table--modal {
+  box-shadow: inset 0px 0px 3px 0px rgba(0, 0, 0, 0.25);
+  background-color: #f9f9f9 !important;
+}
+
+.dashboard-card__table--modal tbody tr:hover {
+  background: transparent !important;
+}
+
+.dashboard-card__table--modal td,
+.dashboard-card__table--modal th {
+  height: 40px !important;
 }
 

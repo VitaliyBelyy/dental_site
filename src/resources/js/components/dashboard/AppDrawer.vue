@@ -3,7 +3,7 @@
         <v-toolbar color="primary darken-1" dark>
             <img :src="logo" width="36" height="36" alt="App logo"/>
             <v-toolbar-title class="ml-0 pl-3">
-                <span class="hidden-sm-and-down">Dental clinic</span>
+                <span class="hidden-sm-and-down">Dental CRM</span>
             </v-toolbar-title>
         </v-toolbar>
 

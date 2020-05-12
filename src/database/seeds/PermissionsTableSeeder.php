@@ -14,15 +14,17 @@ class PermissionsTableSeeder extends Seeder
     {
         $permissions = [
             ['name' => 'users.viewList'],
+            ['name' => 'users.store'],
+            ['name' => 'users.view'],
+            ['name' => 'users.update'],
             ['name' => 'users.destroy'],
-            ['name' => 'users.restore'],
 
             ['name' => 'patients.viewList'],
             ['name' => 'patients.store'],
             ['name' => 'patients.view'],
             ['name' => 'patients.update'],
-            ['name' => 'patients.viewServiceHistory'],
-            ['name' => 'patients.createServiceHistoryRecord'],
+            ['name' => 'patients.viewVisitHistory'],
+            ['name' => 'patients.createVisitHistoryRecord'],
             ['name' => 'patients.viewPaymentHistory'],
             ['name' => 'patients.createPaymentHistoryRecord'],
         ];

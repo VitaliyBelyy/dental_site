@@ -7,8 +7,9 @@ use App\Http\Requests\Patients\Index as PatientsIndex;
 use App\Http\Requests\Patients\Store as PatientsStore;
 use App\Http\Requests\Patients\Show as PatientsShow;
 use App\Http\Requests\Patients\Update as PatientsUpdate;
-use App\Http\Requests\Patients\ShowServiceHistory as PatientsShowServiceHistory;
-use App\Http\Requests\Patients\CreateServiceHistoryRecord as PatientsCreateServiceHistoryRecord;
+use App\Http\Requests\Patients\Destroy as PatientsDestroy;
+use App\Http\Requests\Patients\ShowVisitHistory as PatientsShowVisitHistory;
+use App\Http\Requests\Patients\CreateVisitHistoryRecord as PatientsCreateVisitHistoryRecord;
 use App\Http\Requests\Patients\ShowPaymentHistory as PatientsShowPaymentHistory;
 use App\Http\Requests\Patients\CreatePaymentHistoryRecord as PatientsCreatePaymentHistoryRecord;
 use App\Models\Anamnesis;
@@ -65,7 +66,7 @@ class PatientsController extends Controller
 
         $patient = Patient::create([
             'full_name' => $request->full_name,
-            'phone' => $request->phone ?? null,
+            'phone' => $request->phone,
             'email' => $request->email ?? null,
             'gender' => $request->gender ?? null,
             'birth_date' => $request->birth_date ?? null,
@@ -123,42 +124,43 @@ class PatientsController extends Controller
         return response()->api($patient);
     }
 
-    public function showServiceHistory(PatientsShowServiceHistory $request, $id) {
+    public function showVisitHistory(PatientsShowVisitHistory $request, Patient $patient) {
         $limit = $request->get('limit') ?? 10;
-        $search = $request->get('q');
         $sortBy = $request->get('sort_by');
-        $query = DB::table('patient_service')
-            ->join('services', 'patient_service.service_id', '=', 'services.id')
-            ->where('patient_service.patient_id', '=', $id)
-            ->select(DB::raw('patient_service.id, patient_service.service_cost, patient_service.date, services.name'));
-
-        if (isset($search)) {
-            $query = $query->where('services.name', 'LIKE', '%' . $request->get('q') . '%');
-        }
+        $query = $patient->visits()
+            ->join('service_visit', 'visits.id', '=', 'service_visit.visit_id')
+            ->groupBy('visits.id', 'visits.date')
+            ->select(DB::raw('visits.id, visits.date, SUM(service_visit.total_cost) as service_cost'));
 
         if (isset($sortBy)) {
             $direction = $request->get('sort_desc');
             $query = $query->orderBy($request->get('sort_by'), (isset($direction) && json_decode($direction)) ? 'DESC' : 'ASC');
         }
 
-        $history = $query->orderBy('patient_service.created_at', 'DESC')
+        $history = $query->orderBy('visits.created_at', 'DESC')
             ->paginate($limit);
 
         return response()->api($history);
     }
 
-    public function createServiceHistoryRecord(PatientsCreateServiceHistoryRecord $request, Patient $patient) {
-        $patient->services()->attach($request->service_id, [
-            'count' => $request->count,
-            'service_cost' => $request->service_cost,
+    public function createVisitHistoryRecord(PatientsCreateVisitHistoryRecord $request, Patient $patient) {
+        $visit = $patient->visits()->create([
             'date' => $request->date
         ]);
+        $serviceCost = 0;
 
+        foreach ($request->services as $service) {
+            $visit->services()->attach($service['id'], [
+                'service_count' => $service['service_count'],
+                'total_cost' => $service['total_cost']
+            ]);
+            $serviceCost += $service['total_cost'];
+        }
         $patient->update([
-           'total_accrued' => $patient->total_accrued + $request->service_cost
+           'total_accrued' => $patient->total_accrued + $serviceCost
         ]);
 
-        return response()->api(null, 200);
+        return response()->api($visit);
     }
 
     public function showPaymentHistory(PatientsShowPaymentHistory $request, Patient $patient) {
@@ -175,7 +177,7 @@ class PatientsController extends Controller
     }
 
     public function createPaymentHistoryRecord(PatientsCreatePaymentHistoryRecord $request, Patient $patient) {
-        $result = $patient->payments()->create([
+        $payment = $patient->payments()->create([
             'amount' => $request->amount,
             'date' => $request->date,
             'notes' => $request->notes ?? null,
@@ -185,6 +187,13 @@ class PatientsController extends Controller
             'total_paid' => $patient->total_paid + $request->amount
         ]);
 
-        return response()->api($result);
+        return response()->api($payment);
+    }
+
+    public function destroy(PatientsDestroy $request, Patient $patient)
+    {
+        $patient->delete();
+
+        return response()->api($patient);
     }
 }

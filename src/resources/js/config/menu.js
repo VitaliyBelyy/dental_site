@@ -2,7 +2,8 @@ const Menu = [
     {
         title: "Dashboard",
         icon: "mdi-view-dashboard",
-        name: "dashboard.statistics"
+        name: "dashboard.statistics",
+        admin: true
     },
     {
         title: "Calendar",
@@ -18,6 +19,7 @@ const Menu = [
         title: "Services",
         icon: "mdi-view-list",
         name: "dashboard.services",
+        admin: true
     },
     {
         title: "Users",

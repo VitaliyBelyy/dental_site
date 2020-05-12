@@ -21,6 +21,7 @@ use Illuminate\Support\Str;
 $factory->define(User::class, function (Faker $faker) {
     return [
         'full_name' => $faker->name,
+        'phone' => $faker->numerify('+38 (0##) ###-##-##'),
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
         'password' => Hash::make('password'),

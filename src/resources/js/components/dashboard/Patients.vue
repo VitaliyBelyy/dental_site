@@ -156,9 +156,9 @@
                     {
                         icon: "mdi-account-details",
                         click: (id) => {
-                            this.$router.push({name: 'dashboard.service-history', params: { id }});
+                            this.$router.push({name: 'dashboard.visit-history', params: { id }});
                         },
-                        title: "Show service history",
+                        title: "Show visit history",
                     },
 
                     { divider: true },
@@ -169,6 +169,16 @@
                             this.$router.push({name: 'dashboard.payment-history', params: { id }});
                         },
                         title: "Show payment history",
+                    },
+
+                    { divider: true },
+
+                    {
+                        icon: "mdi-delete",
+                        click: (id) => {
+                            this.deletePatient(id);
+                        },
+                        title: "Delete patient",
                     },
                 ]
             }
@@ -231,6 +241,14 @@
                     .finally(() => {
                         this.isLoading = false;
                     });
+            },
+            deletePatient(id) {
+                if (confirm('Are you sure you want to delete this patient?')) {
+                    this.$store.dispatch('patients/deletePatient', id)
+                        .then(() => {
+                                this.loadPatients();
+                            });
+                }
             },
         }
     }

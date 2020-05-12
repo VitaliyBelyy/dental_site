@@ -5,14 +5,9 @@ let mutations = {
     setPagination: (state, payload) => {
         state.pagination = payload;
     },
-    setDeletedDate: (state, payload) => {
-        for (let user of state.users) {
-            if (user.id === payload.id) {
-                user.deleted_at = payload.date;
-                break;
-            }
-        }
-    }
+    setSelectedUser: (state, payload) => {
+        state.selectedUser = payload;
+    },
 };
 
 export default mutations;

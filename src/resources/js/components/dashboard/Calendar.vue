@@ -60,6 +60,7 @@
                             v-model="focus"
                             color="primary"
                             :events="events"
+                            :event-name="getEventName"
                             :event-color="(event) => getStatusColor(event.status)"
                             :event-margin-bottom="3"
                             :now="today"
@@ -76,7 +77,7 @@
                             :activator="selectedElement"
                             offset-x
                         >
-                            <v-card color="grey lighten-4" min-width="350px" flat>
+                            <!-- <v-card color="grey lighten-4" min-width="350px" flat>
                                 <v-toolbar :color="getStatusColor(selectedEvent.status)" dark>
                                     <v-btn @click="deleteEvent(selectedEvent)" icon>
                                         <v-icon>mdi-delete</v-icon>
@@ -88,13 +89,47 @@
                                     {{ selectedEvent.details }}
                                 </v-card-text>
                                 <v-card-actions>
-                                    <v-btn text color="secondary" @click="selectedOpen = false">
-                                        Close
-                                    </v-btn>
                                     <v-spacer></v-spacer>
                                     <v-btn text color="primary" @click.prevent="editEvent(selectedEvent)">
                                         Edit
                                     </v-btn>
+                                </v-card-actions>
+                            </v-card> -->
+                            <v-card max-width="400px" outlined class="event-card">
+                                <v-card-content>
+                                    <v-list-item three-line>
+                                        <v-list-item-content class="pt-4 pb-6">
+                                            <v-chip class="event-card__status mb-4" small :color="getStatusColor(selectedEvent.status)" text-color="white">{{ selectedEvent.status }}</v-chip>
+                                            <v-list-item-title class="headline mb-1">{{ selectedEvent.patient && selectedEvent.patient.full_name ? selectedEvent.patient.full_name : 'Unknown patient'}}</v-list-item-title>
+                                            <v-list-item-subtitle class="event-card__period"><v-icon small>mdi-clock-outline</v-icon>{{ getPeriod(selectedEvent.start, selectedEvent.end) }}</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                
+                                        <v-list-item-avatar tile size="80" color="grey">
+                                            <v-img :src="selectedEvent.patient && selectedEvent.patient.image_path ? selectedEvent.patient.image_path : '/storage/images/no-profile-image.png'"></v-img>
+                                        </v-list-item-avatar>
+                                    </v-list-item>
+
+                                    <v-list-item class="event-card__info" two-line v-if="selectedEvent.user && selectedEvent.user.full_name">
+                                        <v-list-item-content class="pa-0">
+                                            <v-list-item-title>Attending doctor</v-list-item-title>
+                                            <v-list-item-subtitle>{{ selectedEvent.user.full_name }}</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+
+                                    <v-list-item class="event-card__info" two-line v-if="selectedEvent.details">
+                                        <v-list-item-content class="pa-0">
+                                            <v-list-item-title>Details</v-list-item-title>
+                                            <v-list-item-subtitle>{{ selectedEvent.details }}</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-card-content>
+                                
+                                <v-divider></v-divider>
+                            
+                                <v-card-actions>
+                                    <v-btn text color="primary" @click.prevent="editEvent(selectedEvent)">Edit</v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn text color="primary" @click.prevent="deleteEvent(selectedEvent)">Delete</v-btn>
                                 </v-card-actions>
                             </v-card>
                         </v-menu>
@@ -102,6 +137,7 @@
                 </v-card>
             </v-col>
         </v-row>
+        {{selectedEvent}}
     </v-container>
 </template>
 
@@ -213,7 +249,10 @@
                 this.start = start;
                 this.end = end;
             },
-            getStatusColor(status) {
+            getEventName (event) {
+                return event.start.time + ' - ' + event.end.time + ' ' + event.input.name;
+            },
+            getStatusColor (status) {
                 switch (status) {
                     case "Запланировано":
                         return "#2196F3";
@@ -228,6 +267,9 @@
                 }
 
                 return "#2196F3";
+            },
+            getPeriod (start, end) {
+                return moment(start).format('D MMMM, dddd ') + moment(start).format('HH:mm') + ' - ' + moment(end).format('HH:mm');
             },
             editEvent (event) {
                 this.$store.dispatch('events/setPatients', [event.patient]);
@@ -280,7 +322,7 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .add-event-button {
         position: fixed;
         bottom: 45px;
@@ -289,5 +331,21 @@
     }
     .calendar {
         min-height: 650px;
+    }
+    .event-card__status {
+        flex: initial;
+    }
+    .event-card__period .v-icon {
+        margin-right: 5px;
+        margin-top: -2px;
+    }
+    .event-card__info {
+        min-height: 0;
+        padding-top: 0;
+        padding-bottom: 20px;
+
+        &:last-child {
+            padding-bottom: 24px;
+        }
     }
 </style>

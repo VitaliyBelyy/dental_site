@@ -18,12 +18,14 @@ class RolesTableSeeder extends Seeder
         $user = Role::firstOrCreate(['name' => 'user']);
 
         $permissionsList = [
+            'users.view',
+            'users.update',
             'patients.viewList',
             'patients.store',
             'patients.view',
             'patients.update',
-            'patients.viewServiceHistory',
-            'patients.createServiceHistoryRecord',
+            'patients.viewVisitHistory',
+            'patients.createVisitHistoryRecord',
             'patients.viewPaymentHistory',
             'patients.createPaymentHistoryRecord',
         ];

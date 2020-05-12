@@ -8,14 +8,19 @@ import ResetPassword from "../components/auth/ResetPassword";
 import Dashboard from '../layouts/Dashboard';
 import Statistics from "../components/dashboard/Statistics";
 import Users from "../components/dashboard/Users";
+import CreateUser from "../components/dashboard/CreateUser";
+import EditUser from "../components/dashboard/EditUser";
 import Patients from "../components/dashboard/Patients";
 import CreatePatient from "../components/dashboard/CreatePatient";
 import PatientProfile from "../components/dashboard/PatientProfile";
 import EditPatient from "../components/dashboard/EditPatient";
-import ServiceHistory from "../components/dashboard/ServiceHistory";
+import VisitHistory from "../components/dashboard/VisitHistory";
 import PaymentHistory from "../components/dashboard/PaymentHistory";
 import Calendar from "../components/dashboard/Calendar";
 import Services from "../components/dashboard/Services";
+
+import store from '@/js/store/index';
+
 export default [
     {
         path: '/auth',
@@ -84,19 +89,38 @@ export default [
         children: [
             {
                 path: '/',
-                redirect: { name: 'dashboard.statistics' },
+                redirect: { name: 'dashboard.patients' },
             },
             {
                 path: 'statistics',
                 name: 'dashboard.statistics',
                 component: Statistics,
-                meta: { title: "Statistics" },
+                meta: { title: "Statistics", admin: true },
             },
             {
                 path: 'users',
                 name: 'dashboard.users',
                 component: Users,
-                meta: { title: "Users" },
+                meta: { title: "Users", admin: true },
+            },
+            {
+                path: 'users/create',
+                name: 'dashboard.create-user',
+                component: CreateUser,
+                meta: { admin: true },
+            },
+            {
+                path: 'users/:id/edit',
+                name: 'dashboard.edit-user',
+                component: EditUser,
+                beforeEnter: (to, from, next) => {
+                    if (store.getters['auth/isAdmin'] || (store.state.auth.user && store.state.auth.user.id === to.params.id)) {
+                        return next();
+                    }
+                    
+                    return next(from.fullPath);
+                },
+                props: true,
             },
             {
                 path: 'patients',
@@ -122,9 +146,9 @@ export default [
                 props: true
             },
             {
-                path: 'patients/:id/service-history',
-                name: 'dashboard.service-history',
-                component: ServiceHistory,
+                path: 'patients/:id/visit-history',
+                name: 'dashboard.visit-history',
+                component: VisitHistory,
                 props: true
             },
             {
@@ -142,6 +166,7 @@ export default [
                 path: 'services',
                 name: 'dashboard.services',
                 component: Services,
+                meta: { title: "Services", admin: true },
             },
         ]
     },

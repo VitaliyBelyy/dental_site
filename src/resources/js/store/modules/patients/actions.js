@@ -100,18 +100,33 @@ let actions = {
                 });
         });
     },
-    loadServiceHistory: ({ commit }, payload) => {
-        let url = `${END_POINT}/${payload.id}/service-history?${queryString.stringify(payload.params, {encode: false})}`;
+    loadVisitHistory: ({ commit }, payload) => {
+        let url = `${END_POINT}/${payload.id}/visit-history?${queryString.stringify(payload.params, {encode: false})}`;
 
         return new Promise((resolve, reject) => {
             window.httpClient.get(url)
                 .then((response) => {
-                    commit('setServiceHistory', response.data.response);
+                    commit('setVisitHistory', response.data.response);
 
                     if (response.data.meta.pagination) {
-                        commit('setServiceHistoryPagination', response.data.meta.pagination);
+                        commit('setVisitHistoryPagination', response.data.meta.pagination);
                     }
 
+                    resolve();
+                })
+                .catch(err => {
+                    console.log(err.response);
+                    reject();
+                });
+        });
+    },
+    loadVisitHistoryServices: ({ commit }, payload) => {
+        let url = '/api/visits/' + payload.id + '/services';
+
+        return new Promise((resolve, reject) => {
+            window.httpClient.get(url)
+                .then((response) => {
+                    commit('setVisitHistoryServices', response.data.response);
                     resolve();
                 })
                 .catch(err => {
@@ -135,8 +150,8 @@ let actions = {
                 });
         });
     },
-    createServiceHistoryRecord: ({ commit }, payload) => {
-        let url = END_POINT + '/' + payload.id + '/service-history';
+    createVisitHistoryRecord: ({ commit }, payload) => {
+        let url = END_POINT + '/' + payload.id + '/visit-history';
 
         return new Promise((resolve, reject) => {
             window.httpClient.post(url, payload.data)
@@ -174,6 +189,20 @@ let actions = {
 
         return new Promise((resolve, reject) => {
             window.httpClient.post(url, payload.data)
+                .then(() => {
+                    resolve();
+                })
+                .catch(err => {
+                    console.log(err.response);
+                    reject();
+                });
+        });
+    },
+    deletePatient: ({ commit }, id) => {
+        let url = END_POINT + '/' + id;
+
+        return new Promise((resolve, reject) => {
+            window.httpClient.delete(url)
                 .then(() => {
                     resolve();
                 })

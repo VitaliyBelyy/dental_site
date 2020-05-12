@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Services;
 
-use Illuminate\Foundation\Http\FormRequest;
+use BwtTeam\LaravelAPI\Requests\ApiRequest;
 
-class Store extends FormRequest
+class Store extends ApiRequest
 {
     /**
      * Determine if the user is authorized to make this request.

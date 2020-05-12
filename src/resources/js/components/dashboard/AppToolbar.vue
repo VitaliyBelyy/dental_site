@@ -21,7 +21,7 @@
                         v-for="(item, index) in accountMenu"
                         :to="!item.href ? { name: item.name } : null"
                         :href="item.href"
-                        @click="item.click"
+                        @click.prevent="item.click"
                         ripple="ripple"
                         :disabled="item.disabled"
                         :key="index"
@@ -47,6 +47,12 @@
             return {
                 accountMenu: [
                     {
+                        icon: "mdi-pencil",
+                        href: "#",
+                        title: 'Edit profile',
+                        click: this.handleEdit
+                    },
+                    {
                         icon: "mdi-exit-to-app",
                         href: "#",
                         title: 'Logout',
@@ -59,6 +65,13 @@
         methods: {
             handleDrawerToggle() {
                 this.$store.dispatch('app/setDrawerState', !this.$store.state.app.drawer);
+            },
+            handleEdit() {
+                let user = this.$store.state.auth.user;
+                
+                if (user && user.id) {
+                    this.$router.push({ name: 'dashboard.edit-user', params: { id: user.id }});
+                }
             },
             handleLogout() {
                 this.$store.dispatch('auth/logout')

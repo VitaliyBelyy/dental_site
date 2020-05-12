@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFkToPatientServiceTable extends Migration
+class AddFkToServiceVisitTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class AddFkToPatientServiceTable extends Migration
      */
     public function up()
     {
-        Schema::table('patient_service', function (Blueprint $table) {
-            $table->foreign('patient_id')
+        Schema::table('service_visit', function (Blueprint $table) {
+            $table->foreign('visit_id')
                 ->references('id')
-                ->on('patients')
+                ->on('visits')
                 ->onDelete('CASCADE')
                 ->onUpdate('CASCADE');
             $table->foreign('service_id')
@@ -34,8 +34,8 @@ class AddFkToPatientServiceTable extends Migration
      */
     public function down()
     {
-        Schema::table('patient_service', function (Blueprint $table) {
-            $table->dropForeign(['patient_id']);
+        Schema::table('service_visit', function (Blueprint $table) {
+            $table->dropForeign(['visit_id']);
             $table->dropForeign(['service_id']);
         });
     }

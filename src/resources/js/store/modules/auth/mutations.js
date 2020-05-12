@@ -8,9 +8,9 @@ let mutations = {
     setLoadingStatus: (state, status) => {
         state.isLoading = status;
     },
-    setVerificationStatus: (state, status) => {
+    setVerificationDate: (state, date) => {
         if (state.user) {
-            state.user.emailVerificationStatus = status;
+            state.user.email_verified_at = date;
         }
     },
     setValidationErrors(state, payload) {
@@ -18,6 +18,9 @@ let mutations = {
     },
     clearValidationErrors(state) {
         state.validationErrors = {};
+    },
+    updateUser(state, data) {
+        state.user = Object.assign({}, state.user, data);
     }
 };
 

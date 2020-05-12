@@ -55,6 +55,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'user_avatars' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/user-avatars'),
+            'url' => env('APP_URL') . '/storage/user-avatars',
+            'visibility' => 'public',
+        ],
+
         'patient_avatars' => [
             'driver' => 'local',
             'root' => storage_path('app/public/patient-avatars'),

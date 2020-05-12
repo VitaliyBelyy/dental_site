@@ -51,15 +51,9 @@ class Patient extends Model
         return $this->belongsTo('App\Models\Anamnesis');
     }
 
-    public function services()
+    public function visits()
     {
-        return $this->belongsToMany('App\Models\Service')
-            ->withTimestamps()
-            ->withPivot([
-                'count',
-                'service_cost',
-                'date',
-            ]);
+        return $this->hasMany('App\Models\Visit');
     }
 
     public function payments()

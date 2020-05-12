@@ -1,8 +1,8 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="500px">
-        <v-card class="event-card">
+        <v-card class="dashboard-card">
             <v-card-title class="px-4 py-3">
-                <h3 class="event-card__title">{{ formTitle }}</h3>
+                <h3 class="dashboard-card__title">{{ formTitle }}</h3>
                 <v-spacer></v-spacer>
                 <v-select
                     solo
@@ -12,7 +12,7 @@
                     :background-color="getStatusColor(form.status)"
                     v-model="form.status"
                     :items="statusList"
-                    class="event-card__status-select"
+                    class="dashboard-card__status-select"
                 >
                     <template v-slot:item="{ item }">
                         <span :style="'color: ' + getStatusColor(item)">{{ item }}</span>
@@ -196,7 +196,7 @@
 
 <script>
     import moment from 'moment';
-    import {required} from "vuelidate/lib/validators";
+    import { required } from "vuelidate/lib/validators";
     import { Subject } from 'rxjs';
     import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
@@ -440,13 +440,7 @@
 </script>
 
 <style scoped>
-    .event-card__title {
-        font-weight: 300;
-        letter-spacing: normal;
-        font-size: 22px;
-        text-transform: capitalize;
-    }
-    .event-card__status-select {
+    .dashboard-card__status-select {
         max-width: 185px;
     }
 </style>

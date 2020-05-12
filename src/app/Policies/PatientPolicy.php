@@ -30,14 +30,14 @@ class PatientPolicy
         return $user->hasPermissionTo('patients.update') && $user->id === $patient->user_id;
     }
 
-    public function viewServiceHistory(User $user, Patient $patient)
+    public function viewVisitHistory(User $user, Patient $patient)
     {
-        return $user->hasPermissionTo('patients.viewServiceHistory') && $user->id === $patient->user_id;
+        return $user->hasPermissionTo('patients.viewVisitHistory') && $user->id === $patient->user_id;
     }
 
-    public function createServiceHistoryRecord(User $user, Patient $patient)
+    public function createVisitHistoryRecord(User $user, Patient $patient)
     {
-        return $user->hasPermissionTo('patients.createServiceHistoryRecord') && $user->id === $patient->user_id;
+        return $user->hasPermissionTo('patients.createVisitHistoryRecord') && $user->id === $patient->user_id;
     }
 
     public function viewPaymentHistory(User $user, Patient $patient)
