@@ -77,24 +77,6 @@
                             :activator="selectedElement"
                             offset-x
                         >
-                            <!-- <v-card color="grey lighten-4" min-width="350px" flat>
-                                <v-toolbar :color="getStatusColor(selectedEvent.status)" dark>
-                                    <v-btn @click="deleteEvent(selectedEvent)" icon>
-                                        <v-icon>mdi-delete</v-icon>
-                                    </v-btn>
-                                    <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-                                    <div class="flex-grow-1"></div>
-                                </v-toolbar>
-                                <v-card-text>
-                                    {{ selectedEvent.details }}
-                                </v-card-text>
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn text color="primary" @click.prevent="editEvent(selectedEvent)">
-                                        Edit
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card> -->
                             <v-card max-width="400px" outlined class="event-card">
                                 <v-card-content>
                                     <v-list-item three-line>
