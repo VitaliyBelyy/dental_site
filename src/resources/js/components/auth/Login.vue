@@ -47,7 +47,7 @@
                        class="form-submit"
                        :loading="isLoading"
                        @click.prevent="submit">Login</v-btn>
-                <p>Are you new? <router-link :to="{ name: 'auth.register' }">Sign up</router-link></p>
+                <div><router-link :to="{ name: 'home' }" class="back-link"><span class="lnr lnr-arrow-left back-link__icon"></span> Back to the site</router-link></div>
             </v-card-actions>
         </v-card>
     </div>
@@ -124,7 +124,7 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
     .form-title {
         color: #fff;
         text-transform: uppercase;
@@ -150,5 +150,20 @@
         justify-content: space-between;
         align-items: flex-end;
         font-size: 1rem;
+    }
+    .back-link {
+        position: relative;
+        padding-left: 30px;
+
+        &:hover .back-link__icon {
+            left: 0;
+        }
+    }
+    .back-link__icon {
+        position: absolute;
+        top: 1px;
+        left: 5px;
+        transition: all 0.3s ease 0s;
+        font-weight: 700;
     }
 </style>
