@@ -198,6 +198,26 @@ let actions = {
                 });
         });
     },
+    loadServiceHistory: ({ commit }, payload) => {
+        let url = `${END_POINT}/${payload.id}/service-history?${queryString.stringify(payload.params, {encode: false})}`;
+
+        return new Promise((resolve, reject) => {
+            window.httpClient.get(url)
+                .then((response) => {
+                    commit('setServiceHistory', response.data.response);
+
+                    if (response.data.meta.pagination) {
+                        commit('setServiceHistoryPagination', response.data.meta.pagination);
+                    }
+
+                    resolve();
+                })
+                .catch(err => {
+                    console.log(err.response);
+                    reject();
+                });
+        });
+    },
     deletePatient: ({ commit }, id) => {
         let url = END_POINT + '/' + id;
 

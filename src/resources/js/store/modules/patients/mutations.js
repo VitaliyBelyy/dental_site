@@ -29,6 +29,12 @@ let mutations = {
     setPaymentHistoryPagination: (state, payload) => {
         state.paymentHistoryPagination = payload;
     },
+    setServiceHistory: (state, payload) => {
+        state.serviceHistory = payload;
+    },
+    setServiceHistoryPagination: (state, payload) => {
+        state.serviceHistoryPagination = payload;
+    },
 };
 
 export default mutations;

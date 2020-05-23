@@ -49,4 +49,9 @@ class PatientPolicy
     {
         return $user->hasPermissionTo('patients.createPaymentHistoryRecord') && $user->id === $patient->user_id;
     }
+
+    public function viewServiceHistory(User $user, Patient $patient)
+    {
+        return $user->hasPermissionTo('patients.viewServiceHistory') && $user->id === $patient->user_id;
+    }
 }

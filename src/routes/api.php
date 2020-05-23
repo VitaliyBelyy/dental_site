@@ -37,15 +37,18 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function () {
     # DELETE            /patients/{patient}                         patients.destroy
     Route::delete('patients/{patient}', 'PatientsController@destroy');
 
-    # GET               /patients/{patient}/visit-history              patients.showVisitHistory
+    # GET               /patients/{patient}/visit-history           patients.showVisitHistory
     Route::get('patients/{patient}/visit-history', 'PatientsController@showVisitHistory');
-    # POST              /patients/{patient}/visit-history         patients.createVisitHistoryRecord
+    # POST              /patients/{patient}/visit-history           patients.createVisitHistoryRecord
     Route::post('patients/{patient}/visit-history', 'PatientsController@createVisitHistoryRecord');
 
     # GET               /patients/{patient}/payment-history         patients.showPaymentHistory
     Route::get('patients/{patient}/payment-history', 'PatientsController@showPaymentHistory');
     # POST              /patients/{patient}/payment-history         patients.createPaymentHistoryRecord
     Route::post('patients/{patient}/payment-history', 'PatientsController@createPaymentHistoryRecord');
+
+    # GET               /patients/{patient}/service-history         patients.showServiceHistory
+    Route::get('patients/{patient}/service-history', 'PatientsController@showServiceHistory');
 
     // Anamnesis
     # GET               /anamnesis                   anamnesis.index
@@ -84,11 +87,19 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function () {
     Route::get('charts/services-cost', 'ChartsController@showServicesCost');
     # GET               /charts/ratio                       charts.showRatio
     Route::get('charts/ratio', 'ChartsController@showRatio');
+
+    // Teeth
+    # GET               /teeth                              teeth.index
+    Route::get('teeth', 'TeethController@index');
+    
+    // Mail
+    # POST              /contact-letter                     mail.sendContactLetter
+    Route::post('contact-letter', 'MailController@sendContactLetter');
 });
 
 // Auth
 Route::group(['namespace' => 'Api\Auth', 'prefix' => 'auth'], function () {
-    Route::post('register', 'AuthController@register');
+    // Route::post('register', 'AuthController@register');
     Route::post('login', 'AuthController@login');
 
     Route::middleware(['auth:api'])->group(function () {

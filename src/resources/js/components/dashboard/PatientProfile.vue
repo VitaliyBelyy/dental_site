@@ -1,6 +1,6 @@
 <template>
     <v-container fluid>
-        <v-row class="ma-0" justify="center">
+        <v-row class="mx-0 mb-8" justify="center">
             <v-col cols="12" md="8" class="py-0">
                 <v-card class="dashboard-card">
                     <v-card-title class="py-4 px-6">
@@ -57,7 +57,7 @@
                                             <h5 class="patient-info__details-heading">Birth date:</h5>
                                         </v-col>
                                         <v-col cols="12" sm="9" class="patient-info__group-column">
-                                            <p class="patient-info__details">{{ patientBirthDate ? patientBirthDate : '-' }}</p>
+                                            <p class="patient-info__details">{{ patient.birth_date ? patient.birth_date : '-' }}</p>
                                         </v-col>
                                     </v-row>
                                 </div>
@@ -111,11 +111,48 @@
                 </v-card>
             </v-col>
         </v-row>
+        
+        <v-row class="mx-0 mb-8" justify="center">
+            <v-col cols="12" md="8" class="py-0">
+                <v-card class="dashboard-card">
+                    <v-card-title class="py-4 px-6">
+                        <h3 class="dashboard-card__title">Teeth map</h3>
+                    </v-card-title>
+                    <v-divider></v-divider>
+                    <v-card-text class="pt-4 pb-6 px-6">
+                        <teeth-map :value="selectedTooth" @change="(value) => selectedTooth = value"/>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+
+        <v-row class="mx-0" justify="center">
+            <v-col cols="12" md="8" class="py-0">
+                <v-card class="dashboard-card">
+                    <v-card-title class="py-4 px-6">
+                        <h3 class="dashboard-card__title">Services history</h3>
+                    </v-card-title>
+                    <v-divider></v-divider>
+                    <v-card-text class="pa-0">
+                        <v-data-table
+                            :headers="headers"
+                            :items="historyItems"
+                            :server-items-length="totalHistoryItems"
+                            :options.sync="options"
+                            :loading="isLoading"
+                            :items-per-page="15"
+                            :footer-props="footerProps"
+                            class="elevation-1"
+                        ></v-data-table>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
 <script>
-    import moment from 'moment';
+    import TeethMap from './TeethMap';
 
     const MALE = 0;
     const FEMALE = 1;
@@ -125,9 +162,51 @@
 
         props: ['id'],
 
+        components: {
+            TeethMap
+        },
+
         data() {
             return {
+                selectedTooth: null,
+                search: null,
                 isLoading: false,
+                options: {},
+                footerProps: {
+                    'items-per-page-options': [15, 30, 45]
+                },
+                headers: [
+                    {
+                        text: 'ID',
+                        align: 'left',
+                        sortable: false,
+                        value: 'id',
+                    },
+                    {
+                        text: 'Name',
+                        align: 'left',
+                        sortable: true,
+                        value: 'name',
+                    },
+                    {
+                        text: 'Count',
+                        align: 'left',
+                        sortable: true,
+                        value: 'service_count',
+                    },
+                    {
+                        text: 'Total cost',
+                        align: 'left',
+                        sortable: true,
+                        value: 'total_cost',
+                    },
+                    {
+                        text: 'Date',
+                        align: 'left',
+                        sortable: true,
+                        value: 'date',
+                    },
+                ],
             }
         },
 
@@ -145,8 +224,24 @@
 
                 return null;
             },
-            patientBirthDate() {
-                return this.patient.birth_date ? moment(this.patient.birth_date).format('DD-MM-YYYY') : null;
+            historyItems() {
+                return this.$store.state.patients.serviceHistory || [];
+            },
+            totalHistoryItems() {
+                return this.$store.state.patients.serviceHistoryPagination.total || 0;
+            }
+        },
+
+        watch: {
+            options: {
+                handler() {
+                    this.loadServiceHistory();
+                },
+                deep: true,
+            },
+            selectedTooth() {
+                this.options.page = 1;
+                this.loadServiceHistory();
             }
         },
 
@@ -158,6 +253,21 @@
             loadPatient() {
                 this.isLoading = true;
                 this.$store.dispatch('patients/loadPatient', this.id)
+                    .finally(() => {
+                        this.isLoading = false;
+                    });
+            },
+            loadServiceHistory() {
+                let params = {
+                    tooth: this.selectedTooth,
+                    page: this.options.page || 1,
+                    limit: this.options.itemsPerPage || 15,
+                    sort_by: this.options.sortBy || null,
+                    sort_desc: this.options.sortDesc || null,
+                };
+
+                this.isLoading = true;
+                this.$store.dispatch('patients/loadServiceHistory', { id: this.id, params })
                     .finally(() => {
                         this.isLoading = false;
                     });

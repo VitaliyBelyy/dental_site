@@ -4,7 +4,7 @@ namespace App\Http\Requests\Patients;
 
 use BwtTeam\LaravelAPI\Requests\ApiRequest;
 
-class ShowVisitHistory extends ApiRequest
+class ShowServiceHistory extends ApiRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +15,7 @@ class ShowVisitHistory extends ApiRequest
     {
         $patient = $this->route('patient');
 
-        return $patient && $this->user()->can('viewVisitHistory', $patient);
+        return $patient && $this->user()->can('viewServiceHistory', $patient);
     }
 
     /**
@@ -26,6 +26,7 @@ class ShowVisitHistory extends ApiRequest
     public function rules()
     {
         return [
+            'tooth' => 'nullable|integer|exists:teeth,id',
             'limit' => 'nullable|integer|min:1|max:50',
             'page' => 'nullable|integer|min:1',
             'sort_by' => 'nullable|string|max:64',

@@ -28,6 +28,7 @@ class RolesTableSeeder extends Seeder
             'patients.createVisitHistoryRecord',
             'patients.viewPaymentHistory',
             'patients.createPaymentHistoryRecord',
+            'patients.viewServiceHistory',
         ];
 
         $user->syncPermissions(Permission::whereIn('name', $permissionsList)->get());

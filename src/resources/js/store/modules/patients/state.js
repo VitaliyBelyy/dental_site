@@ -9,6 +9,8 @@ let state = {
     services: [],
     paymentHistory: [],
     paymentHistoryPagination: {},
+    serviceHistory: [],
+    serviceHistoryPagination: {},
 };
 
 export default state;

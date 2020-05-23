@@ -27,6 +27,7 @@ class PermissionsTableSeeder extends Seeder
             ['name' => 'patients.createVisitHistoryRecord'],
             ['name' => 'patients.viewPaymentHistory'],
             ['name' => 'patients.createPaymentHistoryRecord'],
+            ['name' => 'patients.viewServiceHistory'],
         ];
 
         foreach ($permissions as $key => $value) {

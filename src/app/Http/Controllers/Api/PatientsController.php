@@ -12,8 +12,10 @@ use App\Http\Requests\Patients\ShowVisitHistory as PatientsShowVisitHistory;
 use App\Http\Requests\Patients\CreateVisitHistoryRecord as PatientsCreateVisitHistoryRecord;
 use App\Http\Requests\Patients\ShowPaymentHistory as PatientsShowPaymentHistory;
 use App\Http\Requests\Patients\CreatePaymentHistoryRecord as PatientsCreatePaymentHistoryRecord;
+use App\Http\Requests\Patients\ShowServiceHistory as PatientsShowServiceHistory;
 use App\Models\Anamnesis;
 use App\Models\Patient;
+use App\Models\Tooth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -188,6 +190,30 @@ class PatientsController extends Controller
         ]);
 
         return response()->api($payment);
+    }
+
+    public function showServiceHistory(PatientsShowServiceHistory $request, Patient $patient) {
+        $limit = $request->get('limit') ?? 10;
+        $toothId = $request->get('tooth');
+        $sortBy = $request->get('sort_by');
+        $query = $patient->visits()
+            ->join('service_visit', 'visits.id', '=', 'service_visit.visit_id')
+            ->join('services', 'service_visit.service_id', '=', 'services.id')
+            ->select('service_visit.id', 'services.name', 'service_visit.service_count', 'service_visit.total_cost', 'visits.date');
+
+        if (isset($toothId)) {
+            $query = $query->where('service_visit.tooth_id', '=', $toothId);
+        }
+
+        if (isset($sortBy)) {
+            $direction = $request->get('sort_desc');
+            $query = $query->orderBy($request->get('sort_by'), (isset($direction) && json_decode($direction)) ? 'DESC' : 'ASC');
+        }
+
+        $history = $query->orderBy('service_visit.created_at', 'DESC')
+            ->paginate($limit);
+
+        return response()->api($history);
     }
 
     public function destroy(PatientsDestroy $request, Patient $patient)
