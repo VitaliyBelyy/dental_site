@@ -201,6 +201,12 @@
                         value: 'total_cost',
                     },
                     {
+                        text: 'Tooth',
+                        align: 'left',
+                        sortable: true,
+                        value: 'index',
+                    },
+                    {
                         text: 'Date',
                         align: 'left',
                         sortable: true,

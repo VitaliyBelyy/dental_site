@@ -199,7 +199,8 @@ class PatientsController extends Controller
         $query = $patient->visits()
             ->join('service_visit', 'visits.id', '=', 'service_visit.visit_id')
             ->join('services', 'service_visit.service_id', '=', 'services.id')
-            ->select('service_visit.id', 'services.name', 'service_visit.service_count', 'service_visit.total_cost', 'visits.date');
+            ->join('teeth', 'service_visit.tooth_id', '=', 'teeth.id')
+            ->select('service_visit.id', 'services.name', 'service_visit.service_count', 'service_visit.total_cost', 'teeth.index', 'visits.date');
 
         if (isset($toothId)) {
             $query = $query->where('service_visit.tooth_id', '=', $toothId);
