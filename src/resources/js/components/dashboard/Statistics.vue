@@ -9,7 +9,7 @@
                     <v-divider></v-divider>
                     <v-card-text>
                         <line-chart :chart-data="statisticData" :options="statisticOptions" v-if="!statisticLoading"/>
-                        <div class="chart-progress" v-else>
+                        <div class="card-progress" v-else>
                             <v-progress-circular
                                 :size="50"
                                 color="primary"
@@ -45,7 +45,7 @@
                     <v-divider></v-divider>
                     <v-card-text>
                         <doughnut-chart :chart-data="ratioData" :options="ratioOptions" v-if="!ratioLoading"/>
-                        <div class="chart-progress" v-else>
+                        <div class="card-progress" v-else>
                             <v-progress-circular
                                 :size="50"
                                 color="primary"
@@ -251,12 +251,6 @@
 </script>
 
 <style scoped>
-    .chart-progress {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 400px;
-    }
     .ratio-type {
         max-width: 235px;
     }
