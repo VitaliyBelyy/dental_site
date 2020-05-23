@@ -3,6 +3,9 @@ import Vue from 'vue';
 import Vuetify from 'vuetify';
 import Vuelidate from 'vuelidate';
 import Cookies from "js-cookie";
+import VueScrollTo  from "vue-scrollto";
+import CheckView from 'vue-check-view';
+import VueSimpleSVG from 'vue-simple-svg';
 
 const ignoreMessage = "The .native modifier for v-on is only valid on components but it was used on <div>.";
 Vue.config.warnHandler = function (msg, vm, trace) {
@@ -36,6 +39,12 @@ if (token) {
 Vue.use(Vuetify);
 
 Vue.use(Vuelidate);
+
+Vue.use(VueScrollTo);
+
+Vue.use(CheckView);
+
+Vue.use(VueSimpleSVG);
 
 Vue.config.productionTip = false;
 
