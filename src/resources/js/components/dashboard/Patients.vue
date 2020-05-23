@@ -76,8 +76,6 @@
 </template>
 
 <script>
-    import moment from 'moment';
-
     const MALE = 0;
     const FEMALE = 1;
 
@@ -200,7 +198,7 @@
                             'phone': patient.phone,
                             'email': patient.email || null,
                             'gender': gender,
-                            'birth_date': patient.birth_date ? moment(patient.birth_date).format('DD-MM-YYYY') : null,
+                            'birth_date': patient.birth_date || null,
                             'image_path': patient.image_path || '/storage/images/no-profile-image.png',
                         };
                     });

@@ -142,7 +142,6 @@
 <script>
     import { mask } from 'vue-the-mask';
     import { required, email, minLength } from 'vuelidate/lib/validators';
-    import moment from 'moment';
 
     export default {
         name: "PatientForm",
@@ -301,7 +300,7 @@
                     phone: this.patient.phone || null,
                     email: this.patient.email || null,
                     gender: (this.patient.gender || this.patient.gender === 0) ? this.patient.gender.toString() : null,
-                    birthDate: this.patient.birth_date ? moment(this.patient.birth_date).format('YYYY-MM-DD') : null,
+                    birthDate: this.patient.birth_date || null,
                     anamnesisId: (this.patient.anamnesis && this.patient.anamnesis.id) ? this.patient.anamnesis.id : null,
                     medicalInfo: this.patient.medical_info || null,
                 };
