@@ -4,15 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Visit extends Model
+class Tooth extends Model
 {
+    const UPPER_JAW = 0;
+    const LOWER_JAW = 1;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'teeth';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'patient_id', 'date'
+        'index', 'jaw', 'icon_file_name', 'reverse'
     ];
 
     /**
@@ -21,7 +31,7 @@ class Visit extends Model
      * @var array
      */
     protected $hidden = [
-
+        
     ];
 
     /**
@@ -30,17 +40,6 @@ class Visit extends Model
      * @var array
      */
     protected $casts = [
-        'date' => 'date',
+        
     ];
-
-    public function services()
-    {
-        return $this->belongsToMany('App\Models\Service')
-            ->withTimestamps()
-            ->withPivot([
-                'tooth_id',
-                'service_count',
-                'total_cost',
-            ]);
-    }
 }

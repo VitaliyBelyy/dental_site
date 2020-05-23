@@ -24,6 +24,11 @@ class AddFkToServiceVisitTable extends Migration
                 ->on('services')
                 ->onDelete('CASCADE')
                 ->onUpdate('CASCADE');
+            $table->foreign('tooth_id')
+                ->references('id')
+                ->on('teeth')
+                ->onDelete('SET NULL')
+                ->onUpdate('CASCADE');
         });
     }
 
@@ -37,6 +42,7 @@ class AddFkToServiceVisitTable extends Migration
         Schema::table('service_visit', function (Blueprint $table) {
             $table->dropForeign(['visit_id']);
             $table->dropForeign(['service_id']);
+            $table->dropForeign(['tooth_id']);
         });
     }
 }

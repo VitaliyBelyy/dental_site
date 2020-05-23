@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Models\Patient;
 use App\Models\Service;
+use App\Models\Tooth;
 
 class PatientsTableSeeder extends Seeder
 {
@@ -25,11 +26,13 @@ class PatientsTableSeeder extends Seeder
                     $serviceCost = 0;
 
                     for ($j = 0; $j < $iterationsNum; $j++) {
+                        $tooth = Tooth::inRandomOrder()->first();
                         $service = Service::inRandomOrder()->first();
-                        $serviceCount = rand(1, 5);
+                        $serviceCount = rand(1, 3);
                         $totalCost = $service->price * $serviceCount;
 
                         $visit->services()->attach($service->id, [
+                            'tooth_id' => $tooth->id,
                             'service_count' => $serviceCount,
                             'total_cost' => $totalCost
                         ]);
