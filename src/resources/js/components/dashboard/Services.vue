@@ -51,12 +51,13 @@
                         </v-data-table>
                     </v-card-text>
 
-                    <service-form :dialog="dialog"
-                                  :service="editedService"
-                                  :selected-id="selectedId"
-                                  @on-create="serviceCreated"
-                                  @on-update="serviceUpdated"
-                                  @on-close="closeForm"
+                    <service-form
+                        :dialog="dialog"
+                        :service="editedService"
+                        :selected-id="selectedId"
+                        @on-create="serviceCreated"
+                        @on-update="serviceUpdated"
+                        @on-close="closeForm"
                     ></service-form>
                 </v-card>
             </v-col>

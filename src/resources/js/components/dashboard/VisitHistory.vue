@@ -35,18 +35,20 @@
                         </v-data-table>
                     </v-card-text>
 
-                    <visit-history-form :patient-id="id"
-                                        :dialog="formDialog"
-                                        :record="editedRecord"
-                                        :selected-id="selectedId"
-                                        @on-create="recordCreated"
-                                        @on-update="recordUpdated"
-                                        @on-close="closeForm"
+                    <visit-history-form 
+                        :patient-id="id"
+                        :dialog="formDialog"
+                        :record="editedRecord"
+                        :selected-id="selectedId"
+                        @on-create="recordCreated"
+                        @on-update="recordUpdated"
+                        @on-close="closeForm"
                     ></visit-history-form>
 
-                    <visit-history-services-table :dialog="servicesDialog"
-                                                  :selected-id="visitId"
-                                                  @on-close="closeServicesTable"
+                    <visit-history-services-table 
+                        :dialog="servicesDialog"
+                        :selected-id="visitId"
+                        @on-close="closeServicesTable"
                     ></visit-history-services-table>
                 </v-card>
             </v-col>
