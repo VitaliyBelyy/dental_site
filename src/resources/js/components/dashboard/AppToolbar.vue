@@ -19,12 +19,12 @@
                 <v-list class="pa-0">
                     <v-list-item
                         v-for="(item, index) in accountMenu"
+                        :key="index"
+                        ripple="ripple"
                         :to="!item.href ? { name: item.name } : null"
                         :href="item.href"
                         @click.prevent="item.click"
-                        ripple="ripple"
                         :disabled="item.disabled"
-                        :key="index"
                     >
                         <v-list-item-content>
                             <v-list-item-title>{{ item.title }}</v-list-item-title>
@@ -76,7 +76,7 @@
             handleLogout() {
                 this.$store.dispatch('auth/logout')
                     .then(() => {
-                        this.$router.push({ name: 'auth.login' });
+                        this.$router.push({ name: 'home' });
                     })
             },
         },

@@ -18,10 +18,16 @@ import VisitHistory from "../components/dashboard/VisitHistory";
 import PaymentHistory from "../components/dashboard/PaymentHistory";
 import Calendar from "../components/dashboard/Calendar";
 import Services from "../components/dashboard/Services";
+import Landing from '../components/Landing';
 
 import store from '@/js/store/index';
 
 export default [
+    {
+        path: '/',
+        name: 'home',
+        component: Landing,
+    },
     {
         path: '/auth',
         component: Auth,
@@ -81,7 +87,7 @@ export default [
         ]
     },
     {
-        path: '/',
+        path: '/dashboard',
         component: Dashboard,
         meta: {
             auth: true,

@@ -1,9 +1,8 @@
 const Menu = [
     {
-        title: "Dashboard",
-        icon: "mdi-view-dashboard",
-        name: "dashboard.statistics",
-        admin: true
+        title: "Home",
+        icon: "mdi-home",
+        name: "home"
     },
     {
         title: "Calendar",
@@ -25,6 +24,12 @@ const Menu = [
         title: "Users",
         icon: "mdi-account-cog",
         name: "dashboard.users",
+        admin: true
+    },
+    {
+        title: "Statistics",
+        icon: "mdi-chart-areaspline",
+        name: "dashboard.statistics",
         admin: true
     },
 ];

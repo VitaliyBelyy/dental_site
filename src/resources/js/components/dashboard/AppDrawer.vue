@@ -12,9 +12,10 @@
                 <v-list-item-group color="primary">
                     <v-list-item
                         v-for="item in menu"
+                        :key="item.name"
                         ripple="ripple"
                         :to="item.name ? { name: item.name } : null"
-                        :key="item.name"
+                        exact
                     >
                         <v-list-item-icon v-if="item.icon">
                             <v-icon>{{ item.icon }}</v-icon>
