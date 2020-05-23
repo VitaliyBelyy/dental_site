@@ -119,7 +119,6 @@
                 </v-card>
             </v-col>
         </v-row>
-        {{selectedEvent}}
     </v-container>
 </template>
 
