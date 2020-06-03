@@ -1,24 +1,8 @@
 <template>
     <div>
-        <v-snackbar
-            v-model="snackbar"
-            color="success"
-            top
-        >
-            <v-icon dark class="mr-2">mdi-checkbox-marked-circle</v-icon>
-            Password recovery email was sent successfully.
-            <v-btn
-                text
-                icon
-                dark
-                @click="snackbar = false">
-                <v-icon size="20">mdi-close</v-icon>
-            </v-btn>
-        </v-snackbar>
-
         <v-card class="auth-card">
             <v-card-title class="auth-card__title">
-                <h3>Reset password</h3>
+                <h3>Восстановления пароля</h3>
             </v-card-title>
 
             <v-divider></v-divider>
@@ -26,7 +10,7 @@
             <v-card-text class="px-4 pb-0 pt-6">
                 <v-form>
                     <v-text-field
-                        label="Email address"
+                        label="E-mail"
                         name="email"
                         dense
                         outlined
@@ -46,12 +30,12 @@
                        exact
                        :disabled="isLoading"
                        :to="{ name: 'auth.login' }"
-                >Cancel</v-btn>
+                >Отмена</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn color="primary"
                        :loading="isLoading"
                        @click.prevent="sendResetLink"
-                >Send password reset link</v-btn>
+                >Отправить ссылку</v-btn>
             </v-card-actions>
         </v-card>
     </div>
@@ -67,7 +51,6 @@
             return {
                 email: '',
                 isLoading: false,
-                snackbar: false
             }
         },
 
@@ -82,8 +65,8 @@
             emailErrors() {
                 const errors = [];
                 if (!this.$v.email.$dirty) return errors;
-                !this.$v.email.required && errors.push('The e-mail is required.');
-                !this.$v.email.email && errors.push('The email must be a valid email address.');
+                !this.$v.email.required && errors.push('Поле \'E-mail\' не должно быть пустым.');
+                !this.$v.email.email && errors.push('Некорректный формат электронного адреса.');
                 return errors;
             }
         },
@@ -96,10 +79,9 @@
                     const {email} = this;
 
                     this.isLoading = true;
-                    this.snackbar = false;
                     this.$store.dispatch('auth/sendResetLink', {email})
                         .then(() => {
-                            this.snackbar = true;
+                            this.$router.push({ name: 'auth.login' });
                         })
                         .finally(() => {
                             this.isLoading = false;

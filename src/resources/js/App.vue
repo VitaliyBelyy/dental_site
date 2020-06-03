@@ -14,6 +14,10 @@
     export default {
         name: 'App',
 
+        created() {
+            this.$vuetify.lang.current = 'ru';
+        },
+
         computed: {
             isLoading() {
                 return this.$store.state.auth.isLoading;

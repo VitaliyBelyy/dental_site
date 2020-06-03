@@ -37,13 +37,13 @@ abstract class AbstractChartDataset
         $startDate = Carbon::parse($periodFilter->getStartDate());
         $endDate = Carbon::parse($periodFilter->getEndDate());
         $periodType = $periodTypeFilter->getPeriodType();
-
+        
         switch($periodType) {
             case PeriodTypeFilter::DAILY_PERIOD:
-                $dates = (new CarbonPeriod($startDate, "1 {$periodType}", $endDate))->toArray();
+                $dates = (new CarbonPeriod($startDate, "1 " . PeriodTypeFilter::PERIODS_WORD_MAP[$periodType], $endDate))->toArray();
                 for ($i = 0; $i < count($dates); $i++) {
                     $currentDate = $dates[$i];
-                    $key = $currentDate->copy()->format('F jS Y');
+                    $key = $currentDate->copy()->translatedFormat('F d, Y');
                     $index = $data->search(function ($item) use ($currentDate) {
                         return Carbon::parse($item->max_date)->eq($currentDate->copy());
                     });
@@ -51,7 +51,7 @@ abstract class AbstractChartDataset
                 }
                 break;
             case PeriodTypeFilter::WEEKLY_PERIOD:
-                $dates = (new CarbonPeriod($startDate->startOfWeek(), "1 {$periodType}", $endDate->endOfWeek()))->toArray();
+                $dates = (new CarbonPeriod($startDate->startOfWeek(), "1 " . PeriodTypeFilter::PERIODS_WORD_MAP[$periodType], $endDate->endOfWeek()))->toArray();
                 for ($i = 0; $i < count($dates); $i++) {
                     $currentDate = $dates[$i];
                     $key = $this->getWeekTitle($currentDate);
@@ -62,10 +62,10 @@ abstract class AbstractChartDataset
                 }
                 break;
             case PeriodTypeFilter::MONTHLY_PERIOD:
-                $dates = (new CarbonPeriod($startDate->startOfMonth(), "1 {$periodType}", $endDate->endOfMonth()))->toArray();
+                $dates = (new CarbonPeriod($startDate->startOfMonth(), "1 " . PeriodTypeFilter::PERIODS_WORD_MAP[$periodType], $endDate->endOfMonth()))->toArray();
                 for ($i = 0; $i < count($dates); $i++) {
                     $currentDate = $dates[$i];
-                    $key = $currentDate->copy()->format('F Y');
+                    $key = $currentDate->copy()->translatedFormat('F, Y');
                     $index = $data->search(function ($item) use ($currentDate) {
                         return Carbon::parse($item->max_date)->between($currentDate->copy()->startOfMonth(), $currentDate->copy()->endOfMonth());
                     });
@@ -81,14 +81,14 @@ abstract class AbstractChartDataset
     {
         $startDate = $date->copy()->startOfWeek();
         $endDate = $date->copy()->endOfWeek();
-        $startMonth = $startDate->format('F');
-        $endMonth = $endDate->format('F');
+        $startMonth = $startDate->translatedFormat('F');
+        $endMonth = $endDate->translatedFormat('F');
         $suffixMonth = $startMonth === $endMonth ? '' : $endMonth;
-        $startYear = $startDate->format('Y');
-        $endYear = $endDate->format('Y');
+        $startYear = $startDate->translatedFormat('Y');
+        $endYear = $endDate->translatedFormat('Y');
         $suffixYear = $startYear === $endYear ? '' : $endYear;
-        return $suffixYear ? "{$startMonth} {$startDate->format('jS')} {$startYear} - {$suffixMonth} {$endDate->format('jS')} {$suffixYear}" :
-            "{$startMonth} {$startDate->format('jS')} - {$suffixMonth} {$endDate->format('jS')} {$startYear}";
+        return $suffixYear ? "{$startMonth} {$startDate->translatedFormat('d')} {$startYear}-{$suffixMonth} {$endDate->translatedFormat('d')}, {$suffixYear}" :
+            "{$startMonth} {$startDate->translatedFormat('d')}-{$suffixMonth} {$endDate->translatedFormat('d')}, {$startYear}";
     }
 
     protected function applyFilters(Builder &$query, array $filters = null): Builder

@@ -4,7 +4,7 @@
             <v-col cols="12" md="8" class="py-0">
                 <user-form 
                     edit
-                    :title="profileEditing ? 'Edit profile' : 'Edit user'"
+                    :title="profileEditing ? 'Редактировать профиль' : 'Редактировать данные пользователя'"
                     :user="user"
                     :is-loading="dataProcessing"
                     @on-submit="updateUser"

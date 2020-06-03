@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 class PeriodTypeFilter
 {
-    const DAILY_PERIOD = 'day';
-    const WEEKLY_PERIOD = 'week';
-    const MONTHLY_PERIOD = 'month';
+    const DAILY_PERIOD = 0;
+    const WEEKLY_PERIOD = 1;
+    const MONTHLY_PERIOD = 2;
 
     const PERIODS = [
         self::DAILY_PERIOD,
@@ -17,11 +17,17 @@ class PeriodTypeFilter
         self::MONTHLY_PERIOD,
     ];
 
+    const PERIODS_WORD_MAP = [
+        self::DAILY_PERIOD => 'day',
+        self::WEEKLY_PERIOD => 'week',
+        self::MONTHLY_PERIOD => 'month'
+    ];
+
     private $periodType;
 
     private $fieldName;
 
-    public function __construct(string $periodType, string $fieldName)
+    public function __construct(int $periodType, string $fieldName)
     {
         $this->periodType = $periodType;
         $this->fieldName = $fieldName;

@@ -17,6 +17,13 @@ class Tooth extends Model
     protected $table = 'teeth';
 
     /**
+     * Remove incrementing for the primary key.
+     *
+     * @var boolean
+     */
+    public $incrementing = false;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

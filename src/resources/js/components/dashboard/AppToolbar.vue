@@ -17,22 +17,25 @@
                 </template>
 
                 <v-list class="pa-0">
-                    <v-list-item
-                        v-for="(item, index) in accountMenu"
-                        :key="index"
-                        ripple="ripple"
-                        :to="!item.href ? { name: item.name } : null"
-                        :href="item.href"
-                        @click.prevent="item.click"
-                        :disabled="item.disabled"
-                    >
-                        <v-list-item-content>
-                            <v-list-item-title>{{ item.title }}</v-list-item-title>
-                        </v-list-item-content>
-                        <v-list-item-icon v-if="item.icon">
-                            <v-icon>{{ item.icon }}</v-icon>
-                        </v-list-item-icon>
-                    </v-list-item>
+                    <template v-for="(item, index) in accountMenu">
+                        <v-list-item
+                            :key="index"
+                            ripple="ripple"
+                            :to="!item.href ? { name: item.name } : null"
+                            :href="item.href"
+                            @click.prevent="item.click"
+                            :disabled="item.disabled"
+                        >
+                            <v-list-item-content>
+                                <v-list-item-title>{{ item.title }}</v-list-item-title>
+                            </v-list-item-content>
+                            <v-list-item-icon v-if="item.icon">
+                                <v-icon>{{ item.icon }}</v-icon>
+                            </v-list-item-icon>
+                        </v-list-item>
+
+                        <v-divider v-if="index + 1 < accountMenu.length" :key="index"></v-divider>
+                    </template>
                 </v-list>
             </v-menu>
         </v-toolbar-items>
@@ -49,13 +52,13 @@
                     {
                         icon: "mdi-pencil",
                         href: "#",
-                        title: 'Edit profile',
+                        title: 'Редактировать',
                         click: this.handleEdit
                     },
                     {
                         icon: "mdi-exit-to-app",
                         href: "#",
-                        title: 'Logout',
+                        title: 'Выйти',
                         click: this.handleLogout
                     }
                 ]

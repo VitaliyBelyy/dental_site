@@ -7,7 +7,7 @@
     >
         <v-card max-height="600px" class="dashboard-card">
             <v-card-title class="py-4">
-                <h3 class="dashboard-card__title">Provided services</h3>
+                <h3 class="dashboard-card__title">Перечень услуг</h3>
                 <v-spacer></v-spacer>
                 <v-btn icon @click="closeServicesTable">
                     <v-icon>mdi-close</v-icon>
@@ -18,13 +18,21 @@
 
             <v-card-text class="py-6">
                 <v-data-table
+                    v-if="!isLoading"
                     disable-sort
                     hide-default-footer
                     :headers="headers"
                     :items="services"
-                    :loading="isLoading"
                     class="dashboard-card__table--modal"
+                    no-data-text="Нет записей"
                 ></v-data-table>
+                <div class="card-progress" v-else>
+                    <v-progress-circular
+                        :size="50"
+                        color="primary"
+                        indeterminate
+                    ></v-progress-circular>
+                </div>
             </v-card-text>
         </v-card>
     </v-dialog>
@@ -54,19 +62,24 @@
                         value: 'id',
                     },
                     {
-                        text: 'Name',
+                        text: 'Название',
                         align: 'left',
                         value: 'name',
                     },
                     {
-                        text: 'Count',
+                        text: 'Количество',
                         align: 'left',
                         value: 'service_count',
                     },
                     {
-                        text: 'Price',
+                        text: 'Стоимость',
                         align: 'left',
                         value: 'total_cost',
+                    },
+                    {
+                        text: 'ID Зуба',
+                        align: 'left',
+                        value: 'tooth_id',
                     },
                 ],
             }
@@ -81,6 +94,7 @@
                             'name': service.name,
                             'service_count': service.pivot.service_count,
                             'total_cost': service.pivot.total_cost,
+                            'tooth_id': service.pivot.tooth_id,
                         };
                     });
                 }
@@ -110,6 +124,8 @@
     }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+  .card-progress {
+    min-height: 100px;
+  }
 </style>

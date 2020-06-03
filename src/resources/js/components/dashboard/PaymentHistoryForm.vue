@@ -22,7 +22,7 @@
                                     @blur="$v.form.amount.$touch()"
                                 >
                                     <template v-slot:label>
-                                        Amount <span class="red--text">*</span>
+                                        Сумма <span class="red--text">*</span>
                                     </template>
                                 </v-text-field>
                             </v-col>
@@ -46,7 +46,7 @@
                                             @blur="$v.form.date.$touch()"
                                         >
                                             <template v-slot:label>
-                                                Date <span class="red--text">*</span>
+                                                Дата <span class="red--text">*</span>
                                             </template>
                                         </v-text-field>
                                     </template>
@@ -58,7 +58,7 @@
                             </v-col>
                             <v-col cols="12" class="pt-0">
                                 <v-textarea
-                                    label="Notes"
+                                    label="Примечания"
                                     v-model="form.notes"
                                     outlined
                                     hide-details
@@ -68,7 +68,7 @@
                                 ></v-textarea>
                             </v-col>
                             <v-col cols="12">
-                                <small><span class="red--text">*</span> indicates required field</small>
+                                <small><span class="red--text">*</span> Обязательные поля</small>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -81,12 +81,12 @@
                        text
                        :disabled="isLoading"
                        @click="closeForm"
-                >Close</v-btn>
+                >Закрыть</v-btn>
                 <v-btn color="primary"
                        text
                        :loading="isLoading"
                        @click="saveForm"
-                >Save</v-btn>
+                >Сохранить</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -146,19 +146,19 @@
 
         computed: {
             formTitle() {
-                return this.selectedId === null ? "New Payment Record" : "Edit Payment Record";
+                return this.selectedId === null ? "Новая запись" : "Редактировать запись";
             },
             amountErrors() {
                 const errors = [];
                 if (!this.$v.form.amount.$dirty) return errors;
-                !this.$v.form.amount.required && errors.push('The amount field is required.');
-                !this.$v.form.amount.isNumeric && errors.push('Wrong format of the amount field.');
+                !this.$v.form.amount.required && errors.push('Поле \'Сумма\' не должно быть пустым.');
+                !this.$v.form.amount.isNumeric && errors.push('Некорректный формат.');
                 return errors;
             },
             dateErrors() {
                 const errors = [];
                 if (!this.$v.form.date.$dirty) return errors;
-                !this.$v.form.date.required && errors.push('The date field is required.');
+                !this.$v.form.date.required && errors.push('Поле \'Дата\' не должно быть пустым.');
                 return errors;
             },
         },

@@ -7,7 +7,7 @@
                         <v-spacer></v-spacer>
                         <v-btn color="primary" @click="formDialog = true">
                             <v-icon left>mdi-plus</v-icon>
-                            Add new
+                            Добавить
                         </v-btn>
                     </v-toolbar>
                     <v-divider></v-divider>
@@ -20,8 +20,12 @@
                             :loading="isLoading"
                             :items-per-page="15"
                             :footer-props="footerProps"
-                            class="elevation-1"
+                            class="card-table elevation-1"
                         >
+                            <template v-slot:item.date="{ item }">
+                                {{ item.date | date }}
+                            </template>
+
                             <template v-slot:item.action="{ item }">
                                 <v-tooltip bottom>
                                     <template v-slot:activator="{ on }">
@@ -31,6 +35,10 @@
                                     </template>
                                     <span>Show provided services</span>
                                 </v-tooltip>
+                            </template>
+
+                            <template v-slot:footer.page-text="props">
+                                {{props.pageStart}} - {{props.pageStop}} из {{props.itemsLength}}
                             </template>
                         </v-data-table>
                     </v-card-text>
@@ -75,7 +83,8 @@
                 isLoading: false,
                 options: {},
                 footerProps: {
-                    'items-per-page-options': [15, 30, 45]
+                    'items-per-page-options': [15, 30, 45],
+                    'items-per-page-text': 'Элементов на странице:'
                 },
                 headers: [
                     {
@@ -85,19 +94,19 @@
                         value: 'id',
                     },
                     {
-                        text: 'Date',
+                        text: 'Дата',
                         align: 'left',
                         sortable: true,
                         value: 'date',
                     },
                     {
-                        text: 'Service cost',
+                        text: 'Стоимость услуг',
                         align: 'left',
                         sortable: true,
                         value: 'service_cost',
                     },
                     {
-                        text: 'Actions',
+                        text: '',
                         align: 'left',
                         sortable: false,
                         value: 'action',

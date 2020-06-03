@@ -8,14 +8,14 @@
                             flat
                             solo
                             prepend-icon="search"
-                            placeholder="Type something"
+                            placeholder="Поиск..."
                             v-model="search"
                             hide-details
                             class="hidden-sm-and-down"
                         ></v-text-field>
                         <v-btn color="primary" @click="dialog = true">
                             <v-icon left>mdi-plus</v-icon>
-                            Add new
+                            Добавить
                         </v-btn>
                     </v-toolbar>
                     <v-divider></v-divider>
@@ -28,7 +28,7 @@
                             :loading="isLoading"
                             :items-per-page="15"
                             :footer-props="footerProps"
-                            class="elevation-1"
+                            class="card-table elevation-1"
                         >
                             <template v-slot:item.action="{ item }">
                                 <v-tooltip bottom>
@@ -37,7 +37,7 @@
                                             <v-icon small v-on="on">mdi-pencil</v-icon>
                                         </v-btn>
                                     </template>
-                                    <span>Edit service</span>
+                                    <span>Редактировать</span>
                                 </v-tooltip>
                                 <v-tooltip bottom>
                                     <template v-slot:activator="{ on }">
@@ -45,8 +45,12 @@
                                             <v-icon small v-on="on">mdi-delete</v-icon>
                                         </v-btn>
                                     </template>
-                                    <span>Delete service</span>
+                                    <span>Удалить</span>
                                 </v-tooltip>
+                            </template>
+
+                            <template v-slot:footer.page-text="props">
+                                {{props.pageStart}} - {{props.pageStop}} из {{props.itemsLength}}
                             </template>
                         </v-data-table>
                     </v-card-text>
@@ -81,7 +85,8 @@
                 isLoading: false,
                 options: {},
                 footerProps: {
-                    'items-per-page-options': [15, 30, 45]
+                    'items-per-page-options': [15, 30, 45],
+                    'items-per-page-text': 'Элементов на странице:'
                 },
                 headers: [
                     {
@@ -91,19 +96,19 @@
                         value: 'id',
                     },
                     {
-                        text: 'Name',
+                        text: 'Название',
                         align: 'left',
                         sortable: true,
                         value: 'name',
                     },
                     {
-                        text: 'Price',
+                        text: 'Стоимость',
                         align: 'left',
                         sortable: true,
                         value: 'price',
                     },
                     {
-                        text: 'Actions',
+                        text: '',
                         align: 'left',
                         sortable: false,
                         value: 'action',
@@ -159,7 +164,7 @@
                 this.dialog = true;
             },
             deleteService(service) {
-                if (confirm('Are you sure you want to delete this service?')) {
+                if (confirm('Вы уверены что хотите удалить эту услугу?')) {
                     this.$store.dispatch('services/deleteService', service.id)
                         .then(() => {
                             this.loadServices();

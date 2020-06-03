@@ -16,35 +16,37 @@
                 ></event-form>
 
                 <v-card>
-                    <v-toolbar flat color="white" height="64">
-                        <v-btn outlined class="mr-4" @click="setToday">
-                            Today
-                        </v-btn>
-                        <v-btn fab text small class="mr-1" @click="prev">
-                            <v-icon small>mdi-chevron-left</v-icon>
-                        </v-btn>
-                        <v-btn fab text small class="mr-4" @click="next">
-                            <v-icon small>mdi-chevron-right</v-icon>
-                        </v-btn>
-
-                        <v-toolbar-title>{{ title }}</v-toolbar-title>
-                        <div class="flex-grow-1"></div>
+                    <v-toolbar flat color="white" height="64" class="calendar-toolbar">
+                        <div class="calendar-toolbar__left-side">
+                            <v-btn outlined @click="setToday" class="calendar-toolbar__today-button mr-4">
+                                Сегодня
+                            </v-btn>
+                            <div class="flex-grow-1"></div>
+                            <v-btn fab text small class="mr-1" @click="prev">
+                                <v-icon small>mdi-chevron-left</v-icon>
+                            </v-btn>
+                            <v-btn fab text small class="mr-4" @click="next">
+                                <v-icon small>mdi-chevron-right</v-icon>
+                            </v-btn>
+                            <v-toolbar-title>{{ title }}</v-toolbar-title>
+                        </div>
+                        
                         <v-menu offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">
                             <template v-slot:activator="{ on }">
-                                <v-btn outlined v-on="on">
+                                <v-btn outlined v-on="on" class="calendar-toolbar__type-button">
                                     <span>{{ typeToLabel[type] }}</span>
                                     <v-icon right>mdi-menu-down</v-icon>
                                 </v-btn>
                             </template>
                             <v-list>
                                 <v-list-item @click="type = 'day'">
-                                    <v-list-item-title>Day</v-list-item-title>
+                                    <v-list-item-title>День</v-list-item-title>
                                 </v-list-item>
                                 <v-list-item @click="type = 'week'">
-                                    <v-list-item-title>Week</v-list-item-title>
+                                    <v-list-item-title>Неделя</v-list-item-title>
                                 </v-list-item>
                                 <v-list-item @click="type = 'month'">
-                                    <v-list-item-title>Month</v-list-item-title>
+                                    <v-list-item-title>Месяц</v-list-item-title>
                                 </v-list-item>
                             </v-list>
                         </v-menu>
@@ -54,67 +56,71 @@
                     <v-progress-linear indeterminate color="primary" height="2" v-if="isLoading"></v-progress-linear>
 
                     <v-card-text>
-                        <v-calendar
-                            class="calendar"
-                            ref="calendar"
-                            v-model="focus"
-                            color="primary"
-                            :events="events"
-                            :event-name="getEventName"
-                            :event-color="(event) => getStatusColor(event.status)"
-                            :event-margin-bottom="3"
-                            :now="today"
-                            :type="type"
-                            :weekdays="[1,2,3,4,5,6,0]"
-                            @click:event="showEvent"
-                            @click:more="viewDay"
-                            @click:date="viewDay"
-                            @change="updateRange"
-                        ></v-calendar>
-                        <v-menu
-                            v-model="selectedOpen"
-                            :close-on-content-click="false"
-                            :activator="selectedElement"
-                            offset-x
-                        >
-                            <v-card max-width="400px" outlined class="event-card">
-                                <v-card-content>
-                                    <v-list-item three-line>
-                                        <v-list-item-content class="pt-4 pb-6">
-                                            <v-chip class="event-card__status mb-4" small :color="getStatusColor(selectedEvent.status)" text-color="white">{{ selectedEvent.status }}</v-chip>
-                                            <v-list-item-title class="headline mb-1">{{ selectedEvent.patient && selectedEvent.patient.full_name ? selectedEvent.patient.full_name : 'Unknown patient'}}</v-list-item-title>
-                                            <v-list-item-subtitle class="event-card__period"><v-icon small>mdi-clock-outline</v-icon>{{ getPeriod(selectedEvent.start, selectedEvent.end) }}</v-list-item-subtitle>
-                                        </v-list-item-content>
-                                
-                                        <v-list-item-avatar tile size="80" color="grey">
-                                            <v-img :src="selectedEvent.patient && selectedEvent.patient.image_path ? selectedEvent.patient.image_path : '/storage/images/no-profile-image.png'"></v-img>
-                                        </v-list-item-avatar>
-                                    </v-list-item>
+                        <div class="calendar__wrapper">
+                            <v-calendar
+                                :class="['calendar', {'calendar--daily': type === 'day'}]"
+                                ref="calendar"
+                                v-model="focus"
+                                color="primary"
+                                :events="events"
+                                :event-name="getEventName"
+                                :event-color="(event) => getStatusColor(event.status)"
+                                :event-margin-bottom="3"
+                                :now="today"
+                                :type="type"
+                                :weekdays="[1,2,3,4,5,6,0]"
+                                @click:event="showEvent"
+                                @click:more="viewDay"
+                                @click:date="viewDay"
+                                @change="updateRange"
+                            ></v-calendar>
+                            <v-menu
+                                v-model="selectedOpen"
+                                :close-on-content-click="false"
+                                :activator="selectedElement"
+                                offset-x
+                            >
+                                <v-card max-width="400px" outlined class="event-card">
+                                    <v-card-content>
+                                        <v-list-item three-line>
+                                            <v-list-item-content class="pt-4 pb-6">
+                                                <v-chip class="event-card__status mb-4" small :color="getStatusColor(selectedEvent.status)" text-color="white">{{ selectedEvent.status }}</v-chip>
+                                                <v-list-item-title class="headline mb-1">{{ selectedEvent.patient && selectedEvent.patient.full_name ? selectedEvent.patient.full_name : 'Unknown patient'}}</v-list-item-title>
+                                                <v-list-item-subtitle class="event-card__period"><v-icon small>mdi-clock-outline</v-icon>{{ getPeriod(selectedEvent.start, selectedEvent.end) }}</v-list-item-subtitle>
+                                            </v-list-item-content>
+                                    
+                                            <v-list-item-avatar tile size="80" color="grey">
+                                                <v-img :src="selectedEvent.patient && selectedEvent.patient.image_path ? selectedEvent.patient.image_path : '/storage/images/no-profile-image.png'"></v-img>
+                                            </v-list-item-avatar>
+                                        </v-list-item>
 
-                                    <v-list-item class="event-card__info" two-line v-if="selectedEvent.user && selectedEvent.user.full_name">
-                                        <v-list-item-content class="pa-0">
-                                            <v-list-item-title>Attending doctor</v-list-item-title>
-                                            <v-list-item-subtitle>{{ selectedEvent.user.full_name }}</v-list-item-subtitle>
-                                        </v-list-item-content>
-                                    </v-list-item>
-
-                                    <v-list-item class="event-card__info" two-line v-if="selectedEvent.details">
-                                        <v-list-item-content class="pa-0">
-                                            <v-list-item-title>Details</v-list-item-title>
-                                            <v-list-item-subtitle>{{ selectedEvent.details }}</v-list-item-subtitle>
-                                        </v-list-item-content>
-                                    </v-list-item>
-                                </v-card-content>
+                                        <template v-if="isAdmin">
+                                            <v-list-item class="event-card__info" two-line v-if="selectedEvent.user && selectedEvent.user.full_name">
+                                                <v-list-item-content class="pa-0">
+                                                    <v-list-item-title>Лечащий врач</v-list-item-title>
+                                                    <v-list-item-subtitle>{{ selectedEvent.user.full_name }}</v-list-item-subtitle>
+                                                </v-list-item-content>
+                                            </v-list-item>
+                                        </template>
+                                        
+                                        <v-list-item class="event-card__info" two-line v-if="selectedEvent.details">
+                                            <v-list-item-content class="pa-0">
+                                                <v-list-item-title>Примечания</v-list-item-title>
+                                                <v-list-item-subtitle>{{ selectedEvent.details }}</v-list-item-subtitle>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                    </v-card-content>
+                                    
+                                    <v-divider></v-divider>
                                 
-                                <v-divider></v-divider>
-                            
-                                <v-card-actions>
-                                    <v-btn text color="primary" @click.prevent="editEvent(selectedEvent)">Edit</v-btn>
-                                    <v-spacer></v-spacer>
-                                    <v-btn text color="primary" @click.prevent="deleteEvent(selectedEvent)">Delete</v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-menu>
+                                    <v-card-actions>
+                                        <v-btn text color="primary" @click.prevent="editEvent(selectedEvent)">Редактировать</v-btn>
+                                        <v-spacer></v-spacer>
+                                        <v-btn text color="primary" @click.prevent="deleteEvent(selectedEvent)">Удалить</v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-menu>
+                        </div>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -140,9 +146,9 @@
                 focus: moment().format('YYYY-MM-DD'),
                 type: 'month',
                 typeToLabel: {
-                    month: 'Month',
-                    week: 'Week',
-                    day: 'Day',
+                    month: 'Месяц',
+                    week: 'Неделя',
+                    day: 'День',
                 },
                 start: null,
                 end: null,
@@ -160,6 +166,9 @@
         },
 
         computed: {
+            isAdmin() {
+                return this.$store.getters['auth/isAdmin'];
+            },
             events () {
                 if (this.$store.state.events.events && this.$store.state.events.events.length) {
                     return this.$store.state.events.events.map(event => {
@@ -190,15 +199,15 @@
                 const startYear = start.year;
                 const endYear = end.year;
                 const suffixYear = startYear === endYear ? '' : endYear;
-                const startDay = moment(start.date).format('Do');
-                const endDay = moment(end.date).format('Do');
+                const startDay = moment(start.date).format('DD');
+                const endDay = moment(end.date).format('DD');
                 switch (this.type) {
                     case 'month':
-                        return `${startMonth} ${startYear}`;
+                        return `${startMonth}, ${startYear}`;
                     case 'week':
-                        return suffixYear ? `${startMonth} ${startDay} ${startYear} - ${suffixMonth} ${endDay} ${suffixYear}` : `${startMonth} ${startDay} - ${suffixMonth} ${endDay} ${startYear}`;
+                        return suffixYear ? `${startMonth} ${startDay} ${startYear}-${suffixMonth} ${endDay}, ${suffixYear}` : `${startMonth} ${startDay}-${suffixMonth} ${endDay}, ${startYear}`;
                     case 'day':
-                        return `${startMonth} ${startDay} ${startYear}`;
+                        return `${startMonth} ${startDay}, ${startYear}`;
                 }
 
                 return '';
@@ -259,7 +268,7 @@
                 this.dialog = true;
             },
             deleteEvent (event) {
-                if (confirm('Are you sure you want to delete this event?')) {
+                if (confirm('Вы уверены что хотите удалить эту запись?')) {
                     this.$store.dispatch('events/deleteEvent', event.id)
                         .then(() => {
                             this.selectedOpen = false;
@@ -310,6 +319,16 @@
         right: 25px;
         z-index: 99;
     }
+    .calendar-toolbar__left-side {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        overflow: hidden;
+
+        .flex-grow-1 {
+            display: none;
+        }
+    }
     .calendar {
         min-height: 650px;
     }
@@ -327,6 +346,16 @@
 
         &:last-child {
             padding-bottom: 24px;
+        }
+    }
+
+    @media (max-width: 800px) {
+        .calendar__wrapper {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        .calendar:not(.calendar--daily) {
+            min-width: 800px;
         }
     }
 </style>

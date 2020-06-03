@@ -3,8 +3,7 @@ import Cookies from 'js-cookie';
 let state = {
     token: Cookies.get('access_token') || null,
     user: null,
-    isLoading: false,
-    validationErrors: {},
+    isLoading: false
 };
 
 export default state;

@@ -1,33 +1,33 @@
 const Menu = [
     {
-        title: "Home",
+        title: "Главная",
         icon: "mdi-home",
         name: "home"
     },
     {
-        title: "Calendar",
+        title: "Календарь",
         icon: "mdi-calendar-month",
         name: "dashboard.calendar"
     },
     {
-        title: "Patients",
+        title: "Пациенты",
         icon: "mdi-account-group",
         name: "dashboard.patients"
     },
     {
-        title: "Services",
+        title: "Услуги",
         icon: "mdi-view-list",
         name: "dashboard.services",
         admin: true
     },
     {
-        title: "Users",
+        title: "Пользователи",
         icon: "mdi-account-cog",
         name: "dashboard.users",
         admin: true
     },
     {
-        title: "Statistics",
+        title: "Статистика",
         icon: "mdi-chart-areaspline",
         name: "dashboard.statistics",
         admin: true

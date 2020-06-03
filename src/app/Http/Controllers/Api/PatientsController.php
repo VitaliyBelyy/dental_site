@@ -15,7 +15,6 @@ use App\Http\Requests\Patients\CreatePaymentHistoryRecord as PatientsCreatePayme
 use App\Http\Requests\Patients\ShowServiceHistory as PatientsShowServiceHistory;
 use App\Models\Anamnesis;
 use App\Models\Patient;
-use App\Models\Tooth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -153,6 +152,7 @@ class PatientsController extends Controller
 
         foreach ($request->services as $service) {
             $visit->services()->attach($service['id'], [
+                'tooth_id' => $service['tooth_id'],
                 'service_count' => $service['service_count'],
                 'total_cost' => $service['total_cost']
             ]);
@@ -199,8 +199,7 @@ class PatientsController extends Controller
         $query = $patient->visits()
             ->join('service_visit', 'visits.id', '=', 'service_visit.visit_id')
             ->join('services', 'service_visit.service_id', '=', 'services.id')
-            ->join('teeth', 'service_visit.tooth_id', '=', 'teeth.id')
-            ->select('service_visit.id', 'services.name', 'service_visit.service_count', 'service_visit.total_cost', 'teeth.index', 'visits.date');
+            ->select('service_visit.id', 'services.name', 'service_visit.service_count', 'service_visit.total_cost', 'service_visit.tooth_id', 'visits.date');
 
         if (isset($toothId)) {
             $query = $query->where('service_visit.tooth_id', '=', $toothId);

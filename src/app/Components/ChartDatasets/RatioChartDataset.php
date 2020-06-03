@@ -69,9 +69,9 @@ class RatioChartDataset
         if ($this->type === self::GENDER) {
             switch($value) {
                 case Patient::MALE:
-                    return 'Male';
+                    return 'Мужской';
                 case Patient::FEMALE:
-                    return 'Female';
+                    return 'Женский';
             }
         }
 

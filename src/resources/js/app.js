@@ -1,11 +1,15 @@
 import './bootstrap';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
+import ru from 'vuetify/es5/locale/ru';
 import Vuelidate from 'vuelidate';
 import Cookies from "js-cookie";
 import VueScrollTo  from "vue-scrollto";
 import CheckView from 'vue-check-view';
 import VueSimpleSVG from 'vue-simple-svg';
+import moment from 'moment';
+
+moment.locale('ru');
 
 const ignoreMessage = "The .native modifier for v-on is only valid on components but it was used on <div>.";
 Vue.config.warnHandler = function (msg, vm, trace) {
@@ -17,10 +21,13 @@ Vue.config.warnHandler = function (msg, vm, trace) {
 };
 
 // Vuex store
-import store from '@/js/store/index';
+import store from '@/js/store';
 
 // Router configuration
-import router from '@/js/router/index';
+import router from '@/js/router';
+
+// Vue filters
+import filters from '@/js/filters';
 
 // Root component file
 import App from '@/js/App.vue';
@@ -36,7 +43,14 @@ if (token) {
     window.httpClient.bindToken(token);
 }
 
-Vue.use(Vuetify);
+filters.init();
+
+Vue.use(Vuetify, {
+    lang: {
+        locales: { ru },
+        current: 'ru'
+    }
+})
 
 Vue.use(Vuelidate);
 

@@ -91,10 +91,6 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function () {
     // Teeth
     # GET               /teeth                              teeth.index
     Route::get('teeth', 'TeethController@index');
-    
-    // Mail
-    # POST              /contact-letter                     mail.sendContactLetter
-    Route::post('contact-letter', 'MailController@sendContactLetter');
 });
 
 // Auth
@@ -111,3 +107,7 @@ Route::group(['namespace' => 'Api\Auth', 'prefix' => 'auth'], function () {
     Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail');
     Route::post('password/reset', 'ResetPasswordController@reset');
 });
+
+// Mail
+# POST              /contact-letter                     mail.sendContactLetter
+Route::post('contact-letter', 'Api\MailController@sendContactLetter');

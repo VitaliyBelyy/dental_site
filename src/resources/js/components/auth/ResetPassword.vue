@@ -2,7 +2,7 @@
     <div>
         <v-card class="auth-card">
             <v-card-title class="auth-card__title">
-                <h3>Change password</h3>
+                <h3>Сбросить пароль</h3>
             </v-card-title>
 
             <v-divider></v-divider>
@@ -10,7 +10,7 @@
             <v-card-text class="px-4 pb-0 pt-6">
                 <v-form>
                     <v-text-field
-                        label="Email address"
+                        label="E-mail"
                         name="email"
                         dense
                         outlined
@@ -23,7 +23,7 @@
                     ></v-text-field>
 
                     <v-text-field
-                        label="New password"
+                        label="Новый пароль"
                         name="password"
                         dense
                         outlined
@@ -42,7 +42,7 @@
                 <v-btn color="primary"
                        :loading="isLoading"
                        @click.prevent="resetPassword"
-                >Confirm</v-btn>
+                >Подтвердить</v-btn>
             </v-card-actions>
         </v-card>
     </div>
@@ -78,15 +78,15 @@
             emailErrors() {
                 const errors = [];
                 if (!this.$v.email.$dirty) return errors;
-                !this.$v.email.required && errors.push('The e-mail is required.');
-                !this.$v.email.email && errors.push('The email must be a valid email address.');
+                !this.$v.email.required && errors.push('Поле \'E-mail\' не должно быть пустым.');
+                !this.$v.email.email && errors.push('Некорректный формат электронного адреса.');
                 return errors;
             },
             passwordErrors() {
                 const errors = [];
                 if (!this.$v.password.$dirty) return errors;
-                !this.$v.password.required && errors.push('The password is required.');
-                !this.$v.password.minLength && errors.push('Password must be at least 8 characters long');
+                !this.$v.password.required && errors.push('Поле \'Пароль\' не должно быть пустым.');
+                !this.$v.password.minLength && errors.push('Минимальная длина пароля 8 символов.');
                 return errors;
             },
         },

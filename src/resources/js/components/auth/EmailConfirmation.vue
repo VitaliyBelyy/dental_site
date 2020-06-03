@@ -6,7 +6,7 @@
             top
         >
             <v-icon dark class="mr-2">mdi-checkbox-marked-circle</v-icon>
-            Verification email was successfully resent.
+            Письмо для подтверждения адреса электронной почты было успешно отправлено.
             <v-btn
                 text
                 icon
@@ -24,7 +24,7 @@
                     size="50"
                     class="mb-5"
                 ></v-progress-circular>
-                <p class="confirmation-card__message ma-0">Processing the email confirmation request ...</p>
+                <p class="confirmation-card__message ma-0">Обработка запроса ...</p>
             </v-card-text>
 
             <v-card-text class="text-center py-6" v-else-if="confirmationError">
@@ -33,7 +33,7 @@
                     color="red"
                     class="mb-5"
                 >mdi-alert-circle</v-icon>
-                <p class="confirmation-card__message ma-0">An error occurred. Try to <a href="#" @click.prevent="resendEmailVerification">resend verification email.</a></p>
+                <p class="confirmation-card__message ma-0">Возникла ошибка. Попробуйте <a href="#" @click.prevent="resendEmailVerification">отправить письмо повторно.</a></p>
             </v-card-text>
 
             <v-card-text class="text-center py-6" v-else>
@@ -42,7 +42,7 @@
                     color="green"
                     class="mb-5"
                 >mdi-checkbox-marked-circle</v-icon>
-                <p class="confirmation-card__message ma-0">Your email address was successfully verified.</p>
+                <p class="confirmation-card__message ma-0">Адрес электронной почты был успешно подтвержден.</p>
             </v-card-text>
 
             <v-divider></v-divider>
@@ -59,7 +59,7 @@
                        :disabled="isLoading || confirmationError"
                        link
                        :to="{ name: 'dashboard.patients' }"
-                >Go to dashboard</v-btn>
+                >Перейти к административной части</v-btn>
             </v-card-actions>
         </v-card>
     </div>

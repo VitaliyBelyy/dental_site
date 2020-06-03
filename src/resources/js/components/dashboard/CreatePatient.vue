@@ -2,7 +2,7 @@
     <v-container fluid>
         <v-row class="ma-0" justify="center">
             <v-col cols="12" md="8" class="py-0">
-                <patient-form title="New patient"
+                <patient-form title="Новый пациент"
                               :is-loading="dataProcessing"
                               @on-submit="createPatient"
                 ></patient-form>

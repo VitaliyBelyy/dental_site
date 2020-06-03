@@ -4,10 +4,14 @@
             <v-col cols="12" class="py-0">
                 <v-card>
                     <v-toolbar flat color="white">
+                        <p class="total-price mb-0">
+                            <b class="total-price__heading">{{ overpayment ? 'Переплата' : 'Задолженность' }}: </b>
+                            <span class="total-price__value">{{ overpayment ? -1 * debt : debt }} <v-icon small :color="overpayment ? '#4caf50' : '#ff5252'">{{ overpayment ? 'mdi-arrow-up' : 'mdi-arrow-down' }}</v-icon></span>
+                        </p>
                         <v-spacer></v-spacer>
                         <v-btn color="primary" @click="dialog = true">
                             <v-icon left>mdi-plus</v-icon>
-                            Add new
+                            Добавить
                         </v-btn>
                     </v-toolbar>
                     <v-divider></v-divider>
@@ -20,18 +24,26 @@
                             :loading="isLoading"
                             :items-per-page="15"
                             :footer-props="footerProps"
-                            class="elevation-1"
+                            class="card-table elevation-1"
                         >
+                            <template v-slot:item.date="{ item }">
+                                {{ item.date | date }}
+                            </template>
+
+                            <template v-slot:footer.page-text="props">
+                                {{props.pageStart}} - {{props.pageStop}} из {{props.itemsLength}}
+                            </template>
                         </v-data-table>
                     </v-card-text>
 
-                    <payment-history-form :patient-id="id"
-                                          :dialog="dialog"
-                                          :record="editedRecord"
-                                          :selected-id="selectedId"
-                                          @on-create="recordCreated"
-                                          @on-update="recordUpdated"
-                                          @on-close="closeForm"
+                    <payment-history-form
+                        :patient-id="id"
+                        :dialog="dialog"
+                        :record="editedRecord"
+                        :selected-id="selectedId"
+                        @on-create="recordCreated"
+                        @on-update="recordUpdated"
+                        @on-close="closeForm"
                     ></payment-history-form>
                 </v-card>
             </v-col>
@@ -56,7 +68,8 @@
                 isLoading: false,
                 options: {},
                 footerProps: {
-                    'items-per-page-options': [15, 30, 45]
+                    'items-per-page-options': [15, 30, 45],
+                    'items-per-page-text': 'Элементов на странице:'
                 },
                 headers: [
                     {
@@ -66,19 +79,19 @@
                         value: 'id',
                     },
                     {
-                        text: 'Amount',
+                        text: 'Сумма',
                         align: 'left',
                         sortable: true,
                         value: 'amount',
                     },
                     {
-                        text: 'Date',
+                        text: 'Дата',
                         align: 'left',
                         sortable: true,
                         value: 'date',
                     },
                     {
-                        text: 'Notes',
+                        text: 'Примечания',
                         align: 'left',
                         sortable: false,
                         value: 'notes',
@@ -91,6 +104,12 @@
         },
 
         computed: {
+            debt() {
+                return this.$store.getters['patients/patientDebt'] || 0;
+            },
+            overpayment() {
+                return this.debt < 0;
+            },
             historyItems() {
                 return this.$store.state.patients.paymentHistory || [];
             },
@@ -108,7 +127,14 @@
             },
         },
 
+        created() {
+            this.loadPatient();
+        },
+
         methods: {
+            loadPatient() {
+                this.$store.dispatch('patients/loadPatient', this.id);
+            },
             loadPaymentHistory() {
                 let params = {
                     page: this.options.page || 1,
@@ -124,10 +150,12 @@
                     });
             },
             recordCreated() {
+                this.loadPatient();
                 this.loadPaymentHistory();
                 this.closeForm();
             },
             recordUpdated() {
+                this.loadPatient();
                 this.loadPaymentHistory();
                 this.closeForm();
             },
@@ -143,5 +171,7 @@
 </script>
 
 <style scoped>
-
+    .total-price__value .v-icon {
+        margin-top: -4px;
+    }
 </style>

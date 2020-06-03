@@ -2,7 +2,7 @@
     <v-container fluid>
         <v-row class="ma-0" justify="center">
             <v-col cols="12" md="8" class="py-0">
-                <patient-form title="Edit patient"
+                <patient-form title="Редактировать данные пациента"
                               :patient="patient"
                               :is-loading="dataProcessing"
                               @on-submit="updatePatient"

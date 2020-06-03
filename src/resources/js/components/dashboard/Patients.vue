@@ -8,14 +8,14 @@
                             flat
                             solo
                             prepend-icon="search"
-                            placeholder="Type something"
+                            placeholder="Поиск..."
                             v-model="search"
                             hide-details
                             class="hidden-sm-and-down mr-4"
                         ></v-text-field>
                         <v-btn color="primary" link :to="{ name: 'dashboard.create-patient' }">
                             <v-icon left>mdi-plus</v-icon>
-                            Add new
+                            Добавить
                         </v-btn>
                     </v-toolbar>
                     <v-divider></v-divider>
@@ -28,12 +28,18 @@
                             :loading="isLoading"
                             :items-per-page="15"
                             :footer-props="footerProps"
-                            class="elevation-1"
+                            no-data-text="Нет записей"
+                            loading-text="Загрузка информации..."
+                            class="card-table elevation-1"
                         >
                             <template v-slot:item.avatar="{ item }">
                                 <v-avatar size="32">
                                     <img :src="item.image_path" :alt="item.full_name"/>
                                 </v-avatar>
+                            </template>
+
+                            <template v-slot:item.phone="{ item }">
+                                <span class="nowrap">{{ item.phone }}</span>
                             </template>
 
                             <template v-slot:item.action="{ item }">
@@ -67,6 +73,10 @@
                                     </v-list>
                                 </v-menu>
                             </template>
+
+                            <template v-slot:footer.page-text="props">
+                                {{props.pageStart}} - {{props.pageStop}} из {{props.itemsLength}}
+                            </template>
                         </v-data-table>
                     </v-card-text>
                 </v-card>
@@ -88,7 +98,8 @@
                 isLoading: false,
                 options: {},
                 footerProps: {
-                    'items-per-page-options': [15, 30, 45]
+                    'items-per-page-options': [15, 30, 45],
+                    'items-per-page-text': 'Элементов на странице:'
                 },
                 headers: [
                     {
@@ -98,43 +109,43 @@
                         value: 'id',
                     },
                     {
-                        text: 'Avatar',
+                        text: 'Фото',
                         align: 'left',
                         sortable: false,
                         value: 'avatar',
                     },
                     {
-                        text: 'Full name',
+                        text: 'Имя',
                         align: 'left',
                         sortable: true,
                         value: 'full_name',
                     },
                     {
-                        text: 'Phone',
+                        text: 'Телефон',
                         align: 'left',
                         sortable: false,
                         value: 'phone',
                     },
                     {
-                        text: 'Email',
+                        text: 'E-mail',
                         align: 'left',
                         sortable: false,
                         value: 'email',
                     },
                     {
-                        text: 'Gender',
+                        text: 'Пол',
                         align: 'left',
                         sortable: false,
                         value: 'gender',
                     },
                     {
-                        text: 'Birth date',
+                        text: 'Дата рождения',
                         align: 'left',
                         sortable: true,
                         value: 'birth_date',
                     },
                     {
-                        text: 'Actions',
+                        text: '',
                         align: 'left',
                         sortable: false,
                         value: 'action',
@@ -146,7 +157,7 @@
                         click: (id) => {
                             this.$router.push({name: 'dashboard.patient-profile', params: { id }});
                         },
-                        title: "Show patient profile",
+                        title: "Просмотр профиля пациента",
                     },
 
                     { divider: true },
@@ -156,7 +167,7 @@
                         click: (id) => {
                             this.$router.push({name: 'dashboard.visit-history', params: { id }});
                         },
-                        title: "Show visit history",
+                        title: "Просмотр истории визитов",
                     },
 
                     { divider: true },
@@ -166,7 +177,7 @@
                         click: (id) => {
                             this.$router.push({name: 'dashboard.payment-history', params: { id }});
                         },
-                        title: "Show payment history",
+                        title: "Просмотр истории оплат",
                     },
 
                     { divider: true },
@@ -176,7 +187,7 @@
                         click: (id) => {
                             this.deletePatient(id);
                         },
-                        title: "Delete patient",
+                        title: "Удалить пациента",
                     },
                 ]
             }
@@ -189,7 +200,7 @@
                         let gender = null;
 
                         if (patient.gender || patient.gender === 0) {
-                            gender = (+patient.gender === MALE) ? 'male' : (+patient.gender === FEMALE) ? 'female' : null;
+                            gender = (+patient.gender === MALE) ? 'мужчина' : (+patient.gender === FEMALE) ? 'женщина' : null;
                         }
 
                         return {
@@ -198,7 +209,7 @@
                             'phone': patient.phone,
                             'email': patient.email || null,
                             'gender': gender,
-                            'birth_date': patient.birth_date || null,
+                            'birth_date': patient.birth_date ? this.$options.filters.date(patient.birth_date) : null,
                             'image_path': patient.image_path || '/storage/images/no-profile-image.png',
                         };
                     });
@@ -241,7 +252,7 @@
                     });
             },
             deletePatient(id) {
-                if (confirm('Are you sure you want to delete this patient?')) {
+                if (confirm('Вы уверены что хотите удалить этого пациента?')) {
                     this.$store.dispatch('patients/deletePatient', id)
                         .then(() => {
                                 this.loadPatients();

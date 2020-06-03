@@ -9,10 +9,10 @@
             <v-card-title class="py-4 px-6">
                 <h3 class="dashboard-card__title">{{ formTitle }}</h3>
                 <v-spacer></v-spacer>
-                <div class="total-price">
-                    <b class="total-price__heading">Total: </b>
+                <p class="total-price mb-0">
+                    <b class="total-price__heading">Итоговая стоимость: </b>
                     <span class="total-price__value">{{ total }}</span>
-                </div>
+                </p>
             </v-card-title>
 
             <v-divider></v-divider>
@@ -20,6 +20,12 @@
             <v-card-text class="px-4 pb-0 pt-4">
                 <v-form>
                     <v-container class="pa-0">
+                        <v-row class="mb-4">
+                            <v-col cols="12">
+                                <teeth-map :value="form.selectedTooth" @change="(value) => form.selectedTooth = value"/>
+                            </v-col>
+                        </v-row>
+
                         <v-row>
                             <v-col cols="12">
                                 <v-menu
@@ -41,7 +47,7 @@
                                             @blur="$v.form.date.$touch()"
                                         >
                                             <template v-slot:label>
-                                                Date <span class="red--text">*</span>
+                                                Дата <span class="red--text">*</span>
                                             </template>
                                         </v-text-field>
                                     </template>
@@ -51,14 +57,14 @@
                                     ></v-date-picker>
                                 </v-menu>
                             </v-col>
-                            <v-col cols="12" sm="6" class="pt-0">
+                            <v-col cols="12" sm="5" class="pt-0">
                                 <v-autocomplete
                                     dense
                                     outlined
                                     no-filter
                                     item-text="name"
                                     return-object
-                                    label="Service"
+                                    label="Услуга"
                                     :search-input.sync="searchQuery"
                                     v-model="form.service"
                                     :loading="isLoadingServices"
@@ -113,14 +119,14 @@
                                     <v-icon large>mdi-plus</v-icon>
                                 </v-btn>
                             </v-col>
-                            <v-col cols="12" sm="2" class="pt-0">
+                            <v-col cols="12" sm="3" class="pt-0">
                                 <v-btn
                                     color="primary"
                                     elevation="1"
                                     width="100%"
                                     height="40px"
                                     @click="addSelectedService"
-                                >Add</v-btn>
+                                >Добавить</v-btn>
                             </v-col>
                             <v-col cols="12" class="pt-0">
                                 <v-data-table
@@ -129,6 +135,7 @@
                                     :headers="headers"
                                     :items="form.selectedServices"
                                     class="dashboard-card__table--modal"
+                                    no-data-text="Нет записей"
                                 >
                                     <template v-if="selectedServicesErrors.length" v-slot:no-data>
                                         <div class="error--text" role="alert">
@@ -138,7 +145,7 @@
                                 </v-data-table>
                             </v-col>
                             <v-col cols="12">
-                                <small><span class="red--text">*</span> indicates required field</small>
+                                <small><span class="red--text">*</span> Обязательные поля</small>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -151,12 +158,12 @@
                        text
                        :disabled="isLoading"
                        @click="closeForm"
-                >Close</v-btn>
+                >Закрыть</v-btn>
                 <v-btn color="primary"
                        text
                        :loading="isLoading"
                        @click="saveForm"
-                >Save</v-btn>
+                >Сохранить</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -167,6 +174,7 @@
     import { required } from 'vuelidate/lib/validators';
     import { Subject } from 'rxjs';
     import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+    import TeethMap from './TeethMap';
 
 
     export default {
@@ -187,6 +195,10 @@
             selectedId: {
                 type: Number
             }
+        },
+
+        components: {
+            TeethMap
         },
 
         validations: {
@@ -211,6 +223,7 @@
                 maxCount: 10,
                 serviceValid: true,
                 form: {
+                    selectedTooth: null,
                     date: moment().format('YYYY-MM-DD'),
                     selectedServices: [],
                     service: null,
@@ -223,19 +236,24 @@
                         value: 'id',
                     },
                     {
-                        text: 'Name',
+                        text: 'Название',
                         align: 'left',
                         value: 'name',
                     },
                     {
-                        text: 'Count',
+                        text: 'Количество',
                         align: 'left',
                         value: 'service_count',
                     },
                     {
-                        text: 'Price',
+                        text: 'Стоимость',
                         align: 'left',
                         value: 'total_cost',
+                    },
+                    {
+                        text: 'ID Зуба',
+                        align: 'left',
+                        value: 'tooth_id',
                     },
                 ],
             }
@@ -246,24 +264,24 @@
                 return this.$store.state.patients.services || [];
             },
             formTitle() {
-                return this.selectedId === null ? "New Payment Record" : "Edit Payment Record";
+                return this.selectedId === null ? "Новая запись" : "Редактировать запись";
             },
             serviceErrors() {
                 const errors = [];
                 if (this.serviceValid) return errors;
-                !this.serviceValid && errors.push('The service field is required.');
+                !this.serviceValid && errors.push('Поле \'Услуга\' не должно быть пустым.');
                 return errors;
             },
             selectedServicesErrors() {
                 const errors = [];
                 if (!this.$v.form.selectedServices.$dirty) return errors;
-                !this.$v.form.selectedServices.required && errors.push('At least one service must be selected.');
+                !this.$v.form.selectedServices.required && errors.push('Необходимо выбрать хотя бы одну услугу.');
                 return errors;
             },
             dateErrors() {
                 const errors = [];
                 if (!this.$v.form.date.$dirty) return errors;
-                !this.$v.form.date.required && errors.push('The date field is required.');
+                !this.$v.form.date.required && errors.push('Поле \'Дата\' не должно быть пустым.');
                 return errors;
             },
             total() {
@@ -380,14 +398,9 @@
                     return;
                 }
 
-                let index = -1;
-
-                for(let i = 0; i < this.form.selectedServices.length; i++) {
-                    if (this.form.selectedServices[i].id === this.form.service.id) {
-                        index = i;
-                        break;
-                    }
-                }
+                let index = this.form.selectedServices.findIndex(service => {
+                    return service.id === this.form.service.id && service.tooth_id === this.form.selectedTooth;
+                });
 
                 if (index >= 0) {
                     let selected = Object.assign({}, this.form.selectedServices[index], {
@@ -399,8 +412,9 @@
                     let selected = {
                         'id': this.form.service.id,
                         'name': this.form.service.name,
+                        'tooth_id': this.form.selectedTooth,
                         'service_count': this.form.count,
-                        'total_cost': this.form.service.price * this.form.count
+                        'total_cost': this.form.service.price * this.form.count,
                     };
                     this.form.selectedServices = [...this.form.selectedServices, selected];
                 }
@@ -422,5 +436,8 @@
     }
     .total-price {
         font-size: 18px;
+    }
+    .teeth-map {
+        font-size: 10px;
     }
 </style>

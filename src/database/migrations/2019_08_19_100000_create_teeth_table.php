@@ -14,9 +14,8 @@ class CreateTeethTable extends Migration
     public function up()
     {
         Schema::create('teeth', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->tinyInteger('jaw');
-            $table->tinyInteger('index');
+            $table->tinyInteger('id')->unsigned()->primary();
+            $table->tinyInteger('jaw')->unsigned();
             $table->string('icon_file_name');
             $table->boolean('reverse')->default(0);
             $table->timestamps();

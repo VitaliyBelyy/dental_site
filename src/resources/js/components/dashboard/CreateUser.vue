@@ -2,7 +2,7 @@
     <v-container fluid>
         <v-row class="ma-0" justify="center">
             <v-col cols="12" md="8" class="py-0">
-                <user-form title="Create user" :is-loading="dataProcessing" @on-submit="createUser"></user-form>
+                <user-form title="Новый пользователь" :is-loading="dataProcessing" @on-submit="createUser"></user-form>
             </v-col>
         </v-row>
     </v-container>

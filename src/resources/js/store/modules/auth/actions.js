@@ -27,13 +27,8 @@ let actions = {
                     resolve();
                 })
                 .catch(err => {
-                    if (err.response.status === 422) {
-                        const errors = err.response.data.meta.errors;
-                        errors && commit("setValidationErrors", errors);
-                    }
-
                     console.log(err.response);
-                    reject();
+                    reject(err.response);
                 });
         });
     },
@@ -55,13 +50,8 @@ let actions = {
     //                 resolve();
     //             })
     //             .catch(err => {
-    //                 if (err.response.status === 422) {
-    //                     const errors = err.response.data.meta.errors;
-    //                     errors && commit("setValidationErrors", errors);
-    //                 }
-
     //                 console.log(err.response);
-    //                 reject();
+    //                 reject(err.response);
     //             });
     //     });
     // },
@@ -74,7 +64,8 @@ let actions = {
                     resolve();
                 })
                 .catch(err => {
-                    reject(err);
+                    console.log(err.response);
+                    reject(err.response);
                 })
                 .finally(() => {
                     commit('setLoadingStatus', false);
@@ -94,7 +85,7 @@ let actions = {
                 })
                 .catch(err => {
                     console.log(err.response);
-                    reject(err);
+                    reject(err.response);
                 });
         });
     },
@@ -119,7 +110,7 @@ let actions = {
                 })
                 .catch(err => {
                     console.log(err.response);
-                    reject();
+                    reject(err.response);
                 });
         });
     },
@@ -132,7 +123,7 @@ let actions = {
                 })
                 .catch(err => {
                     console.log(err.response);
-                    reject();
+                    reject(err.response);
                 });
         });
     },
@@ -146,7 +137,7 @@ let actions = {
                 })
                 .catch(err => {
                     console.log(err.response);
-                    reject();
+                    reject(err.response);
                 });
         });
     },
@@ -160,12 +151,9 @@ let actions = {
                 })
                 .catch(err => {
                     console.log(err.response);
-                    reject();
+                    reject(err.response);
                 });
         });
-    },
-    clearValidationErrors: ({ commit }) => {
-        commit('clearValidationErrors');
     },
     updateUser: ({ commit }, data) => {
         commit('updateUser', data);

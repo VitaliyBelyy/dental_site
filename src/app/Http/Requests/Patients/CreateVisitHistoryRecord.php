@@ -31,6 +31,7 @@ class CreateVisitHistoryRecord extends ApiRequest
             'services.*.id' => 'required|integer|exists:services,id',
             'services.*.service_count' => 'required|integer|min:1|max:10',
             'services.*.total_cost' => 'required|numeric',
+            'services.*.tooth_id' => 'nullable|integer|exists:teeth,id',
         ];
     }
 }

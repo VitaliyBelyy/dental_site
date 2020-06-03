@@ -22,7 +22,7 @@
                                     @blur="$v.form.name.$touch()"
                                 >
                                     <template v-slot:label>
-                                        Name <span class="red--text">*</span>
+                                        Название <span class="red--text">*</span>
                                     </template>
                                 </v-text-field>
                             </v-col>
@@ -37,12 +37,12 @@
                                     @blur="$v.form.price.$touch()"
                                 >
                                     <template v-slot:label>
-                                        Price <span class="red--text">*</span>
+                                        Стоимость <span class="red--text">*</span>
                                     </template>
                                 </v-text-field>
                             </v-col>
                             <v-col cols="12" class="pt-0">
-                                <small><span class="red--text">*</span> indicates required field</small>
+                                <small><span class="red--text">*</span> Обязательные поля</small>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -55,12 +55,12 @@
                        text
                        :disabled="isLoading"
                        @click="closeForm"
-                >Close</v-btn>
+                >Закрыть</v-btn>
                 <v-btn color="primary"
                        text
                        :loading="isLoading"
                        @click="saveForm"
-                >Save</v-btn>
+                >Сохранить</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -114,19 +114,19 @@
 
         computed: {
             formTitle() {
-                return this.selectedId === null ? "New Service" : "Edit Service";
+                return this.selectedId === null ? "Новая услуга" : "Редактировать услугу";
             },
             nameErrors() {
                 const errors = [];
                 if (!this.$v.form.name.$dirty) return errors;
-                !this.$v.form.name.required && errors.push('The name field is required.');
+                !this.$v.form.name.required && errors.push('Поле \'Название\' не должно быть пустым.');
                 return errors;
             },
             priceErrors() {
                 const errors = [];
                 if (!this.$v.form.price.$dirty) return errors;
-                !this.$v.form.price.required && errors.push('The price field is required.');
-                !this.$v.form.price.isNumeric && errors.push('Wrong format of the amount field.');
+                !this.$v.form.price.required && errors.push('Поле \'Стоимость\' не должно быть пустым.');
+                !this.$v.form.price.isNumeric && errors.push('Некорректный формат.');
                 return errors;
             },
         },

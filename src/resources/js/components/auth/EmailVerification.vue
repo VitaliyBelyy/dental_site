@@ -6,7 +6,7 @@
             top
         >
             <v-icon dark class="mr-2">mdi-checkbox-marked-circle</v-icon>
-            Verification email was successfully resent.
+            Письмо для подтверждения адреса электронной почты было успешно отправлено.
             <v-btn
                 text
                 icon
@@ -18,15 +18,15 @@
 
         <v-card class="auth-card">
             <v-card-title class="auth-card__title">
-                <h3>Verify your email address</h3>
+                <h3>Подтверждение адреса электронной почты</h3>
             </v-card-title>
 
             <v-divider></v-divider>
 
             <v-card-text>
                 <p class="ma-0">
-                    Before proceeding, please check your email for a verification link. If you did not receive the email, <a
-                    href="#" @click.prevent="resendEmailVerification">click here to request another.</a>
+                    Прежде чем продолжить необходимо подтвердить адрес электронной почты. Проверьте ваш почтовый ящих и выполните указанные действия. Если по какой-то причине письмо не было получено, нажмите <a
+                    href="#" @click.prevent="resendEmailVerification">здесь</a> для повторной отправки.
                 </p>
             </v-card-text>
 
@@ -44,7 +44,7 @@
                        link
                        light
                        @click="handleLogout"
-                >Back to login</v-btn>
+                >Назад к авторизации</v-btn>
             </v-card-actions>
         </v-card>
     </div>

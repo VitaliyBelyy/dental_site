@@ -37,7 +37,7 @@
                                 @blur="$v.form.fullName.$touch()"
                             >
                                 <template v-slot:label>
-                                    Full Name <span class="red--text">*</span>
+                                    Имя <span class="red--text">*</span>
                                 </template>
                             </v-text-field>
                         </v-col>
@@ -53,7 +53,7 @@
                                 @blur="$v.form.phone.$touch()"
                             >
                                 <template v-slot:label>
-                                    Phone <span class="red--text">*</span>
+                                    Телефон <span class="red--text">*</span>
                                 </template>
                             </v-text-field>
                         </v-col>
@@ -69,7 +69,7 @@
                                 @blur="$v.form.email.$touch()"
                             >
                                 <template v-slot:label>
-                                    Email <span class="red--text">*</span>
+                                    E-mail <span class="red--text">*</span>
                                 </template>
                             </v-text-field>
                         </v-col>  
@@ -85,14 +85,14 @@
                                 @blur="$v.form.password.$touch()"
                             >
                                 <template v-slot:label>
-                                    Password <span class="red--text">*</span>
+                                    Пароль <span class="red--text">*</span>
                                 </template>
                             </v-text-field>
                         </v-col>
                         <template v-else>
                             <v-col cols="12">
                                 <v-text-field
-                                    label="Current Password"
+                                    label="Текущий пароль"
                                     name="current_password"
                                     v-model="form.currentPassword"
                                     maxlength="255"
@@ -105,7 +105,7 @@
                             </v-col>
                             <v-col cols="12">
                                 <v-text-field
-                                    label="New Password"
+                                    label="Новый пароль"
                                     name="new_password"
                                     v-model="form.newPassword"
                                     maxlength="255"
@@ -118,7 +118,7 @@
                             </v-col>
                         </template>
                         <v-col cols="12">
-                            <small><span class="red--text">*</span> indicates required field</small>
+                            <small><span class="red--text">*</span> Обязательные поля</small>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -130,7 +130,7 @@
             <v-btn color="primary"
                    :loading="isLoading"
                    @click.prevent="submit"
-            >Save</v-btn>
+            >Сохранить</v-btn>
         </v-card-actions>
     </v-card>
 </template>
@@ -234,29 +234,29 @@
             fullNameErrors() {
                 const errors = [];
                 if (!this.$v.form.fullName.$dirty) return errors;
-                !this.$v.form.fullName.required && errors.push('The full name is required.');
+                !this.$v.form.fullName.required && errors.push('Поле \'Имя\' не должно быть пустым.');
                 return errors;
             },
             phoneErrors() {
                 const errors = [];
                 if (!this.$v.form.phone.$dirty) return errors;
-                !this.$v.form.phone.required && errors.push('The phone is required.');
-                !this.$v.form.phone.minLength && errors.push('The phone must be a valid phone number.');
+                !this.$v.form.phone.required && errors.push('Поле \'Телефон\' не должно быть пустым.');
+                !this.$v.form.phone.minLength && errors.push('Некорректный формат номера телефона.');
                 return errors;
             },
             emailErrors() {
                 const errors = [];
                 if (!this.$v.form.email.$dirty) return errors;
-                !this.$v.form.email.required && errors.push('The email is required.');
-                !this.$v.form.email.email && errors.push('The email must be a valid email address.');
+                !this.$v.form.email.required && errors.push('Поле \'E-mail\' не должно быть пустым.');
+                !this.$v.form.email.email && errors.push('Некорректный формат электронного адреса.');
                 return errors;
             },
             passwordErrors() {
                 if (!this.edit) {
                     const errors = [];
                     if (!this.$v.form.password.$dirty) return errors;
-                    !this.$v.form.password.required && errors.push('The password is required.');
-                    !this.$v.form.password.minLength && errors.push('Password must be at least 8 characters long.');
+                    !this.$v.form.password.required && errors.push('Поле \'Пароль\' не должно быть пустым.');
+                    !this.$v.form.password.minLength && errors.push('Минимальная длина пароля 8 символов.');
                     return errors;
                 }
 
@@ -266,8 +266,8 @@
                 if (this.edit) {
                     const errors = [];
                     if (!this.$v.form.currentPassword.$dirty) return errors;
-                    !this.$v.form.currentPassword.required && errors.push('The current password is required.');
-                    !this.$v.form.currentPassword.minLength && errors.push('Current password must be at least 8 characters long.');
+                    !this.$v.form.currentPassword.required && errors.push('Поле \'Текущий пароль\' не должно быть пустым.');
+                    !this.$v.form.currentPassword.minLength && errors.push('Минимальная длина пароля 8 символов.');
                     return errors;
                 }
 
@@ -277,8 +277,8 @@
                 if (this.edit) {
                     const errors = [];
                     if (!this.$v.form.newPassword.$dirty) return errors;
-                    !this.$v.form.newPassword.required && errors.push('The new password is required.');
-                    !this.$v.form.newPassword.minLength && errors.push('New password must be at least 8 characters long.');
+                    !this.$v.form.newPassword.required && errors.push('Поле \'Новый пароль\' не должно быть пустым.');
+                    !this.$v.form.newPassword.minLength && errors.push('Минимальная длина пароля 8 символов.');
                     return errors;
                 }
 

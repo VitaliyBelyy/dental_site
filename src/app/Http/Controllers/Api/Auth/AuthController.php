@@ -48,7 +48,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (!auth()->attempt($credentials)) {
-            return response()->api(null, 422);
+            return response()->api(null, 401);
         }
 
         $user = User::where('email', $request->email)->first();

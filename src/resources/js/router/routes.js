@@ -101,13 +101,13 @@ export default [
                 path: 'statistics',
                 name: 'dashboard.statistics',
                 component: Statistics,
-                meta: { title: "Statistics", admin: true },
+                meta: { title: "Статистика", admin: true },
             },
             {
                 path: 'users',
                 name: 'dashboard.users',
                 component: Users,
-                meta: { title: "Users", admin: true },
+                meta: { title: "Пользователи", admin: true },
             },
             {
                 path: 'users/create',
@@ -132,7 +132,7 @@ export default [
                 path: 'patients',
                 name: 'dashboard.patients',
                 component: Patients,
-                meta: { title: "Patients" },
+                meta: { title: "Пациенты" },
             },
             {
                 path: 'patients/create',
@@ -172,7 +172,7 @@ export default [
                 path: 'services',
                 name: 'dashboard.services',
                 component: Services,
-                meta: { title: "Services", admin: true },
+                meta: { title: "Услуги", admin: true },
             },
         ]
     },

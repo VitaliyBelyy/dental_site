@@ -13,12 +13,6 @@ let mutations = {
             state.user.email_verified_at = date;
         }
     },
-    setValidationErrors(state, payload) {
-        state.validationErrors = Object.assign({}, state.validationErrors, payload);
-    },
-    clearValidationErrors(state) {
-        state.validationErrors = {};
-    },
     updateUser(state, data) {
         state.user = Object.assign({}, state.user, data);
     }

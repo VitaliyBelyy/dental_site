@@ -38,7 +38,7 @@
                                     @blur="$v.form.patient.$touch()"
                                 >
                                     <template v-slot:label>
-                                        Patient <span class="red--text">*</span>
+                                        Пациент <span class="red--text">*</span>
                                     </template>
                                     <template v-slot:progress>
                                         <v-progress-circular
@@ -71,7 +71,7 @@
                                             @blur="$v.form.date.$touch()"
                                         >
                                             <template v-slot:label>
-                                                Visit date
+                                                Дата визита
                                                 <span class="red--text">*</span>
                                             </template>
                                         </v-text-field>
@@ -106,7 +106,7 @@
                                             @blur="$v.form.startTime.$touch()"
                                         >
                                             <template v-slot:label>
-                                                Starts at
+                                                Начало
                                                 <span class="red--text">*</span>
                                             </template>
                                         </v-text-field>
@@ -143,7 +143,7 @@
                                             @blur="$v.form.endTime.$touch()"
                                         >
                                             <template v-slot:label>
-                                                Ends at
+                                                Окончание
                                                 <span class="red--text">*</span>
                                             </template>
                                         </v-text-field>
@@ -159,7 +159,7 @@
                             </v-col>
                             <v-col cols="12" class="pt-0">
                                 <v-textarea
-                                    label="Details"
+                                    label="Примечания"
                                     v-model="form.details"
                                     outlined
                                     hide-details
@@ -170,7 +170,7 @@
                             </v-col>
                             <v-col cols="12">
                                 <small>
-                                    <span class="red--text">*</span> indicates required field
+                                    <span class="red--text">*</span> Обязательные поля
                                 </small>
                             </v-col>
                         </v-row>
@@ -183,12 +183,12 @@
                        text
                        :disabled="isLoading"
                        @click="closeForm"
-                >Close</v-btn>
+                >Закрыть</v-btn>
                 <v-btn color="primary"
                        text
                        :loading="isLoading"
                        @click="saveForm"
-                >Save</v-btn>
+                >Сохранить</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -266,34 +266,34 @@
                 return this.$store.state.events.patients;
             },
             formTitle() {
-                return this.selectedId === null ? "New Event" : "Edit Event";
+                return this.selectedId === null ? "Новая запись" : "Редактировать запись";
             },
             patientErrors() {
                 const errors = [];
                 if (!this.$v.form.patient.$dirty) return errors;
                 !this.$v.form.patient.required &&
-                errors.push("The patient is required.");
+                errors.push('Поле \'Пациент\' не должно быть пустым.');
                 return errors;
             },
             dateErrors() {
                 const errors = [];
                 if (!this.$v.form.date.$dirty) return errors;
                 !this.$v.form.date.required &&
-                errors.push("The date field is required.");
+                errors.push('Поле \'Дата визита\' не должно быть пустым.');
                 return errors;
             },
             startTimeErrors() {
                 const errors = [];
                 if (!this.$v.form.startTime.$dirty) return errors;
                 !this.$v.form.startTime.required &&
-                errors.push("The start time is required.");
+                errors.push('Поле \'Начало\' не должно быть пустым.');
                 return errors;
             },
             endTimeErrors() {
                 const errors = [];
                 if (!this.$v.form.endTime.$dirty) return errors;
                 !this.$v.form.endTime.required &&
-                errors.push("The end time is required.");
+                errors.push('Поле \'Окончание\' не должно быть пустым.');
                 return errors;
             }
         },
@@ -442,5 +442,12 @@
 <style scoped>
     .dashboard-card__status-select {
         max-width: 185px;
+    }
+
+    @media (max-width: 600px) {
+        .dashboard-card__status-select {
+            min-width: 100%;
+            margin-top: 10px;
+        }
     }
 </style>

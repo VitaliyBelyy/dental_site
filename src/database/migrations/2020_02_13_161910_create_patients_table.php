@@ -18,7 +18,7 @@ class CreatePatientsTable extends Migration
             $table->string('full_name');
             $table->string('phone');
             $table->string('email')->nullable();
-            $table->tinyInteger('gender')->nullable();
+            $table->tinyInteger('gender')->unsigned()->nullable();
             $table->date('birth_date')->nullable();
             $table->text('medical_info')->nullable();
             $table->bigInteger('user_id')->unsigned()->index();

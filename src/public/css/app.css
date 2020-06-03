@@ -708,9 +708,156 @@
   content: "\E8A9";
 }
 
+/*
+ 	Flaticon icon font: Flaticon
+ 	Creation date: 14/05/2018 08:35
+ 	*/
+
+@font-face {
+  font-family: "Flaticon";
+  src: url("/../fonts/Flaticon.eot");
+  src: url("/../fonts/Flaticon.eot?#iefix") format("embedded-opentype"), url("/../fonts/Flaticon.woff") format("woff"), url("/../fonts/Flaticon.ttf") format("truetype"), url("/../fonts/Flaticon.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+@font-face {
+    font-family: "Flaticon";
+    src: url("/../fonts/Flaticon.svg#Flaticon") format("svg");
+}
+}
+
+[class^=flaticon-]:before,
+[class*=" flaticon-"]:before,
+[class^=flaticon-]:after,
+[class*=" flaticon-"]:after {
+  font-family: Flaticon;
+  font-style: normal;
+}
+
+.flaticon-001-tooth-4:before {
+  content: "\F100";
+}
+
+.flaticon-002-toothbrush-1:before {
+  content: "\F101";
+}
+
+.flaticon-003-tooth-3:before {
+  content: "\F102";
+}
+
+.flaticon-004-syringe:before {
+  content: "\F103";
+}
+
+.flaticon-005-tooth-2:before {
+  content: "\F104";
+}
+
+.flaticon-006-dentist-tools-1:before {
+  content: "\F105";
+}
+
+.flaticon-007-computer-1:before {
+  content: "\F106";
+}
+
+.flaticon-008-protection:before {
+  content: "\F107";
+}
+
+.flaticon-009-mouthwash:before {
+  content: "\F108";
+}
+
+.flaticon-010-mirror:before {
+  content: "\F109";
+}
+
+.flaticon-011-implants:before {
+  content: "\F10A";
+}
+
+.flaticon-012-hygiene:before {
+  content: "\F10B";
+}
+
+.flaticon-013-dental-drill:before {
+  content: "\F10C";
+}
+
+.flaticon-014-gum:before {
+  content: "\F10D";
+}
+
+.flaticon-015-floss:before {
+  content: "\F10E";
+}
+
+.flaticon-016-extraction:before {
+  content: "\F10F";
+}
+
+.flaticon-017-pill:before {
+  content: "\F110";
+}
+
+.flaticon-018-dentist-1:before {
+  content: "\F111";
+}
+
+.flaticon-019-dentist:before {
+  content: "\F112";
+}
+
+.flaticon-020-decay:before {
+  content: "\F113";
+}
+
+.flaticon-021-molar-crown:before {
+  content: "\F114";
+}
+
+.flaticon-022-computer:before {
+  content: "\F115";
+}
+
+.flaticon-023-tooth-1:before {
+  content: "\F116";
+}
+
+.flaticon-024-toothbrush:before {
+  content: "\F117";
+}
+
+.flaticon-025-health-report:before {
+  content: "\F118";
+}
+
+.flaticon-026-dentist-chair:before {
+  content: "\F119";
+}
+
+.flaticon-027-caries:before {
+  content: "\F11A";
+}
+
+.flaticon-028-dentist-tools:before {
+  content: "\F11B";
+}
+
+.flaticon-029-braces:before {
+  content: "\F11C";
+}
+
+.flaticon-030-tooth:before {
+  content: "\F11D";
+}
+
 .auth-card__title {
   font-size: 1rem;
-  text-transform: capitalize;
   line-height: 1;
   background: #f5f5f5;
 }
@@ -719,7 +866,6 @@
   font-weight: 300;
   letter-spacing: normal;
   font-size: 22px;
-  text-transform: capitalize;
 }
 
 .counter {
@@ -754,6 +900,10 @@
 .dashboard-card__table--modal td,
 .dashboard-card__table--modal th {
   height: 40px !important;
+}
+
+.teeth-map {
+  width: 100%;
 }
 
 .teeth-map__container {
@@ -797,6 +947,10 @@
 
 .teeth-map__lower-jaw .teeth-map__tooth-index {
   padding-bottom: 10px;
+}
+
+.teeth-map__tooth-index {
+  font-size: 14px;
 }
 
 .teeth-map__tooth-wrapper {
@@ -882,5 +1036,110 @@
   justify-content: center;
   align-items: center;
   min-height: 400px;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.card-table th {
+  white-space: nowrap;
+}
+
+.v-data-table .v-data-table__mobile-row {
+  align-items: flex-start;
+  padding-top: 20px;
+}
+
+.v-data-table__mobile-row__header {
+  margin-right: 10px;
+}
+
+.v-data-table__mobile-row__cell {
+  word-break: break-word;
+}
+
+.dashboard-card__table--modal td,
+.dashboard-card__table--modal th {
+  height: 100% !important;
+}
+
+.statistic-card .v-toolbar {
+  height: 100% !important;
+}
+
+.statistic-card .v-toolbar .v-toolbar__content {
+  height: 100% !important;
+  min-height: 72px;
+}
+
+@media (max-width: 700px) {
+  .calendar-toolbar {
+    height: 105px !important;
+  }
+
+  .calendar-toolbar .v-toolbar__content {
+    height: 105px !important;
+    flex-wrap: wrap !important;
+    justify-content: space-between !important;
+  }
+
+  .calendar-toolbar__left-side {
+    justify-content: space-between !important;
+  }
+
+  .calendar-toolbar__left-side .flex-grow-1 {
+    display: block !important;
+  }
+
+  .calendar-toolbar__type-button {
+    min-width: 100% !important;
+    margin-top: 10px !important;
+  }
+
+  .statistic-card__chart-wrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .statistic-card__chart {
+    min-width: 700px;
+  }
+
+  .teeth-map {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-card {
+    padding: 15px 20px !important;
+  }
+
+  .remember .v-input .v-label,
+  .remember a,
+  .back-link {
+    font-size: 12px !important;
+  }
+
+  .v-data-footer__select {
+    font-size: 0 !important;
+  }
+
+  .v-data-footer__select .v-select {
+    margin: 13px 0 13px 0 !important;
+  }
+
+  .v-data-footer__pagination {
+    margin: 0 24px 0 24px !important;
+  }
+
+  .v-data-footer .v-btn--icon.v-size--default {
+    width: 24px;
+  }
+
+  .teeth-map {
+    font-size: 8px;
+  }
 }
 

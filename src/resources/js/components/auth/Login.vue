@@ -1,11 +1,28 @@
 <template>
     <div>
-        <h1 class="form-title">Login</h1>
+        <v-snackbar
+            v-model="snackbar"
+            color="error"
+            multi-line
+            top
+        >
+            <v-list-item two-line dark>
+                <v-list-item-content>
+                    <v-list-item-title>Ошибка авторизации!</v-list-item-title>
+                    <v-list-item-subtitle>Введен неверный логин или пароль.</v-list-item-subtitle>
+                </v-list-item-content>
+            </v-list-item>
+            <v-btn text icon dark @click="snackbar = false">
+                <v-icon size="20">mdi-close</v-icon>
+            </v-btn>
+        </v-snackbar>
+
+        <h1 class="form-title">Авторизация</h1>
         <v-card class="form-card elevation-2">
             <v-card-text class="card-content">
                 <v-form>
                     <v-text-field
-                        label="Email"
+                        label="E-mail"
                         name="email"
                         prepend-icon="email"
                         type="email"
@@ -17,7 +34,7 @@
                     ></v-text-field>
 
                     <v-text-field
-                        label="Password"
+                        label="Пароль"
                         name="password"
                         prepend-icon="lock"
                         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -32,22 +49,23 @@
 
                     <div class="remember">
                         <v-checkbox
-                            label="Remember me"
+                            label="Запомнить меня"
                             color="primary"
                             hide-details
                             v-model="remember"
                             class="mt-2"
                         ></v-checkbox>
-                        <router-link :to="{ name: 'auth.forgot-password' }">Forgot Password?</router-link>
+                        <router-link :to="{ name: 'auth.forgot-password' }">Забыли пароль?</router-link>
                     </div>
                 </v-form>
             </v-card-text>
             <v-card-actions class="card-actions">
-                <v-btn color="primary"
-                       class="form-submit"
-                       :loading="isLoading"
-                       @click.prevent="submit">Login</v-btn>
-                <div><router-link :to="{ name: 'home' }" class="back-link"><span class="lnr lnr-arrow-left back-link__icon"></span> Back to the site</router-link></div>
+                <v-btn
+                    color="primary"
+                    class="form-submit"
+                    :loading="isLoading"
+                    @click.prevent="submit">Войти</v-btn>
+                <div><router-link :to="{ name: 'home' }" class="back-link"><span class="lnr lnr-arrow-left back-link__icon"></span> На главную страницу</router-link></div>
             </v-card-actions>
         </v-card>
     </div>
@@ -55,9 +73,12 @@
 
 <script>
     import { required, email, minLength } from 'vuelidate/lib/validators';
+    import validation from '../../mixins/validation';
 
     export default {
         name: "Login",
+        
+        mixins: [validation],
 
         data() {
             return {
@@ -66,6 +87,7 @@
                 remember: false,
                 showPassword: false,
                 isLoading: false,
+                snackbar: false
             }
         },
 
@@ -82,17 +104,17 @@
 
         computed: {
             emailErrors() {
-                const errors = this.$store.state.auth.validationErrors.email || [];
+                const errors = this.getError('email') || [];
                 if (!this.$v.email.$dirty) return errors;
-                !this.$v.email.required && errors.push('The e-mail is required.');
-                !this.$v.email.email && errors.push('The email must be a valid email address.');
+                !this.$v.email.required && errors.push('Поле \'E-mail\' не должно быть пустым.');
+                !this.$v.email.email && errors.push('Некорректный формат электронного адреса.');
                 return errors;
             },
             passwordErrors() {
-                const errors = this.$store.state.auth.validationErrors.password || [];
+                const errors = this.getError('password') || [];
                 if (!this.$v.password.$dirty) return errors;
-                !this.$v.password.required && errors.push('The password is required.');
-                !this.$v.password.minLength && errors.push('Password must be at least 8 characters long');
+                !this.$v.password.required && errors.push('Поле \'Пароль\' не должно быть пустым.');
+                !this.$v.password.minLength && errors.push('Минимальная длина пароля 8 символов.');
                 return errors;
             },
         },
@@ -105,6 +127,8 @@
                     const {email, password, remember} = this;
 
                     this.isLoading = true;
+                    this.snackbar = false;
+                    this.clearErrors();
                     this.$store.dispatch('auth/login', {data: {email, password}, remember})
                         .then(() => {
                             this.$store.dispatch('auth/clearValidationErrors');
@@ -113,6 +137,19 @@
                                 this.$router.push(this.$route.params.nextUrl);
                             } else {
                                 this.$router.push({ name: 'dashboard.patients' });
+                            }
+                        })
+                        .catch((error) => {
+                            if (error.status === 401) {
+                                this.snackbar = true;
+                            }
+
+                            if (error.data) {
+                                if (error.data.meta && error.data.meta.errors) {
+                                    this.handleErrors(error.data.meta.errors);
+                                } else if (error.data.message) {
+                                    this.handleErrors({password: [error.message]});
+                                }
                             }
                         })
                         .finally(() => {

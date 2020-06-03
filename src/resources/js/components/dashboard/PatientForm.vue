@@ -37,7 +37,7 @@
                                 @blur="$v.form.fullName.$touch()"
                             >
                                 <template v-slot:label>
-                                    Full Name <span class="red--text">*</span>
+                                    Имя <span class="red--text">*</span>
                                 </template>
                             </v-text-field>
                         </v-col>
@@ -53,13 +53,13 @@
                                 @blur="$v.form.phone.$touch()"
                             >
                                 <template v-slot:label>
-                                    Phone <span class="red--text">*</span>
+                                    Телефон <span class="red--text">*</span>
                                 </template>
                             </v-text-field>
                         </v-col>
                         <v-col cols="12" sm="6">
                             <v-text-field
-                                label="Email"
+                                label="E-mail"
                                 name="email"
                                 type="email"
                                 append-icon="mdi-email"
@@ -71,8 +71,8 @@
                         </v-col>
                         <v-col cols="12">
                             <v-radio-group v-model="form.gender" :mandatory="false" row>
-                                <v-radio label="Male" value="0"></v-radio>
-                                <v-radio label="Female" value="1"></v-radio>
+                                <v-radio label="Мужчина" value="0"></v-radio>
+                                <v-radio label="Женщина" value="1"></v-radio>
                             </v-radio-group>
                         </v-col>
                         <v-col cols="12">
@@ -85,7 +85,7 @@
                                 <template v-slot:activator="{ on }">
                                     <v-text-field
                                         v-model="form.birthDate"
-                                        label="Birth date"
+                                        label="Дата рождения"
                                         append-icon="mdi-calendar"
                                         readonly
                                         v-on="on"
@@ -109,20 +109,20 @@
                                 :items="anamnesis"
                                 item-text="name"
                                 item-value="id"
-                                label="Anamnesis"
+                                label="Анамнез"
                             ></v-select>
                         </v-col>
                         <v-col cols="12">
                             <v-textarea
                                 name="medical_info"
-                                label="Medical information"
+                                label="Медицинские сведения"
                                 v-model="form.medicalInfo"
                                 autocomplete="none"
                                 maxlength="1000"
                             ></v-textarea>
                         </v-col>
                         <v-col cols="12">
-                            <small><span class="red--text">*</span> indicates required field</small>
+                            <small><span class="red--text">*</span> Обязательные поля</small>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -134,7 +134,7 @@
             <v-btn color="primary"
                    :loading="isLoading"
                    @click.prevent="submit"
-            >Save</v-btn>
+            >Сохранить</v-btn>
         </v-card-actions>
     </v-card>
 </template>
@@ -217,20 +217,20 @@
             fullNameErrors() {
                 const errors = [];
                 if (!this.$v.form.fullName.$dirty) return errors;
-                !this.$v.form.fullName.required && errors.push('The full name is required.');
+                !this.$v.form.fullName.required && errors.push('Поле \'Имя\' не должно быть пустым.');
                 return errors;
             },
             phoneErrors() {
                 const errors = [];
                 if (!this.$v.form.phone.$dirty) return errors;
-                !this.$v.form.phone.required && errors.push('The phone is required.');
-                !this.$v.form.phone.minLength && errors.push('The phone must be a valid phone number.');
+                !this.$v.form.phone.required && errors.push('Поле \'Телефон\' не должно быть пустым.');
+                !this.$v.form.phone.minLength && errors.push('Некорректный формат номера телефона.');
                 return errors;
             },
             emailErrors() {
                 const errors = [];
                 if (!this.$v.form.email.$dirty) return errors;
-                !this.$v.form.email.email && errors.push('The email must be a valid email address.');
+                !this.$v.form.email.email && errors.push('Некорректный формат электронного адреса.');
                 return errors;
             },
         },
@@ -300,7 +300,7 @@
                     phone: this.patient.phone || null,
                     email: this.patient.email || null,
                     gender: (this.patient.gender || this.patient.gender === 0) ? this.patient.gender.toString() : null,
-                    birthDate: this.patient.birth_date || null,
+                    birthDate: this.patient.birth_date ? this.$options.filters.date(this.patient.birth_date) : null,
                     anamnesisId: (this.patient.anamnesis && this.patient.anamnesis.id) ? this.patient.anamnesis.id : null,
                     medicalInfo: this.patient.medical_info || null,
                 };
